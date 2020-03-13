@@ -8,20 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		F36B68A5241C3D3400D91162 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36B68A4241C3D3400D91162 /* AppDelegate.swift */; };
-		F36B68A7241C3D3400D91162 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36B68A6241C3D3400D91162 /* SceneDelegate.swift */; };
-		F36B68A9241C3D3400D91162 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36B68A8241C3D3400D91162 /* ContentView.swift */; };
 		F36B68AB241C3D3600D91162 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F36B68AA241C3D3600D91162 /* Assets.xcassets */; };
-		F36B68AE241C3D3600D91162 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F36B68AD241C3D3600D91162 /* Preview Assets.xcassets */; };
 		F36B68B1241C3D3600D91162 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F36B68AF241C3D3600D91162 /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		F36B68A1241C3D3400D91162 /* Reporters.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Reporters.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F36B68A4241C3D3400D91162 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		F36B68A6241C3D3400D91162 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		F36B68A8241C3D3400D91162 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		F36B68AA241C3D3600D91162 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		F36B68AD241C3D3600D91162 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		F36B68B0241C3D3600D91162 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F36B68B2241C3D3600D91162 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -57,22 +51,43 @@
 			isa = PBXGroup;
 			children = (
 				F36B68A4241C3D3400D91162 /* AppDelegate.swift */,
-				F36B68A6241C3D3400D91162 /* SceneDelegate.swift */,
-				F36B68A8241C3D3400D91162 /* ContentView.swift */,
-				F36B68AA241C3D3600D91162 /* Assets.xcassets */,
-				F36B68AF241C3D3600D91162 /* LaunchScreen.storyboard */,
-				F36B68B2241C3D3600D91162 /* Info.plist */,
-				F36B68AC241C3D3600D91162 /* Preview Content */,
+				F36B68AC241C3D3600D91162 /* Supporting Files */,
 			);
 			path = Reporters;
 			sourceTree = "<group>";
 		};
-		F36B68AC241C3D3600D91162 /* Preview Content */ = {
+		F36B68AC241C3D3600D91162 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				F36B68AD241C3D3600D91162 /* Preview Assets.xcassets */,
+				F36B68B2241C3D3600D91162 /* Info.plist */,
+				F36B68BA241C44D900D91162 /* Fonts */,
+				F36B68B8241C44C000D91162 /* FireBase */,
+				F36B68B9241C44D000D91162 /* Assets */,
 			);
-			path = "Preview Content";
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		F36B68B8241C44C000D91162 /* FireBase */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = FireBase;
+			sourceTree = "<group>";
+		};
+		F36B68B9241C44D000D91162 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				F36B68AA241C3D3600D91162 /* Assets.xcassets */,
+				F36B68AF241C3D3600D91162 /* LaunchScreen.storyboard */,
+			);
+			path = Assets;
+			sourceTree = "<group>";
+		};
+		F36B68BA241C44D900D91162 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Fonts;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -134,7 +149,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				F36B68B1241C3D3600D91162 /* LaunchScreen.storyboard in Resources */,
-				F36B68AE241C3D3600D91162 /* Preview Assets.xcassets in Resources */,
 				F36B68AB241C3D3600D91162 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -147,8 +161,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				F36B68A5241C3D3400D91162 /* AppDelegate.swift in Sources */,
-				F36B68A7241C3D3400D91162 /* SceneDelegate.swift in Sources */,
-				F36B68A9241C3D3400D91162 /* ContentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -285,17 +297,21 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"Reporters/Preview Content\"";
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				DEVELOPMENT_TEAM = YV49H67XCX;
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = Reporters/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/Reporters/Supporting Files/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = coo.Reporters;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.goask.reporter;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -304,17 +320,21 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"Reporters/Preview Content\"";
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				DEVELOPMENT_TEAM = YV49H67XCX;
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = Reporters/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/Reporters/Supporting Files/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = coo.Reporters;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.goask.reporter;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
