@@ -1,0 +1,11 @@
+/* 
+  Localizable.strings
+  Reporters
+
+  Created by Muhammad Jbara on 17/03/2020.
+  Copyright © 2020 Muhammad Jbara. All rights reserved.
+*/
+
+"DIRECTION" = "rtl";
+"FONT_FAMILT_LIGHT" = "Default";
+"FONT_FAMILT_BOLD" = "Default";

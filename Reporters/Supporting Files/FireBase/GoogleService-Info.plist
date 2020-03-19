@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>349340054547-r5g3pv6lelkm5vfnij2eqae2r7iikom4.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.349340054547-r5g3pv6lelkm5vfnij2eqae2r7iikom4</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBqzJ5w6VQIrTIT1b79Og-zU-i56Sj4wtw</string>
+	<key>GCM_SENDER_ID</key>
+	<string>349340054547</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.goask.reporter</string>
+	<key>PROJECT_ID</key>
+	<string>reporters-3bf40</string>
+	<key>STORAGE_BUCKET</key>
+	<string>reporters-3bf40.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:349340054547:ios:61f71bc8f9111060433be6</string>
+	<key>DATABASE_URL</key>
+	<string>https://reporters-3bf40.firebaseio.com</string>
+</dict>
+</plist>

@@ -7,22 +7,24 @@
 //
 
 import UIKit
+import Firebase
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, ContainerControllerDelegate {
     
     var window: UIWindow?
+    private var containerController: ContainerController!
     
     // MARK: - Interstitial AppDelegate
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-//        FirebaseApp.configure()
+        FirebaseApp.configure()
 //        self.launchOptions = launchOptions
         self.window = UIWindow(frame: UIScreen.main.bounds)
         if let window = self.window {
-//            self.containerController = ContainerController(withDelegate: self as ContainerControllerDelegate)
-//            window.backgroundColor = UIColor.clear
-//            window.rootViewController = self.containerController
+            self.containerController = ContainerController(withDelegate: self as ContainerControllerDelegate)
+            window.backgroundColor = UIColor.clear
+                window.rootViewController = self.containerController
             window.makeKeyAndVisible()
         }
         return true
