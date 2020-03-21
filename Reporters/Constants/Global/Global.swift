@@ -25,6 +25,27 @@ final class Global {
         return font
     }
     
+    public func createImageViewElement(withFrame frame: CGRect, _ argument: [String: Any]! = nil) -> [String: Any] {
+        var document: [String: Any] = [String: Any]()
+        let imageView: UIImageView = UIImageView(frame: frame)
+        document[CONSTANTS.KEYS.ELEMENTS.SELF] = imageView
+        if let argument = argument {
+            if let tag = argument[CONSTANTS.KEYS.ELEMENTS.TAG] as? Int {
+                document[CONSTANTS.KEYS.ELEMENTS.TAG] = tag
+            }
+            if let color = argument[CONSTANTS.KEYS.ELEMENTS.COLOR.BACKGROUND] as? UIColor {
+                imageView.backgroundColor = color
+            }
+            if let image = argument[CONSTANTS.KEYS.ELEMENTS.IMAGE] as? UIImage {
+                imageView.image = image
+            }
+            if let hide = argument[CONSTANTS.KEYS.ELEMENTS.HIDDEN] as? Bool {
+                imageView.isHidden = hide
+            }
+        }
+        return document
+    }
+    
     public func createButtonElement(withFrame frame: CGRect, _ argument: [String: Any]! = nil) -> [String: Any] {
         var document: [String: Any] = [String: Any]()
         let button: UIButton = UIButton(frame: frame)
@@ -45,8 +66,12 @@ final class Global {
             if let hide = argument[CONSTANTS.KEYS.ELEMENTS.HIDDEN] as? Bool {
                 button.isHidden = hide
             }
-            if let selector = argument[CONSTANTS.KEYS.ELEMENTS.BUTTON.SELECTOR] as? Selector, let target = argument[CONSTANTS.KEYS.ELEMENTS.BUTTON.TARGET] {
-                button.addTarget(target, action: selector, for: .touchUpInside)
+            if let action = argument[CONSTANTS.KEYS.ELEMENTS.BUTTON.SELF] as? [String: Any], let selector = action[CONSTANTS.KEYS.ELEMENTS.BUTTON.SELECTOR] as? Selector, let target = action[CONSTANTS.KEYS.ELEMENTS.BUTTON.TARGET] {
+                if let event = action[CONSTANTS.KEYS.ELEMENTS.BUTTON.EVENT]  as? UIControl.Event  {
+                    button.addTarget(target, action: selector, for: event)
+                } else {
+                    button.addTarget(target, action: selector, for: .touchUpInside)
+                }
             }
         }
         return document
@@ -145,6 +170,53 @@ final class Global {
             }
             if let color = argument[CONSTANTS.KEYS.ELEMENTS.COLOR.LINK] as? UIColor {
                 textView.linkTextAttributes = [.foregroundColor: color]
+            }
+        }
+        return document
+    }
+    
+    public func createTextFieldElement(withFrame frame: CGRect, _ argument: [String: Any]! = nil) -> [String: Any] {
+        var document: [String: Any] = [String: Any]()
+        let textView: UITextField = UITextField(frame: frame)
+        document[CONSTANTS.KEYS.ELEMENTS.SELF] = textView
+        if let argument = argument {
+            if let tag = argument[CONSTANTS.KEYS.ELEMENTS.TAG] as? Int {
+                document[CONSTANTS.KEYS.ELEMENTS.TAG] = tag
+            }
+            if let delegate = argument[CONSTANTS.KEYS.ELEMENTS.DELEGATE] as? UITextFieldDelegate {
+                textView.delegate = delegate
+            }
+            if let color = argument[CONSTANTS.KEYS.ELEMENTS.COLOR.BACKGROUND] as? UIColor {
+                textView.backgroundColor = color
+            }
+            if let font = argument[CONSTANTS.KEYS.ELEMENTS.FONT] as? UIFont {
+                textView.font = font
+            }
+            if let text = argument[CONSTANTS.KEYS.ELEMENTS.TEXT] as? String {
+                textView.text = text
+            }
+            if let color = argument[CONSTANTS.KEYS.ELEMENTS.COLOR.TEXT] as? UIColor {
+                textView.textColor = color
+            }
+            if let appearance = argument[CONSTANTS.KEYS.ELEMENTS.KEYBOARD.APPEARANCE] as? UIKeyboardAppearance {
+                textView.keyboardAppearance = appearance
+            }
+            if let alignment = argument[CONSTANTS.KEYS.ELEMENTS.ALIGNMENT] as? NSTextAlignment {
+                textView.textAlignment = alignment
+            }
+            if let type = argument[CONSTANTS.KEYS.ELEMENTS.KEYBOARD.TYPE] as? UIKeyboardType {
+                textView.keyboardType = type
+            }
+            if let returnKey = argument[CONSTANTS.KEYS.ELEMENTS.KEYBOARD.RETURNKEY] as? UIReturnKeyType {
+                textView.returnKeyType = returnKey
+            }
+            if let left = argument[CONSTANTS.KEYS.ELEMENTS.TEXTFIELD.MARGIN.LEFT] as? NSNumber {
+                textView.leftView = UIView(frame: CGRect(x: 0, y: 0, width: CGFloat(left.floatValue), height: textView.frame.height))
+                textView.leftViewMode = .always
+            }
+            if let right = argument[CONSTANTS.KEYS.ELEMENTS.TEXTFIELD.MARGIN.RIGHT] as? NSNumber {
+                textView.rightView = UIView(frame: CGRect(x: 0, y: 0, width: CGFloat(right.floatValue), height: textView.frame.height))
+                textView.rightViewMode = .always
             }
         }
         return document

@@ -588,6 +588,14 @@ public class CONSTANTS {
     
     struct KEYS {
         
+        struct USERDEFAULTS {
+            
+            struct COUNTRY {
+                static let CODE: String = "codeCountry"
+            }
+            
+        }
+        
         struct ELEMENTS {
             static let SELF: String = "element"
             static let TAG: String = "tag"

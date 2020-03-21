@@ -27,6 +27,10 @@
 		F3A14C3B24213CB100A375D1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F3A14C3D24213CB100A375D1 /* Localizable.strings */; };
 		F3A14C432421844400A375D1 /* CustomizeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A14C422421844400A375D1 /* CustomizeButton.swift */; };
 		F3A14C482423EB6500A375D1 /* TemplateLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A14C472423EB6500A375D1 /* TemplateLoginView.swift */; };
+		F3A14C4A2424235D00A375D1 /* PhoneNumberView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A14C492424235D00A375D1 /* PhoneNumberView.swift */; };
+		F3A14C4C24242A1300A375D1 /* UIColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A14C4B24242A1300A375D1 /* UIColorExtension.swift */; };
+		F3A14C5024254F8800A375D1 /* ExpressProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A14C4E24254F8800A375D1 /* ExpressProgress.swift */; };
+		F3A14C5124254F8800A375D1 /* Images_ExpressProgress.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F3A14C4F24254F8800A375D1 /* Images_ExpressProgress.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -58,6 +62,10 @@
 		F3A14C3F24213CBE00A375D1 /* he */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = he; path = he.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F3A14C422421844400A375D1 /* CustomizeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomizeButton.swift; sourceTree = "<group>"; };
 		F3A14C472423EB6500A375D1 /* TemplateLoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateLoginView.swift; sourceTree = "<group>"; };
+		F3A14C492424235D00A375D1 /* PhoneNumberView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberView.swift; sourceTree = "<group>"; };
+		F3A14C4B24242A1300A375D1 /* UIColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorExtension.swift; sourceTree = "<group>"; };
+		F3A14C4E24254F8800A375D1 /* ExpressProgress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExpressProgress.swift; sourceTree = "<group>"; };
+		F3A14C4F24254F8800A375D1 /* Images_ExpressProgress.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images_ExpressProgress.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,7 +119,6 @@
 			isa = PBXGroup;
 			children = (
 				F3A14C1C2420DD5000A375D1 /* Lang */,
-				F3A14C192420D61000A375D1 /* Global */,
 				F3A14C162420D21D00A375D1 /* Constants */,
 				F3A14C212420DDC000A375D1 /* Extensions */,
 				F3A14C272420E28100A375D1 /* DataStructure */,
@@ -162,6 +169,7 @@
 		F3A14C162420D21D00A375D1 /* Constants */ = {
 			isa = PBXGroup;
 			children = (
+				F3A14C192420D61000A375D1 /* Global */,
 				F3A14C172420D22A00A375D1 /* CONSTANTS.swift */,
 			);
 			path = Constants;
@@ -187,9 +195,11 @@
 		F3A14C212420DDC000A375D1 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				F3A14C4D24254F7600A375D1 /* ExpressProgress */,
 				F3A14C222420DF3200A375D1 /* StringExtension.swift */,
 				F3A14C3324212D1800A375D1 /* UILabelExtension.swift */,
 				F3A14C3524212D3F00A375D1 /* UITextViewExtension.swift */,
+				F3A14C4B24242A1300A375D1 /* UIColorExtension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -233,9 +243,19 @@
 		F3A14C462423EB5600A375D1 /* LoginByPhoneNumber */ = {
 			isa = PBXGroup;
 			children = (
+				F3A14C492424235D00A375D1 /* PhoneNumberView.swift */,
 				F3A14C472423EB6500A375D1 /* TemplateLoginView.swift */,
 			);
 			path = LoginByPhoneNumber;
+			sourceTree = "<group>";
+		};
+		F3A14C4D24254F7600A375D1 /* ExpressProgress */ = {
+			isa = PBXGroup;
+			children = (
+				F3A14C4E24254F8800A375D1 /* ExpressProgress.swift */,
+				F3A14C4F24254F8800A375D1 /* Images_ExpressProgress.xcassets */,
+			);
+			path = ExpressProgress;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -300,6 +320,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F3A14C5124254F8800A375D1 /* Images_ExpressProgress.xcassets in Resources */,
 				F3A14C2B2420E2C500A375D1 /* Colors_Views.xcassets in Resources */,
 				F36B68B1241C3D3600D91162 /* LaunchScreen.storyboard in Resources */,
 				F3A14C3B24213CB100A375D1 /* Localizable.strings in Resources */,
@@ -360,6 +381,7 @@
 			files = (
 				F36B68A5241C3D3400D91162 /* AppDelegate.swift in Sources */,
 				F3A14C132420264300A375D1 /* ContainerController.swift in Sources */,
+				F3A14C4C24242A1300A375D1 /* UIColorExtension.swift in Sources */,
 				F3A14C3424212D1800A375D1 /* UILabelExtension.swift in Sources */,
 				F3A14C232420DF3200A375D1 /* StringExtension.swift in Sources */,
 				F3A14C482423EB6500A375D1 /* TemplateLoginView.swift in Sources */,
@@ -368,9 +390,11 @@
 				F3A14C292420E28F00A375D1 /* Stack.swift in Sources */,
 				F3A14C3624212D3F00A375D1 /* UITextViewExtension.swift in Sources */,
 				F3A14C152420265300A375D1 /* OverlapContainer.swift in Sources */,
+				F3A14C4A2424235D00A375D1 /* PhoneNumberView.swift in Sources */,
 				F3A14C1B2420D62100A375D1 /* Global.swift in Sources */,
 				F3A14C182420D22A00A375D1 /* CONSTANTS.swift in Sources */,
 				F3A14C432421844400A375D1 /* CustomizeButton.swift in Sources */,
+				F3A14C5024254F8800A375D1 /* ExpressProgress.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

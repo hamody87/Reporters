@@ -16,5 +16,8 @@
 "AGREE_AND_CONTINUE" = "Agree & Continue";
 "TERMS_OF_SERVICE" = "Terms of Service";
 
+"ENTER_PHONE_NUMBER" = "Enter your phone number";
+"NOTICE_ENTER_PHONE_NUMBER" = "The phone number is used to login only.";
+
 
 
