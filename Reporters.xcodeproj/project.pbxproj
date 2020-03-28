@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		20B3F2DAF2C094889F8B5B57 /* Pods_Reporters.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 257719D2283C7AC5460378A9 /* Pods_Reporters.framework */; };
+		F30AC602242EBE2E00CEA545 /* UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F30AC601242EBE2E00CEA545 /* UIViewExtension.swift */; };
 		F36B68A5241C3D3400D91162 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36B68A4241C3D3400D91162 /* AppDelegate.swift */; };
 		F36B68AB241C3D3600D91162 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F36B68AA241C3D3600D91162 /* Assets.xcassets */; };
 		F36B68B1241C3D3600D91162 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F36B68AF241C3D3600D91162 /* LaunchScreen.storyboard */; };
@@ -37,6 +38,7 @@
 		257719D2283C7AC5460378A9 /* Pods_Reporters.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Reporters.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5D16DB66415E3E3BA47CAE7A /* Pods-Reporters.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Reporters.release.xcconfig"; path = "Target Support Files/Pods-Reporters/Pods-Reporters.release.xcconfig"; sourceTree = "<group>"; };
 		AC9C20DE98730CF6E7E0A688 /* Pods-Reporters.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Reporters.debug.xcconfig"; path = "Target Support Files/Pods-Reporters/Pods-Reporters.debug.xcconfig"; sourceTree = "<group>"; };
+		F30AC601242EBE2E00CEA545 /* UIViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewExtension.swift; sourceTree = "<group>"; };
 		F36B68A1241C3D3400D91162 /* Reporters.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Reporters.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F36B68A4241C3D3400D91162 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F36B68AA241C3D3600D91162 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -200,6 +202,7 @@
 				F3A14C3324212D1800A375D1 /* UILabelExtension.swift */,
 				F3A14C3524212D3F00A375D1 /* UITextViewExtension.swift */,
 				F3A14C4B24242A1300A375D1 /* UIColorExtension.swift */,
+				F30AC601242EBE2E00CEA545 /* UIViewExtension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -207,6 +210,7 @@
 		F3A14C242420E21D00A375D1 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				F3A14C54242927D100A375D1 /* LandingView */,
 				F3A14C2E2420E9FE00A375D1 /* LoginView */,
 				F3A14C252420E22F00A375D1 /* SuperView.swift */,
 				F3A14C2A2420E2C500A375D1 /* Colors_Views.xcassets */,
@@ -256,6 +260,13 @@
 				F3A14C4F24254F8800A375D1 /* Images_ExpressProgress.xcassets */,
 			);
 			path = ExpressProgress;
+			sourceTree = "<group>";
+		};
+		F3A14C54242927D100A375D1 /* LandingView */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = LandingView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -387,6 +398,7 @@
 				F3A14C482423EB6500A375D1 /* TemplateLoginView.swift in Sources */,
 				F3A14C302420EA0F00A375D1 /* LoginView.swift in Sources */,
 				F3A14C262420E22F00A375D1 /* SuperView.swift in Sources */,
+				F30AC602242EBE2E00CEA545 /* UIViewExtension.swift in Sources */,
 				F3A14C292420E28F00A375D1 /* Stack.swift in Sources */,
 				F3A14C3624212D3F00A375D1 /* UITextViewExtension.swift in Sources */,
 				F3A14C152420265300A375D1 /* OverlapContainer.swift in Sources */,

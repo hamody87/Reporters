@@ -519,7 +519,7 @@ public class CONSTANTS {
         }
         
         static func MARGIN(_ times: Int = 0) -> CGFloat {
-            return DEVICE.IS(device: .IPAD) ? 20.0 : 10.0 * CGFloat(times > 0 ? times : 1)
+            return 10.0 * CGFloat(times > 0 ? times : 1)
         }
         
         struct SAFE_AREA {
@@ -616,6 +616,7 @@ public class CONSTANTS {
             static let ENABLE: String = "enable"
             static let IMAGE: String = "image"
             static let HIDDEN: String = "hidden"
+            static let CLIPS: String = "clips"
             struct BUTTON {
                 static let SELF: String = "button"
                 static let SELECTOR: String = "selector"

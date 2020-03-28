@@ -141,6 +141,9 @@ final class Global {
             if let radius = argument[CONSTANTS.KEYS.ELEMENTS.CORNER.RADIUS] as? CGFloat {
                 superView.layer.cornerRadius = radius
             }
+            if let clips = argument[CONSTANTS.KEYS.ELEMENTS.CLIPS] as? Bool {
+                superView.clipsToBounds = clips
+            }
         }
         return document
     }

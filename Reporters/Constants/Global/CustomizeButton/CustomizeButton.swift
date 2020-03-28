@@ -82,6 +82,9 @@ class CustomizeButton: UIView {
             if let color = argument[CONSTANTS.KEYS.ELEMENTS.COLOR.BACKGROUND] as? UIColor {
                 self.coreBtn.backgroundColor = color
             }
+            if let radius = argument[CONSTANTS.KEYS.ELEMENTS.CORNER.RADIUS] as? CGFloat {
+                self.coreBtn.layer.cornerRadius = radius
+            }
             if let color = argument[CONSTANTS.KEYS.ELEMENTS.COLOR.TEXT] as? UIColor {
                 self.textBtn.textColor = color
             }

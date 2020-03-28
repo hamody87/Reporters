@@ -10,11 +10,19 @@
 "FONT_FAMILT_LIGHT" = "";
 "FONT_FAMILT_BOLD" = "";
 
+
+
+
 "UNKNOWN" = "Unknown";
-"READ_&_TAPPING_TO_ACCEPT" = "Read our %@, By tapping %@ you accept the %@.";
+
+"READ_OUR" = "Read our %@";
 "PRIVACY_POLICY" = "Privacy Policy";
-"AGREE_AND_CONTINUE" = "Agree & Continue";
+"TAPPING_TO_ACCEPT" = "By tapping %@ you accept the %@.";
 "TERMS_OF_SERVICE" = "Terms of Service";
+"AGREE_AND_CONTINUE" = "Agree & Continue";
+
+
+
 
 "ENTER_PHONE_NUMBER" = "Enter your phone number";
 "NOTICE_ENTER_PHONE_NUMBER" = "The phone number is used to login only.";

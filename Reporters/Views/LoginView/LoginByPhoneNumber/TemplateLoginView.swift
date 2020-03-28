@@ -108,7 +108,7 @@ class TemplateLoginView: SuperView {
             }
             self.navBar.addSubview(CONSTANTS.GLOBAL.createTextViewElement(withFrame: CGRect(x: 0, y: self.navBar.frame.height - 1.0, width: self.navBar.frame.width, height: 1.0), {
                 var argument: [String: Any] = [String: Any]()
-                argument[CONSTANTS.KEYS.ELEMENTS.COLOR.BACKGROUND] =  UIColor(named: "Background/Fourth")
+                argument[CONSTANTS.KEYS.ELEMENTS.COLOR.BACKGROUND] = UIColor(named: "Background/Fourth")
                 return argument
             }())[CONSTANTS.KEYS.ELEMENTS.SELF] as! UIView)
         }
