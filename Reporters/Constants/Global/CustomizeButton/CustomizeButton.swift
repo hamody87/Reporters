@@ -19,7 +19,7 @@ class CustomizeButton: UIView {
     // MARK: - Public Methods
     
     public func enableTouch(_ enable: Bool) {
-        self.coreBtn.alpha = enable ? 1.0 : 0.3
+        self.alpha = enable ? 1.0 : 0.3
         self.touchBtn.isEnabled = enable
     }
     
@@ -30,10 +30,6 @@ class CustomizeButton: UIView {
     public func setBackgroundButton(_ color: UIColor) {
         self.coreBtn.backgroundColor = color
     }
-    
-//    public func setBackgroundButton(_ color: UIColor) {
-//        self.coreBtn.backgroundColor = color
-//    }
     
 //    setTextColorButton
     

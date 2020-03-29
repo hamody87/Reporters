@@ -12,12 +12,12 @@ final class ExpressProgress: UIView {
     
     struct DEFAULT {
         
-        static let BACKGROUND: String = "Background/First"
+        static let BACKGROUND: String = "Background/ExpressProgress/Basic"
         static let ALPHA: CGFloat = 0.8
         
         struct CIRCLE {
             
-            static let BACKGROUND: String = "Background/Loading"
+            static let BACKGROUND: String = "Background/ExpressProgress/Secondary"
             static let RADIUS: CGFloat = 30.0
             
             struct LINE {

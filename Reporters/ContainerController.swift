@@ -340,7 +340,7 @@ class ContainerController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = .black//UIColor(named: "Background/First")
+        self.view.backgroundColor = .black
         self.addChild(self.currentOverlapContainer)
         self.view.addSubview(self.currentOverlapContainer.view)
         self.currentOverlapContainer?.didMove(toParent: self)

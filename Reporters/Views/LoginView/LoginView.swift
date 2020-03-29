@@ -62,16 +62,20 @@ class LoginView: SuperView {
     private func activateDemoMessages() {
         let message: UIView = UIView(frame: CGRect(x: CONSTANTS.SCREEN.MARGIN(3), y: self.messagesView.frame.height, width: self.messagesView.frame.width - CONSTANTS.SCREEN.MARGIN(6), height: 0))
         self.messagesView.addSubview(message)
-        let numRows: Int = Int.random(in: 1 ... 5)
+        let numRows: Int = Int.random(in: 1 ... 4)
         var width: CGFloat = message.frame.width - DEFAULT.MESSAGE.MARGIN - DEFAULT.MESSAGE.THUMB.SIZE
+        var originX: CGFloat = CONSTANTS.SCREEN.LEFT_DIRECTION ? DEFAULT.MESSAGE.MARGIN + DEFAULT.MESSAGE.THUMB.SIZE : width
         if numRows == 1 {
             let percent: Float = Float.random(in: 0.6 ... 1.0)
             width *= CGFloat(percent)
         }
+        if !CONSTANTS.SCREEN.LEFT_DIRECTION {
+            originX -= width
+        }
         let height: CGFloat = CGFloat(numRows + 1) * 20.0 + 10.0
-        let rowsCore: UIView = UIView(frame: CGRect(x: DEFAULT.MESSAGE.MARGIN + DEFAULT.MESSAGE.THUMB.SIZE, y: 0, width: width, height: height))
+        let rowsCore: UIView = UIView(frame: CGRect(x: originX, y: 0, width: width, height: height))
         rowsCore.backgroundColor = UIColor(named: "Background/LoginView/Messages/Message/Background")
-        rowsCore.roundCorners(corners: [.topLeft, .topRight, .bottomRight], radius: 20.0)
+        rowsCore.roundCorners(corners: CONSTANTS.SCREEN.LEFT_DIRECTION ? [.topLeft, .topRight, .bottomRight] : [.topLeft, .topRight, .bottomLeft], radius: 20.0)
         message.addSubview(rowsCore)
         for i in 1 ... numRows {
             var width: CGFloat = width - CONSTANTS.SCREEN.MARGIN(2)
@@ -79,15 +83,16 @@ class LoginView: SuperView {
                 let percent: Float = Float.random(in: 0.4 ... 1.0)
                 width *= CGFloat(percent)
             }
-            let row: UIView = UIView(frame: CGRect(x: CONSTANTS.SCREEN.MARGIN(1), y: CGFloat(i) * 20.0, width: width, height: 10.0))
+            let row: UIView = UIView(frame: CGRect(x: CONSTANTS.SCREEN.LEFT_DIRECTION ? CONSTANTS.SCREEN.MARGIN(1) : rowsCore.frame.width - width - CONSTANTS.SCREEN.MARGIN(1), y: CGFloat(i) * 20.0, width: width, height: 10.0))
             row.backgroundColor = UIColor(named: "Background/LoginView/Messages/Message/Text")
             rowsCore.addSubview(row)
         }
         message.frame = CGRect(x: message.frame.origin.x, y: message.frame.origin.y, width: message.frame.width, height: rowsCore.frame.height + 30.0 + DEFAULT.MESSAGE.MARGIN)
-        let thumb: UIView = UIView(frame: CGRect(x: 0, y: message.frame.height - DEFAULT.MESSAGE.THUMB.SIZE, width: DEFAULT.MESSAGE.THUMB.SIZE, height: DEFAULT.MESSAGE.THUMB.SIZE))
+        let thumb: UIView = UIView(frame: CGRect(x: CONSTANTS.SCREEN.LEFT_DIRECTION ? 0 : rowsCore.frame.origin.x + rowsCore.frame.width + DEFAULT.MESSAGE.MARGIN, y: message.frame.height - DEFAULT.MESSAGE.THUMB.SIZE, width: DEFAULT.MESSAGE.THUMB.SIZE, height: DEFAULT.MESSAGE.THUMB.SIZE))
         thumb.backgroundColor = UIColor(named: "Background/LoginView/Messages/Thumb")
         message.addSubview(thumb)
-        let authorView: UIView = UIView(frame: CGRect(x: rowsCore.frame.origin.x, y: rowsCore.frame.height + DEFAULT.MESSAGE.MARGIN, width: rowsCore.frame.width * CGFloat(Float.random(in: 0.5 ... 0.7)), height: 30.0))
+        let widthAuthorView: CGFloat = rowsCore.frame.width * CGFloat(Float.random(in: 0.5 ... 0.7))
+        let authorView: UIView = UIView(frame: CGRect(x: CONSTANTS.SCREEN.LEFT_DIRECTION ? rowsCore.frame.origin.x : rowsCore.frame.origin.x + rowsCore.frame.width - widthAuthorView, y: rowsCore.frame.height + DEFAULT.MESSAGE.MARGIN, width: widthAuthorView, height: 30.0))
         authorView.backgroundColor = UIColor(named: "Background/LoginView/Messages/Author/Background")
         message.addSubview(authorView)
         let rowAuthor: UIView = UIView(frame: CGRect(x: 10.0, y: 10.0, width: authorView.frame.width  - 20.0, height: 10.0))
@@ -185,13 +190,6 @@ class LoginView: SuperView {
             textView.attributedText = underlineAttriString
         }
         originY -= CONSTANTS.SCREEN.MARGIN(2)
-        self.safeAreaView.addSubview(CONSTANTS.GLOBAL.createSuperViewElement(withFrame: CGRect(x: 0, y: originY, width: self.safeAreaView.frame.width, height: 1.0), {
-            var argument: [String: Any] = [String: Any]()
-            argument[CONSTANTS.KEYS.ELEMENTS.DELEGATE] = self
-            argument[CONSTANTS.KEYS.ELEMENTS.COLOR.BACKGROUND] = UIColor(named: "Background/LoginView/Border") //?? .black
-            return argument
-        }())[CONSTANTS.KEYS.ELEMENTS.SELF] as! SuperView)
-        originY -= 1.0
         if let view: SuperView = CONSTANTS.GLOBAL.createSuperViewElement(withFrame: CGRect(x: 0, y: 0, width: self.frame.width, height: self.safeAreaView.frame.origin.y + originY), {
             var argument: [String: Any] = [String: Any]()
             argument[CONSTANTS.KEYS.ELEMENTS.DELEGATE] = self

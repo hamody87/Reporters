@@ -408,6 +408,9 @@ public class CONSTANTS {
         
         static let NAME: String = UIDevice.current.name
         static let VERSION: String = UIDevice.current.systemVersion
+        struct LANGUAGE {
+            static let CODE: String = Locale.current.languageCode ?? "en"
+        }
         static let MODEL: String = {
             var systemInfo = utsname()
             uname(&systemInfo)
@@ -511,6 +514,8 @@ public class CONSTANTS {
         static let ENABLE_AUTO_ROTATE: Bool = false
         static let MAX_SIZE: CGFloat = max(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
         static let MIN_SIZE: CGFloat = min(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
+        
+        
         static func WIDTH() -> CGFloat {
             return UIScreen.main.bounds.width
         }
@@ -518,9 +523,13 @@ public class CONSTANTS {
             return UIScreen.main.bounds.height
         }
         
-        static func MARGIN(_ times: Int = 0) -> CGFloat {
+        static func MARGIN(_ times: Float = 0) -> CGFloat {
             return 10.0 * CGFloat(times > 0 ? times : 1)
         }
+
+        static let LEFT_DIRECTION: Bool = {
+            return "DIRECTION".localized != "rtl"
+        }()
         
         struct SAFE_AREA {
             

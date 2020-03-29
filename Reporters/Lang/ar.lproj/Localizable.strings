@@ -7,5 +7,5 @@
 */
 
 "DIRECTION" = "rtl";
-"FONT_FAMILT_LIGHT" = "Default";
-"FONT_FAMILT_BOLD" = "Default";
+"FONT_FAMILT_LIGHT" = "";
+"FONT_FAMILT_BOLD" = "";

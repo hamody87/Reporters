@@ -10,10 +10,12 @@
 "FONT_FAMILT_LIGHT" = "";
 "FONT_FAMILT_BOLD" = "";
 
-
-
-
 "UNKNOWN" = "Unknown";
+"CANCEL" = "Cancel";
+"SELECT" = "Select";
+"LOGIN" = "Log In";
+"BACK" = "Back";
+"SEND" = "Send";
 
 "READ_OUR" = "Read our %@";
 "PRIVACY_POLICY" = "Privacy Policy";
@@ -21,11 +23,12 @@
 "TERMS_OF_SERVICE" = "Terms of Service";
 "AGREE_AND_CONTINUE" = "Agree & Continue";
 
-
-
-
 "ENTER_PHONE_NUMBER" = "Enter your phone number";
 "NOTICE_ENTER_PHONE_NUMBER" = "The phone number is used to login only.";
+"ENTER_PHONE_NUMBER" = "Enter your phone number";
+"VERIFICATION_CODE" = "Verification Code";
+
+
 
 
 
