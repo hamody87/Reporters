@@ -1,4 +1,4 @@
-/* 
+/*
   Localizable.strings
   Reporters
 
@@ -16,6 +16,8 @@
 "LOGIN" = "Log In";
 "BACK" = "Back";
 "SEND" = "Send";
+"ENTER" = "Enter";
+"CONTINUE" = "Continue";
 
 "READ_OUR" = "Read our %@";
 "PRIVACY_POLICY" = "Privacy Policy";
@@ -24,9 +26,24 @@
 "AGREE_AND_CONTINUE" = "Agree & Continue";
 
 "ENTER_PHONE_NUMBER" = "Enter your phone number";
-"NOTICE_ENTER_PHONE_NUMBER" = "The phone number is used to login only.";
+"NOTICE_ENTER_PHONE_NUMBER" = "The phone number is use to login only.";
 "ENTER_PHONE_NUMBER" = "Enter your phone number";
 "VERIFICATION_CODE" = "Verification Code";
+"VERIFICATION_CODE_SENT_SUCCESSFULLY" = "Verification code sent successfully";
+
+// Firebase errors
+"TOO_SHORT" = "The phone number you entered is too short.";
+"TOO_LONG" = "The phone number you entered is too long.";
+"Invalid format." = "Invalid format.";
+"Network error (such as timeout, interrupted connection or unreachable host) has occurred." = "Network error (such as timeout, interrupted connection or unreachable host) has occurred.";
+"The SMS verification code used to create the phone auth credential is invalid. Please resend the verification code SMS and be sure to use the verification code provided by the user." = "The SMS verification code used to create the phone auth credential is invalid. Please resend the verification code SMS and be sure to use the verification code provided by the user.";
+"We have blocked all requests from this device due to unusual activity. Try again later." = "We have blocked all requests from this device due to unusual activity. Try again later.";
+
+
+
+
+
+
 
 
 

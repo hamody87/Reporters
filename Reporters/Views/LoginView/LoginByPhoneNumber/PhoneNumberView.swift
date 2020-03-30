@@ -58,33 +58,26 @@ class PhoneNumberView: TemplateLoginView {
         self.phoneNumberTextField.endEditing(true)
         let progress: ExpressProgress! = ExpressProgress(showProgressAddedTo: self)
         progress.showProgress()
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            progress.errorProgress(withMessage: "dd", {
-                let progress: ExpressProgress! = ExpressProgress(showProgressAddedTo: self)
-                progress.showProgress()
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                    progress.doneProgress(withMessage: "Verification code sent successfully".localized,nil)
+        if let code: String = self.phoneCode.text, let number: String = self.phoneNumberTextField.text, let intCode: Int = Int(code), let intNumber: Int = Int(number) {
+            Auth.auth().languageCode = CONSTANTS.DEVICE.LANGUAGE.CODE
+            PhoneAuthProvider.provider().verifyPhoneNumber("+\(intCode)\(intNumber)", uiDelegate: nil) { (verificationID, error) in
+                if let error = error {
+                    progress.stopProgress(isSuccess: false, error.localizedDescription.localized, {
+                        self.phoneNumberTextField.becomeFirstResponder()
+                    })
+                    return
                 }
-            })
-        }
-        return
-        let phoneNumber: String = "\(self.phoneCode.text ?? "0")\(self.phoneNumberTextField.text ?? "0")"
-        PhoneAuthProvider.provider().verifyPhoneNumber(phoneNumber, uiDelegate: nil) { (verificationID, error) in
-            if let error = error {
-                progress.errorProgress(withMessage: error.localizedDescription.localized, {
-                    self.phoneNumberTextField.becomeFirstResponder()
+                var argument: [String: Any] = [String: Any]()
+                argument[CONSTANTS.KEYS.JSON.FIELD.ID.VERIFICATION] =  verificationID
+                argument[CONSTANTS.KEYS.JSON.FIELD.PHONE.CODE] = intCode
+                argument[CONSTANTS.KEYS.JSON.FIELD.PHONE.NUMBER] = intNumber
+                self.transitionToChildOverlapContainer(viewName: "VerificationCodeView", argument, .coverLeft, false, {
+                    progress.hideProgress(nil)
                 })
-                return
             }
-            progress.doneProgress(withMessage: "Verification code sent successfully".localized, {
-//                var argument: [String: Any] = [String: Any]()
-//                argument[CONSTANTS.KEYS.JSON.FIELD.VERIFICATION_ID] =  verificationID
-//                argument[CONSTANTS.KEYS.JSON.FIELD.PHONE.CODE] =  Int(self.phoneCode.text ?? "0")
-//                argument[CONSTANTS.KEYS.JSON.FIELD.PHONE.NUMBER] =  Int(self.phoneNumberTextField.text ?? "0")
-//                self.transitionToChildOverlapContainer(viewName: "VerificationCodeView", argument, .coverLeft, false, nil)
-            })
+            return
         }
+        progress.hideProgress(nil)
     }
     
     // MARK: - Override Methods
@@ -163,7 +156,6 @@ class PhoneNumberView: TemplateLoginView {
                 self.updatePhoneCode()
             }
             if let img_arrow: UIImage = UIImage(named: "DownArrow") {
-                
                 codeCountryView.addSubview(CONSTANTS.GLOBAL.createImageViewElement(withFrame: CGRect(x: codeCountryView.frame.width - img_arrow.size.width - CONSTANTS.SCREEN.MARGIN(), y: (codeCountryView.frame.height - img_arrow.size.height) / 2.0, width: img_arrow.size.width, height: img_arrow.size.height), {
                     var argument: [String: Any] = [String: Any]()
                     argument[CONSTANTS.KEYS.ELEMENTS.IMAGE] = img_arrow

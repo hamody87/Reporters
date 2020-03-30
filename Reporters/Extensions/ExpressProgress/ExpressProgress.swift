@@ -21,15 +21,10 @@ final class ExpressProgress: UIView {
             static let RADIUS: CGFloat = 30.0
             
             struct LINE {
-                static let WIDTH: CGFloat = 4.0
+                static let WIDTH: CGFloat = 3.0
             }
-            
-            struct ANGLE {
 
-                static let START: CGFloat = .pi * 2.0
-                static let END: CGFloat = .pi * 1.7
-                
-            }
+            static let ANGLE: CGFloat = .pi * 2.0
             
         }
         
@@ -65,6 +60,11 @@ final class ExpressProgress: UIView {
     private var errorIndicator: UIImageView!
     private var messageLabel: UILabel!
     private var existMessage: Bool = false
+    private var startAngle: CGFloat!
+    private var endAngle: CGFloat!
+    private var isSuccess: Bool!
+    private var newMessage: String!
+    private var completion: (() -> Void)?
     
     // MARK: - Drawing Methods
     
@@ -83,12 +83,12 @@ final class ExpressProgress: UIView {
                 contextRef.fillPath()
                 contextRef.setAlpha(1.0)
                 contextRef.setLineWidth(DEFAULT.CIRCLE.LINE.WIDTH)
-                contextRef.addArc(center: CGPoint(x: self.frame.width / 2.0, y: self.frame.height / 2.0), radius: DEFAULT.CIRCLE.RADIUS, startAngle: DEFAULT.CIRCLE.ANGLE.START * self.percentProgress, endAngle: DEFAULT.CIRCLE.ANGLE.END + DEFAULT.CIRCLE.ANGLE.START * self.percentProgress, clockwise: false)
+                contextRef.addArc(center: CGPoint(x: self.frame.width / 2.0, y: self.frame.height / 2.0), radius: DEFAULT.CIRCLE.RADIUS, startAngle: self.startAngle * self.percentProgress, endAngle: self.endAngle + self.startAngle * self.percentProgress, clockwise: false)
                 contextRef.setStrokeColor(UIColor(named: DEFAULT.CIRCLE.BACKGROUND)?.cgColor ?? UIColor.clear.cgColor)
                 contextRef.strokePath()
                 break
                             
-        case .done, .error:
+            case .done, .error:
                 if  self.progressStatus == .done {
                     self.doneIndicator.isHidden = false
                     self.errorIndicator.isHidden = true
@@ -121,20 +121,31 @@ final class ExpressProgress: UIView {
     
     // MARK: - Private Methods
     
+    @objc private func endAnimating() {
+        self.percentProgress += 0.01
+        if self.percentProgress >= 1.0 {
+            self.percentProgress = 0
+        }
+        self.endAngle = min(DEFAULT.CIRCLE.ANGLE, self.endAngle + 0.02)
+        self.setNeedsDisplay()
+        if self.endAngle == DEFAULT.CIRCLE.ANGLE {
+            self.timer?.invalidate()
+            self.putMessage(self.newMessage)
+            self.progressStatus = self.isSuccess ? .done : .error
+            self.setNeedsDisplay()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                self.hideProgress(self.completion)
+            }
+        }
+    }
+    
     @objc private func startAnimating() {
         self.percentProgress += 0.01
         if self.percentProgress >= 1.0 {
             self.percentProgress = 0
         }
+        self.endAngle = min(DEFAULT.CIRCLE.ANGLE * 0.6, self.endAngle + 0.03)
         self.setNeedsDisplay()
-    }
-    
-    private func hideProgress(_ completion: (() -> Void)?) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-            self.progressStatus = .standBy
-            self.removeFromSuperview()
-            completion?()
-        }
     }
     
     private func putMessage(_ message: String!) {
@@ -148,53 +159,39 @@ final class ExpressProgress: UIView {
     
     // MARK: - Public Methods
     
-    public func showProgress(withMessage message: String!) {
-        self.putMessage(message)
-        self.progressStatus = .animating
-        self.removeFromSuperview()
-        self.receiverView.addSubview(self)
-        if self.timer == nil {
-            self.timer = Timer.init(timeInterval: 0.01, target: self, selector: #selector(startAnimating), userInfo: nil, repeats: true)
-            RunLoop.main.add(self.timer!, forMode: .common)
-        }
-    }
-    
-    public func showProgress() {
-        self.showProgress(withMessage: nil)
-    }
-    
-    public func doneProgress(withMessage message: String!, _ completion: (() -> Void)?) {
-        self.timer?.invalidate()
-        self.timer = nil
-        self.putMessage(message)
-        self.progressStatus = .done
-        self.setNeedsDisplay()
-        self.hideProgress(completion)
-    }
-    
-    public func doneProgress(_ completion: (() -> Void)?) {
-        self.doneProgress(withMessage: nil, completion)
-    }
-    
-    public func stopProgress(_ completion: (() -> Void)?) {
+    public func hideProgress(_ completion: (() -> Void)?) {
         self.timer?.invalidate()
         self.timer = nil
         self.progressStatus = .standBy
         self.removeFromSuperview()
         completion?()
     }
-    
-    public func errorProgress(withMessage message: String!, _ completion: (() -> Void)?) {
+
+    public func stopProgress(isSuccess success: Bool, _ message: String!, _ completion: (() -> Void)?) {
+        self.isSuccess = success
+        self.newMessage = message
+        self.completion = completion
         self.timer?.invalidate()
         self.timer = nil
-        self.putMessage(message)
-        self.progressStatus = .error
-        self.setNeedsDisplay()
-        self.hideProgress(completion)
+        self.timer = Timer.init(timeInterval: 0.001, target: self, selector: #selector(endAnimating), userInfo: nil, repeats: true)
+        RunLoop.main.add(self.timer!, forMode: .common)
     }
     
-    public func errorProgress(_ completion: (() -> Void)?) {
-        self.errorProgress(withMessage: nil, completion)
+    public func showProgress(withMessage message: String!) {
+        self.putMessage(message)
+        self.startAngle = DEFAULT.CIRCLE.ANGLE
+        self.endAngle = 0
+        self.progressStatus = .animating
+        self.removeFromSuperview()
+        self.receiverView.addSubview(self)
+        self.timer?.invalidate()
+        self.timer = nil
+        self.timer = Timer.init(timeInterval: 0.001, target: self, selector: #selector(startAnimating), userInfo: nil, repeats: true)
+        RunLoop.main.add(self.timer!, forMode: .common)
+    }
+    
+    public func showProgress() {
+        self.showProgress(withMessage: nil)
     }
     
     // MARK: - Interstitial HeaderLoading

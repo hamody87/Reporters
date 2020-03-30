@@ -598,11 +598,9 @@ public class CONSTANTS {
     struct KEYS {
         
         struct USERDEFAULTS {
-            
             struct COUNTRY {
                 static let CODE: String = "codeCountry"
             }
-            
         }
         
         struct ELEMENTS {
@@ -644,6 +642,20 @@ public class CONSTANTS {
                 }
             }
         }
+        
+        struct JSON {
+            struct FIELD {
+                struct ID {
+                    static let VERIFICATION: String = "verificationID"
+                }
+                struct PHONE {
+                    static let SELF: String = "phone"
+                    static let NUMBER: String = "number"
+                    static let CODE: String = "code"
+                }
+            }
+        }
+        
     }
 
 }
