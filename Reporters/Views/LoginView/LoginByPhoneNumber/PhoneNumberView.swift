@@ -54,7 +54,6 @@ class PhoneNumberView: TemplateLoginView {
     }
     
     @objc private func sendVerificationCode(_ sender: UIButton) {
-        
         self.phoneNumberTextField.endEditing(true)
         let progress: ExpressProgress! = ExpressProgress(showProgressAddedTo: self)
         progress.showProgress()
@@ -126,6 +125,7 @@ class PhoneNumberView: TemplateLoginView {
             self.safeAreaView.addSubview(label)
             originY += label.frame.height + CONSTANTS.SCREEN.MARGIN(2)
         }
+        
         if let codeCountryView: SuperView = CONSTANTS.GLOBAL.createSuperViewElement(withFrame: CGRect(x: CONSTANTS.SCREEN.MARGIN(3), y: originY, width: 110.0, height: 50.0), {
             var argument: [String: Any] = [String: Any]()
             argument[CONSTANTS.KEYS.ELEMENTS.COLOR.BACKGROUND] = UIColor.white
@@ -187,7 +187,7 @@ class PhoneNumberView: TemplateLoginView {
             }
             originY += codeCountryView.frame.height + CONSTANTS.SCREEN.MARGIN()
         }
-        if let customButton: CustomizeButton = CONSTANTS.GLOBAL.createCustomButtonElement(withFrame: CGRect(x: CONSTANTS.SCREEN.MARGIN(3), y: originY, width: self.frame.width - CONSTANTS.SCREEN.MARGIN(6), height: 46.0), {
+        if let customButton: CustomizeButton = CONSTANTS.GLOBAL.createCustomButtonElement(withFrame: CGRect(x: CONSTANTS.SCREEN.MARGIN(3), y: originY, width: self.frame.width - CONSTANTS.SCREEN.MARGIN(6), height: 50.0), {
             var argument: [String: Any] = [String: Any]()
             argument[CONSTANTS.KEYS.ELEMENTS.DELEGATE] = self
             argument[CONSTANTS.KEYS.ELEMENTS.COLOR.BACKGROUND] = UIColor.black

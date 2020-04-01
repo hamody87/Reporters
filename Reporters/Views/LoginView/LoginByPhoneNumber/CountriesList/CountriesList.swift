@@ -19,15 +19,17 @@ extension CountriesList: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let dicSection: NSDictionary = self.data[indexPath.section] as? NSDictionary {
-            if let dataSection: Array = dicSection["data"] as? Array<Any> {
-                if let item: NSDictionary = dataSection[indexPath.row] as? NSDictionary {
-                    if let code: String = item["value"] as? String {
-                        UserDefaults.standard.set(code, forKey: CONSTANTS.KEYS.USERDEFAULTS.COUNTRY.CODE)
-                    }
-                }
-            }
-        }
+//        return
+//        if let dicSection: NSDictionary = self.data[indexPath.section] as? NSDictionary {
+//            if let dataSection: Array = dicSection["data"] as? Array<Any> {
+//                if let item: NSDictionary = dataSection[indexPath.row] as? NSDictionary {
+//                    if let code: String = item["value"] as? String {
+//                        UserDefaults.standard.set(code, forKey: CONSTANTS.KEYS.USERDEFAULTS.COUNTRY.CODE)
+//                    }
+//                }
+//            }
+//        }
+        self.transferArgumentToPreviousSuperView(anArgument: nil)
         self.dismissChildOverlapContainer()
     }
 
@@ -163,6 +165,14 @@ class CountriesList: TemplateLoginView {
     private var tableView: UITableView!
     private var data: Array<Any>!
     
+    // MARK: - Override Methods
+
+    override func loadSuperView(anArgument: Any!) {
+        super.loadSuperView(anArgument: anArgument)
+        print(self.anArgument ?? "NOOOOO")
+        self.tableView.dataSource = self as UITableViewDataSource
+        self.tableView.delegate = self as UITableViewDelegate
+    }
     
     // MARK: - Interstitial SuperView
     
@@ -172,7 +182,7 @@ class CountriesList: TemplateLoginView {
     
     required init?(withFrame frame: CGRect!, delegate: SuperViewDelegate?) {
         super.init(withFrame: frame, delegate: delegate)!
-        self.title = "SELECT".localized
+        self.title = "COUNTRIES".localized
         self.data = Array()
         var countriesWithCodes: [String: String] = [String: String]()
         for i in 0..<NSLocale.isoCountryCodes.count {
@@ -210,8 +220,6 @@ class CountriesList: TemplateLoginView {
         self.tableView = UITableView(frame: CGRect(x: 0, y: withOutHeight, width: self.frame.width, height: self.frame.height - withOutHeight))
         self.tableView.backgroundColor = UIColor(named: "Background/Secondary")
         self.tableView.separatorStyle = .none
-        self.tableView.dataSource = self as UITableViewDataSource
-        self.tableView.delegate = self as UITableViewDelegate
         self.tableView.register(NoneDesignCell.self, forCellReuseIdentifier: NoneDesignCell.NONE_DESIGN_CELL_REUSE_ID)
         if #available(iOS 11.0, *) {
             self.tableView.contentInsetAdjustmentBehavior = .never

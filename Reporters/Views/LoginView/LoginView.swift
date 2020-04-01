@@ -56,7 +56,8 @@ class LoginView: SuperView {
     // MARK: - Private Methods
     
     @objc private func loginWithPhoneNumber() {
-        self.transitionToChildOverlapContainer(viewName: "PhoneNumberView", nil, .coverVertical, false, nil)
+//        self.transitionToChildOverlapContainer(viewName: "PhoneNumberView", nil, .coverVertical, false, nil)
+        self.transitionToChildOverlapContainer(viewName: "SignUpUserDetailsView", nil, .coverVertical, false, nil)
     }
     
     private func activateDemoMessages() {

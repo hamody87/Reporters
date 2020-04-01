@@ -42,26 +42,29 @@ class VerificationCodeView: TemplateLoginView {
 
     @objc private func authenticationCode(_ sender: UIButton) {
         
-//        self.authenticationCodeTextField.endEditing(true)
-//        let progress: ExpressProgress! = ExpressProgress(showProgressAddedTo: self)
-//        progress.showProgress()
-//        let credential = PhoneAuthProvider.provider().credential(withVerificationID: self.verificationID, verificationCode: self.authenticationCodeTextField.text ?? "0")
-//        Auth.auth().signIn(with: credential) { (authResult, error) in
-//            if let error = error {
-//                progress.errorProgress(withMessage: error.localizedDescription.localized, {
-//                    self.authenticationCodeTextField.becomeFirstResponder()
-//                })
-//                return
-//            }
-//            if let user = Auth.auth().currentUser {
-//                let db = Firestore.firestore()
-//                db.collection(CONSTANTS.KEYS.JSON.COLLECTION.USERS).document(user.uid).getDocument() { (document, error) in
-//                    if let error = error {
-//                        progress.errorProgress(withMessage: error.localizedDescription.localized, {
-//                            self.authenticationCodeTextField.becomeFirstResponder()
-//                        })
-//                        return
-//                    }
+        self.authenticationCodeTextField.endEditing(true)
+        let progress: ExpressProgress! = ExpressProgress(showProgressAddedTo: self)
+        progress.showProgress()
+        let credential = PhoneAuthProvider.provider().credential(withVerificationID: self.verificationID, verificationCode: self.authenticationCodeTextField.text ?? "0")
+        Auth.auth().signIn(with: credential) { (authResult, error) in
+            if let error = error {
+                print(error.localizedDescription.localized)
+                progress.stopProgress(isSuccess: false, error.localizedDescription.localized, {
+                    self.authenticationCodeTextField.becomeFirstResponder()
+                })
+                return
+            }
+            if let user = Auth.auth().currentUser {
+                
+                
+                let db = Firestore.firestore()
+                db.collection(CONSTANTS.KEYS.JSON.COLLECTION.USERS).document(user.uid).getDocument() { (document, error) in
+                    if let error = error {
+                        progress.stopProgress(isSuccess: false, error.localizedDescription.localized, {
+                            self.authenticationCodeTextField.becomeFirstResponder()
+                        })
+                        return
+                    }
 //                    if let document = document, document.exists, var argument: [String: Any] = document.data() {
 //                        var date: [String: Any] = [String: Any]()
 //                        date[CONSTANTS.KEYS.JSON.FIELD.DATE.REGISTER] = Date()
@@ -99,14 +102,16 @@ class VerificationCodeView: TemplateLoginView {
 //                        }
 //                        return
 //                    }
-//                    progress.doneProgress({
-//                        var argument: [String: Any]! = self.anArgument as? [String: Any]
-//                        argument[CONSTANTS.KEYS.JSON.FIELD.USER_ID] = user.uid
-//                        self.transitionToChildOverlapContainer(viewName: "SignUpUserDetailsView", argument, .coverLeft, false, nil)
-//                    })
-//                }
-//            }
-//        }
+                    var argument: [String: Any]! = self.anArgument as? [String: Any]
+                    argument[CONSTANTS.KEYS.JSON.FIELD.ID.USER] = user.uid
+                    self.transitionToChildOverlapContainer(viewName: "SignUpUserDetailsView", argument, .coverLeft, false, {
+                        progress.hideProgress(nil)
+                    })
+                }
+                return
+            }
+            progress.hideProgress(nil)
+        }
     }
 
     // MARK: - Override Methods
@@ -185,7 +190,7 @@ class VerificationCodeView: TemplateLoginView {
             NotificationCenter.default.addObserver(self, selector: #selector(self.textFieldDidChange), name: UITextField.textDidChangeNotification, object: nil)
         }
         originY += self.authenticationCodeTextField.frame.height + CONSTANTS.SCREEN.MARGIN()
-        if let customButton: CustomizeButton = CONSTANTS.GLOBAL.createCustomButtonElement(withFrame: CGRect(x: CONSTANTS.SCREEN.MARGIN(3), y: originY, width: self.frame.width - CONSTANTS.SCREEN.MARGIN(6), height: 46.0), {
+        if let customButton: CustomizeButton = CONSTANTS.GLOBAL.createCustomButtonElement(withFrame: CGRect(x: CONSTANTS.SCREEN.MARGIN(3), y: originY, width: self.frame.width - CONSTANTS.SCREEN.MARGIN(6), height: 50.0), {
             var argument: [String: Any] = [String: Any]()
             argument[CONSTANTS.KEYS.ELEMENTS.DELEGATE] = self
             argument[CONSTANTS.KEYS.ELEMENTS.COLOR.BACKGROUND] = UIColor.black

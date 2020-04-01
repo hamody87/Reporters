@@ -7,17 +7,24 @@
 */
 
 "DIRECTION" = "ltr";
-"FONT_FAMILT_LIGHT" = "";
-"FONT_FAMILT_BOLD" = "";
+"FONT_FAMILT_LIGHT" = nil;
+"FONT_FAMILT_BOLD" = nil;
 
 "UNKNOWN" = "Unknown";
 "CANCEL" = "Cancel";
-"SELECT" = "Select";
 "LOGIN" = "Log In";
 "BACK" = "Back";
 "SEND" = "Send";
 "ENTER" = "Enter";
 "CONTINUE" = "Continue";
+"REGISTER" = "Register";
+"COUNTRIES" = "Countries";
+
+"SIGNUP_FIRST_TITLE_1" = "Personal";
+"SIGNUP_SECOND_TITLE_1" = "Name";
+"SIGNUP_NOTICE_1" = "Your personal name should be up 3 letters or more.";
+"SIGNUP_FIRST_TITLE_2" = "Your";
+"SIGNUP_SECOND_TITLE_2" = "Country";
 
 "READ_OUR" = "Read our %@";
 "PRIVACY_POLICY" = "Privacy Policy";

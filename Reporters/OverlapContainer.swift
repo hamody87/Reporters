@@ -23,6 +23,10 @@ extension OverlapContainer: SuperViewDelegate {
         delegate?.dismissChildOverlapContainer()
     }
     
+    func transferArgumentToPreviousSuperView(anArgument argument: Any!) {
+        delegate?.transferArgumentToPreviousSuperView(anArgument: argument)
+    }
+    
     func presentSafariViewController(url: URL) {
         if url.absoluteString.contains("mailto:") {
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
@@ -57,6 +61,7 @@ extension OverlapContainer: UIGestureRecognizerDelegate {
     @objc func childOverlapContainerBeganSlide(panGesture: UIPanGestureRecognizer?)
     @objc func childOverlapContainerDidSliding(panGesture: UIPanGestureRecognizer?)
     @objc func childOverlapContainerEndedSlide(panGesture: UIPanGestureRecognizer?)
+    @objc func transferArgumentToPreviousSuperView(anArgument argument: Any!)
     
 }
 

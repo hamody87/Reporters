@@ -281,6 +281,16 @@ extension ContainerController: OverlapContainerDelegate {
         }
     }
     
+    func transferArgumentToPreviousSuperView(anArgument argument: Any!) {
+        if let objs: [Any] = self.stackOverlapContainers.top?.overlapContainer.masterView.subviews {
+            for obj in objs {
+                if let subview: SuperView = obj as? SuperView {
+                    subview.transferArgument(anArgument: argument)
+                }
+            }
+        }
+    }
+    
 }
 
 @objc public protocol ContainerControllerDelegate {

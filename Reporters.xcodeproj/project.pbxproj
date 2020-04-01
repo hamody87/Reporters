@@ -13,6 +13,8 @@
 		F30AC6072430F11900CEA545 /* CountriesList.swift in Sources */ = {isa = PBXBuildFile; fileRef = F30AC6062430F11900CEA545 /* CountriesList.swift */; };
 		F30AC60A2430F1AD00CEA545 /* NoneDesignCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F30AC6092430F1AD00CEA545 /* NoneDesignCell.swift */; };
 		F30AC60C24312C2C00CEA545 /* VerificationCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F30AC60B24312C2C00CEA545 /* VerificationCodeView.swift */; };
+		F30AC613243355DE00CEA545 /* SignUpUserDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F30AC612243355DE00CEA545 /* SignUpUserDetailsView.swift */; };
+		F30AC617243372E600CEA545 /* StepControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = F30AC616243372E600CEA545 /* StepControl.swift */; };
 		F36B68A5241C3D3400D91162 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36B68A4241C3D3400D91162 /* AppDelegate.swift */; };
 		F36B68AB241C3D3600D91162 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F36B68AA241C3D3600D91162 /* Assets.xcassets */; };
 		F36B68B1241C3D3600D91162 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F36B68AF241C3D3600D91162 /* LaunchScreen.storyboard */; };
@@ -48,6 +50,8 @@
 		F30AC6092430F1AD00CEA545 /* NoneDesignCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoneDesignCell.swift; sourceTree = "<group>"; };
 		F30AC60B24312C2C00CEA545 /* VerificationCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeView.swift; sourceTree = "<group>"; };
 		F30AC611243219C400CEA545 /* Reporters.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Reporters.entitlements; sourceTree = "<group>"; };
+		F30AC612243355DE00CEA545 /* SignUpUserDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpUserDetailsView.swift; sourceTree = "<group>"; };
+		F30AC616243372E600CEA545 /* StepControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepControl.swift; sourceTree = "<group>"; };
 		F36B68A1241C3D3400D91162 /* Reporters.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Reporters.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F36B68A4241C3D3400D91162 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F36B68AA241C3D3600D91162 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -116,6 +120,29 @@
 			path = UITableViewCell;
 			sourceTree = "<group>";
 		};
+		F30AC614243355E900CEA545 /* CountriesList */ = {
+			isa = PBXGroup;
+			children = (
+				F30AC6062430F11900CEA545 /* CountriesList.swift */,
+			);
+			path = CountriesList;
+			sourceTree = "<group>";
+		};
+		F30AC615243372DD00CEA545 /* StepControl */ = {
+			isa = PBXGroup;
+			children = (
+				F30AC616243372E600CEA545 /* StepControl.swift */,
+			);
+			path = StepControl;
+			sourceTree = "<group>";
+		};
+		F30AC6182433A11400CEA545 /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = CoreData;
+			sourceTree = "<group>";
+		};
 		F36B6898241C3D3400D91162 = {
 			isa = PBXGroup;
 			children = (
@@ -138,6 +165,7 @@
 			isa = PBXGroup;
 			children = (
 				F30AC611243219C400CEA545 /* Reporters.entitlements */,
+				F30AC6182433A11400CEA545 /* CoreData */,
 				F3A14C1C2420DD5000A375D1 /* Lang */,
 				F3A14C162420D21D00A375D1 /* Constants */,
 				F3A14C212420DDC000A375D1 /* Extensions */,
@@ -215,6 +243,7 @@
 		F3A14C212420DDC000A375D1 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				F30AC615243372DD00CEA545 /* StepControl */,
 				F30AC6082430F18D00CEA545 /* UITableViewCell */,
 				F3A14C4D24254F7600A375D1 /* ExpressProgress */,
 				F3A14C222420DF3200A375D1 /* StringExtension.swift */,
@@ -267,8 +296,9 @@
 		F3A14C462423EB5600A375D1 /* LoginByPhoneNumber */ = {
 			isa = PBXGroup;
 			children = (
+				F30AC614243355E900CEA545 /* CountriesList */,
+				F30AC612243355DE00CEA545 /* SignUpUserDetailsView.swift */,
 				F30AC60B24312C2C00CEA545 /* VerificationCodeView.swift */,
-				F30AC6062430F11900CEA545 /* CountriesList.swift */,
 				F3A14C492424235D00A375D1 /* PhoneNumberView.swift */,
 				F3A14C472423EB6500A375D1 /* TemplateLoginView.swift */,
 			);
@@ -421,6 +451,7 @@
 				F3A14C3424212D1800A375D1 /* UILabelExtension.swift in Sources */,
 				F3A14C232420DF3200A375D1 /* StringExtension.swift in Sources */,
 				F3A14C482423EB6500A375D1 /* TemplateLoginView.swift in Sources */,
+				F30AC613243355DE00CEA545 /* SignUpUserDetailsView.swift in Sources */,
 				F3A14C302420EA0F00A375D1 /* LoginView.swift in Sources */,
 				F3A14C262420E22F00A375D1 /* SuperView.swift in Sources */,
 				F30AC602242EBE2E00CEA545 /* UIViewExtension.swift in Sources */,
@@ -433,6 +464,7 @@
 				F3A14C182420D22A00A375D1 /* CONSTANTS.swift in Sources */,
 				F3A14C432421844400A375D1 /* CustomizeButton.swift in Sources */,
 				F3A14C5024254F8800A375D1 /* ExpressProgress.swift in Sources */,
+				F30AC617243372E600CEA545 /* StepControl.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

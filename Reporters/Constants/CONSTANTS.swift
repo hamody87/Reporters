@@ -644,16 +644,27 @@ public class CONSTANTS {
         }
         
         struct JSON {
+
+            struct COLLECTION {
+                static let USERS: String = "Users"
+            }
+            
             struct FIELD {
+                
                 struct ID {
+                    static let SELF: String = "ID"
+                    static let USER: String = "userID"
                     static let VERIFICATION: String = "verificationID"
                 }
+                
                 struct PHONE {
                     static let SELF: String = "phone"
                     static let NUMBER: String = "number"
                     static let CODE: String = "code"
                 }
+                
             }
+            
         }
         
     }

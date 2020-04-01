@@ -17,6 +17,7 @@ import UIKit
     @objc func setStatusBarDarkStyle(statusBarStyle: UIStatusBarStyle)
     @objc func superViewController() -> UIViewController!
     @objc func presentSafariViewController(url: URL!)
+    @objc func transferArgumentToPreviousSuperView(anArgument argument: Any!)
     @objc optional func classDir() -> String
     
 }
@@ -51,6 +52,11 @@ class SuperView: UIView, SuperViewDelegate {
     
     func presentSafariViewController(url: URL!) {
         self.delegate?.presentSafariViewController(url: url)
+    }
+    
+    func transferArgumentToPreviousSuperView(anArgument argument: Any!) {
+        self.delegate?.transferArgumentToPreviousSuperView(anArgument: argument)
+        
     }
     
     public func classDir() -> String {
@@ -90,6 +96,10 @@ class SuperView: UIView, SuperViewDelegate {
                 subview.superViewDidAppear()
             }
         }
+    }
+    
+    public func transferArgument(anArgument argument: Any!) {
+        
     }
     
     // MARK: - Interstitial SuperView
