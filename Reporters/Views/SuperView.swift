@@ -78,12 +78,12 @@ class SuperView: UIView, SuperViewDelegate {
         }
     }
     internal var safeAreaView: UIView!
-    internal var anArgument: Any!
+    internal var arguments: Any!
     
     // MARK: - Public Methods
     
     public func loadSuperView(anArgument: Any!) {
-        self.anArgument = anArgument
+        self.arguments = anArgument
     }
     
     public func className() -> String {

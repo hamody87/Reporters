@@ -136,7 +136,7 @@ class LoginView: SuperView {
             argument[CONSTANTS.KEYS.ELEMENTS.COLOR.BACKGROUND] = UIColor.clear
             argument[CONSTANTS.KEYS.ELEMENTS.FONT] = CONSTANTS.GLOBAL.createFont(ofSize: 17.0, false)
             argument[CONSTANTS.KEYS.ELEMENTS.TEXT] = String(format: "READ_OUR".localized, "PRIVACY_POLICY".localized)
-            argument[CONSTANTS.KEYS.ELEMENTS.ENABLE] = false
+            argument[CONSTANTS.KEYS.ELEMENTS.ALLOW.ENABLE] = false
             argument[CONSTANTS.KEYS.ELEMENTS.COLOR.LINK] = UIColor.white
             return argument
         }())[CONSTANTS.KEYS.ELEMENTS.SELF] as? UITextView {
@@ -172,7 +172,7 @@ class LoginView: SuperView {
             argument[CONSTANTS.KEYS.ELEMENTS.COLOR.BACKGROUND] = UIColor.clear
             argument[CONSTANTS.KEYS.ELEMENTS.FONT] = CONSTANTS.GLOBAL.createFont(ofSize: 17.0, false)
             argument[CONSTANTS.KEYS.ELEMENTS.TEXT] = String(format: "TAPPING_TO_ACCEPT".localized, "AGREE_AND_CONTINUE".localized, "TERMS_OF_SERVICE".localized)
-            argument[CONSTANTS.KEYS.ELEMENTS.ENABLE] = false
+            argument[CONSTANTS.KEYS.ELEMENTS.ALLOW.ENABLE] = false
             argument[CONSTANTS.KEYS.ELEMENTS.COLOR.LINK] = UIColor.white
             return argument
         }())[CONSTANTS.KEYS.ELEMENTS.SELF] as? UITextView {

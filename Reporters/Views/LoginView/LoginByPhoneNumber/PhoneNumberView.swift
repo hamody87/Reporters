@@ -32,20 +32,21 @@ class PhoneNumberView: TemplateLoginView {
     private var flag: UIImageView!
     private var phoneCode: UILabel!
     private var button: CustomizeButton!
+    private var selectedCode: String = CONSTANTS.INFO.GLOBAL.COUNTRY.CODE
     
     // MARK: - Private Methods
     
     @objc private func presentCountriesList() {
         self.phoneNumberTextField.endEditing(true)
-        self.transitionToChildOverlapContainer(viewName: "CountriesList", nil, .coverVertical, false, nil)
+        var argument: [String: Any] = [String: Any]()
+        argument[CONSTANTS.KEYS.JSON.FIELD.COUNTRY.CODE] = self.selectedCode
+        self.transitionToChildOverlapContainer(viewName: "CountriesList", argument, .coverVertical, false, nil)
     }
     
     private func updatePhoneCode() {
-        if let code: String = UserDefaults.standard.value(forKey: CONSTANTS.KEYS.USERDEFAULTS.COUNTRY.CODE) as? String {
-            self.phoneCode.text = "+\(CONSTANTS.INFO.GLOBAL.COUNTRY.PHONE_CODE[code] ?? 0)"
-            if let img_flag: UIImage = UIImage(named: code.lowercased()) {
-                self.flag.image = img_flag
-            }
+        self.phoneCode.text = "+\(CONSTANTS.INFO.GLOBAL.COUNTRY.PHONE_CODE[self.selectedCode] ?? 0)" 
+        if let img_flag: UIImage = UIImage(named: self.selectedCode.lowercased()) {
+            self.flag.image = img_flag
         }
     }
     
@@ -80,11 +81,17 @@ class PhoneNumberView: TemplateLoginView {
     }
     
     // MARK: - Override Methods
+        
+    override func transferArgument(anArgument argument: Any!) {
+        if let arg: [String: Any] = argument as? [String: Any], let code: String = arg[CONSTANTS.KEYS.JSON.FIELD.COUNTRY.CODE] as? String {
+            self.selectedCode = code
+            self.updatePhoneCode()
+        }
+    }
     
     override func superViewDidAppear() {
         super.superViewDidAppear()
         self.phoneNumberTextField.becomeFirstResponder()
-        self.updatePhoneCode()
     }
     
     override func backToPrevSuperView() {
@@ -152,7 +159,6 @@ class PhoneNumberView: TemplateLoginView {
                         codeCountryView.addSubview(self.phoneCode)
                     }
                 }
-                UserDefaults.standard.set(CONSTANTS.INFO.GLOBAL.COUNTRY.CODE, forKey: CONSTANTS.KEYS.USERDEFAULTS.COUNTRY.CODE)
                 self.updatePhoneCode()
             }
             if let img_arrow: UIImage = UIImage(named: "DownArrow") {
@@ -192,7 +198,7 @@ class PhoneNumberView: TemplateLoginView {
             argument[CONSTANTS.KEYS.ELEMENTS.DELEGATE] = self
             argument[CONSTANTS.KEYS.ELEMENTS.COLOR.BACKGROUND] = UIColor.black
             argument[CONSTANTS.KEYS.ELEMENTS.TEXT] = "\("SEND".localized) \("VERIFICATION_CODE".localized)"
-            argument[CONSTANTS.KEYS.ELEMENTS.ENABLE] = false
+            argument[CONSTANTS.KEYS.ELEMENTS.ALLOW.ENABLE] = false
             argument[CONSTANTS.KEYS.ELEMENTS.BUTTON.SELF] = [CONSTANTS.KEYS.ELEMENTS.BUTTON.TARGET: self, CONSTANTS.KEYS.ELEMENTS.BUTTON.SELECTOR: #selector(self.sendVerificationCode(_ :))]
             argument[CONSTANTS.KEYS.ELEMENTS.COLOR.TEXT] = UIColor.white
             argument[CONSTANTS.KEYS.ELEMENTS.FONT] = CONSTANTS.GLOBAL.createFont(ofSize: 20.0, false)

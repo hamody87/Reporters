@@ -19,12 +19,19 @@
 "CONTINUE" = "Continue";
 "REGISTER" = "Register";
 "COUNTRIES" = "Countries";
+"FINISH" = "Finish";
+"UPDATE" = "Update";
+"NONE" = "None";
+"TAKE_PHOTO" = "Take photo";
+"CHOOSE_PHOTO" = "Choose photo";
 
 "SIGNUP_FIRST_TITLE_1" = "Personal";
 "SIGNUP_SECOND_TITLE_1" = "Name";
 "SIGNUP_NOTICE_1" = "Your personal name should be up 3 letters or more.";
 "SIGNUP_FIRST_TITLE_2" = "Your";
 "SIGNUP_SECOND_TITLE_2" = "Country";
+"SIGNUP_FIRST_TITLE_3" = "Your";
+"SIGNUP_SECOND_TITLE_3" = "Photo";
 
 "READ_OUR" = "Read our %@";
 "PRIVACY_POLICY" = "Privacy Policy";

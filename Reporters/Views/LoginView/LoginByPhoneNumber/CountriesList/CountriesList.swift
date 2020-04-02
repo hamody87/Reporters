@@ -19,23 +19,27 @@ extension CountriesList: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        return
-//        if let dicSection: NSDictionary = self.data[indexPath.section] as? NSDictionary {
-//            if let dataSection: Array = dicSection["data"] as? Array<Any> {
-//                if let item: NSDictionary = dataSection[indexPath.row] as? NSDictionary {
-//                    if let code: String = item["value"] as? String {
-//                        UserDefaults.standard.set(code, forKey: CONSTANTS.KEYS.USERDEFAULTS.COUNTRY.CODE)
-//                    }
-//                }
-//            }
-//        }
-        self.transferArgumentToPreviousSuperView(anArgument: nil)
+        var argument: [String: Any] = [String: Any]()
+        if let dicSection: NSDictionary = self.data[indexPath.section] as? NSDictionary, let dataSection: Array = dicSection["data"] as? Array<Any>, let item: NSDictionary = dataSection[indexPath.row] as? NSDictionary, let code: String = item["value"] as? String {
+            argument[CONSTANTS.KEYS.JSON.FIELD.COUNTRY.CODE] = code
+        }
+        self.transferArgumentToPreviousSuperView(anArgument: argument)
         self.dismissChildOverlapContainer()
     }
 
 }
 
 extension CountriesList: UITableViewDataSource {
+    
+    func sectionIndexTitles(for tableView: UITableView) -> [String]? {
+        var sectionIndexTitle: [String] = [String]()
+        for dicSection: Any in self.data {
+            if let dicSection: NSDictionary = dicSection as? NSDictionary,  let title: String = dicSection["title"] as? String {
+                sectionIndexTitle.append(title)
+            }
+        }
+        return sectionIndexTitle
+    }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let dicSection: NSDictionary = self.data[section] as? NSDictionary {
@@ -89,22 +93,22 @@ extension CountriesList: UITableViewDataSource {
             nameCountry = cellView.subviews[1] as? UILabel
             codeCountry = cellView.subviews[2] as? UILabel
         } else {
-            cellView = UIView(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: DEFAULT.TABLEVIEW.CELL.HEIGHT))
+            cellView = UIView(frame: CGRect(x: 0, y: 0, width: cell.contentView.frame.width, height: DEFAULT.TABLEVIEW.CELL.HEIGHT))
             cellView.tag = DEFAULT.TABLEVIEW.CELL.TAG
             cell.contentView.addSubview(cellView)
             let img_flag: UIImage! = UIImage(named: "none")
-            flag = UIImageView(frame: CGRect(x: CONSTANTS.SCREEN.LEFT_DIRECTION ? CONSTANTS.SCREEN.MARGIN(2) : cellView.frame.width - img_flag.size.width - CONSTANTS.SCREEN.MARGIN(2), y: (cellView.frame.height - img_flag.size.height) / 2.0, width: img_flag.size.width, height: img_flag.size.height))
+            flag = UIImageView(frame: CGRect(x: CONSTANTS.SCREEN.LEFT_DIRECTION ? CONSTANTS.SCREEN.MARGIN() : cellView.frame.width - img_flag.size.width - CONSTANTS.SCREEN.MARGIN(), y: (cellView.frame.height - img_flag.size.height) / 2.0, width: img_flag.size.width, height: img_flag.size.height))
             flag.image = img_flag
             cellView.addSubview(flag)
-            let widthName: CGFloat = cellView.frame.width - flag.frame.width - CONSTANTS.SCREEN.MARGIN(6) - 50.0
-            nameCountry = UILabel(frame: CGRect(x: CONSTANTS.SCREEN.LEFT_DIRECTION ? flag.frame.origin.x + flag.frame.width + CONSTANTS.SCREEN.MARGIN() : CONSTANTS.SCREEN.MARGIN(3) + 50.0, y: 0, width: widthName, height: cellView.frame.height))
+            let widthName: CGFloat = cellView.frame.width - flag.frame.width - CONSTANTS.SCREEN.MARGIN(4) - 50.0
+            nameCountry = UILabel(frame: CGRect(x: CONSTANTS.SCREEN.LEFT_DIRECTION ? flag.frame.origin.x + flag.frame.width + CONSTANTS.SCREEN.MARGIN() : CONSTANTS.SCREEN.MARGIN(2) + 50.0, y: 0, width: widthName, height: cellView.frame.height))
             nameCountry.backgroundColor = .clear
             nameCountry.textColor = UIColor(named: "Font/Basic")
             nameCountry.textAlignment = CONSTANTS.SCREEN.LEFT_DIRECTION ? .left : .right
             nameCountry.numberOfLines = 1
             nameCountry.font = CONSTANTS.GLOBAL.createFont(ofSize: 18.0, false)
             cellView.addSubview(nameCountry)
-            codeCountry = UILabel(frame: CGRect(x: CONSTANTS.SCREEN.LEFT_DIRECTION ? cellView.frame.width - CONSTANTS.SCREEN.MARGIN(2) - 50.0 : 10.0, y: 0, width: 50.0, height: cellView.frame.height))
+            codeCountry = UILabel(frame: CGRect(x: CONSTANTS.SCREEN.LEFT_DIRECTION ? cellView.frame.width - CONSTANTS.SCREEN.MARGIN() - 50.0 : 10.0, y: 0, width: 50.0, height: cellView.frame.height))
             codeCountry.backgroundColor = .clear
             codeCountry.textColor = UIColor(named: "Font/Basic")
             codeCountry.textAlignment = CONSTANTS.SCREEN.LEFT_DIRECTION ? .right : .left
@@ -132,6 +136,10 @@ extension CountriesList: UITableViewDataSource {
                     if let code: Int = item["code"] as? Int {
                         codeCountry.text = "+\(code)"
                     }
+                    cellView.backgroundColor = .clear
+                    if let value: String = item["value"] as? String, value == self.codeSelected {
+                        cellView.backgroundColor = UIColor(named: "Background/Fourth")
+                    }
                 }
             }
         }
@@ -153,7 +161,6 @@ class CountriesList: TemplateLoginView {
                 fileprivate static let HEIGHT: CGFloat = 45.0
                 fileprivate static let TAG: Int = 111
                 
-                
             }
             
         }
@@ -164,12 +171,15 @@ class CountriesList: TemplateLoginView {
     
     private var tableView: UITableView!
     private var data: Array<Any>!
+    private var codeSelected: String!
     
     // MARK: - Override Methods
 
     override func loadSuperView(anArgument: Any!) {
         super.loadSuperView(anArgument: anArgument)
-        print(self.anArgument ?? "NOOOOO")
+        if let arg: [String: Any] = self.arguments as? [String: Any], let code: String = arg[CONSTANTS.KEYS.JSON.FIELD.COUNTRY.CODE] as? String {
+            self.codeSelected = code
+        }
         self.tableView.dataSource = self as UITableViewDataSource
         self.tableView.delegate = self as UITableViewDelegate
     }
@@ -220,6 +230,8 @@ class CountriesList: TemplateLoginView {
         self.tableView = UITableView(frame: CGRect(x: 0, y: withOutHeight, width: self.frame.width, height: self.frame.height - withOutHeight))
         self.tableView.backgroundColor = UIColor(named: "Background/Secondary")
         self.tableView.separatorStyle = .none
+        self.tableView.sectionIndexColor = UIColor(named: "Font/Basic")
+        self.tableView.semanticContentAttribute = CONSTANTS.SCREEN.LEFT_DIRECTION ? UISemanticContentAttribute.forceLeftToRight : UISemanticContentAttribute.forceRightToLeft
         self.tableView.register(NoneDesignCell.self, forCellReuseIdentifier: NoneDesignCell.NONE_DESIGN_CELL_REUSE_ID)
         if #available(iOS 11.0, *) {
             self.tableView.contentInsetAdjustmentBehavior = .never

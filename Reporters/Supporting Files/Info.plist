@@ -52,5 +52,9 @@
 	</array>
 	<key>FirebaseAppDelegateProxyEnabled</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>This app wants to take pictures to put photo for your account.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This app wants to use your photos library to put photo for your account.</string>
 </dict>
 </plist>

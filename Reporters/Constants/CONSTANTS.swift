@@ -47,13 +47,13 @@ public class CONSTANTS {
                     }
                     return "Unknown".localized
                 }()
-                
-                static let NAME: String = {
-                    if let nameCountry: String = (Locale.current as NSLocale).displayName(forKey: .countryCode, value: CODE) {
+
+                static func NAME(code: String) -> String {
+                    if let nameCountry: String = (Locale.current as NSLocale).displayName(forKey: .countryCode, value: code) {
                         return nameCountry
                     }
                     return "Unknown".localized
-                }()
+                }
                 
                 static let PHONE_CODE: [String: Int] = ["AF": 93,
                                                         "AL": 355,
@@ -597,12 +597,6 @@ public class CONSTANTS {
     
     struct KEYS {
         
-        struct USERDEFAULTS {
-            struct COUNTRY {
-                static let CODE: String = "codeCountry"
-            }
-        }
-        
         struct ELEMENTS {
             static let SELF: String = "element"
             static let TAG: String = "tag"
@@ -620,10 +614,13 @@ public class CONSTANTS {
             static let ALIGNMENT: String = "alignment"
             static let ALPHA: String = "alpha"
             static let NUMLINES: String = "numberOfLines"
-            static let ENABLE: String = "enable"
             static let IMAGE: String = "image"
             static let HIDDEN: String = "hidden"
             static let CLIPS: String = "clips"
+            struct ALLOW {
+                static let ENABLE: String = "enable"
+                static let UPDATE: String = "update"
+            }
             struct BUTTON {
                 static let SELF: String = "button"
                 static let SELECTOR: String = "selector"
@@ -661,6 +658,12 @@ public class CONSTANTS {
                     static let SELF: String = "phone"
                     static let NUMBER: String = "number"
                     static let CODE: String = "code"
+                }
+                
+                struct COUNTRY {
+                    static let SELF: String = "country"
+                    static let CODE: String = "code"
+                    static let NAME: String = "name"
                 }
                 
             }

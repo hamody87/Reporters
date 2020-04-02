@@ -102,7 +102,7 @@ class VerificationCodeView: TemplateLoginView {
 //                        }
 //                        return
 //                    }
-                    var argument: [String: Any]! = self.anArgument as? [String: Any]
+                    var argument: [String: Any]! = self.arguments as? [String: Any]
                     argument[CONSTANTS.KEYS.JSON.FIELD.ID.USER] = user.uid
                     self.transitionToChildOverlapContainer(viewName: "SignUpUserDetailsView", argument, .coverLeft, false, {
                         progress.hideProgress(nil)
@@ -195,7 +195,7 @@ class VerificationCodeView: TemplateLoginView {
             argument[CONSTANTS.KEYS.ELEMENTS.DELEGATE] = self
             argument[CONSTANTS.KEYS.ELEMENTS.COLOR.BACKGROUND] = UIColor.black
             argument[CONSTANTS.KEYS.ELEMENTS.TEXT] = "CONTINUE".localized
-            argument[CONSTANTS.KEYS.ELEMENTS.ENABLE] = false
+            argument[CONSTANTS.KEYS.ELEMENTS.ALLOW.ENABLE] = false
             argument[CONSTANTS.KEYS.ELEMENTS.BUTTON.SELF] = [CONSTANTS.KEYS.ELEMENTS.BUTTON.TARGET: self, CONSTANTS.KEYS.ELEMENTS.BUTTON.SELECTOR: #selector(self.authenticationCode(_ :))]
             argument[CONSTANTS.KEYS.ELEMENTS.COLOR.TEXT] = UIColor.white
             argument[CONSTANTS.KEYS.ELEMENTS.FONT] = CONSTANTS.GLOBAL.createFont(ofSize: 20.0, false)

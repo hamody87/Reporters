@@ -60,8 +60,8 @@ final class Global {
             if let image = argument[CONSTANTS.KEYS.ELEMENTS.IMAGE] as? UIImage {
                 button.setImage(image, for: UIControl.State.normal)
             }
-            if let radius = argument[CONSTANTS.KEYS.ELEMENTS.CORNER.RADIUS] as? CGFloat {
-                button.layer.cornerRadius = radius
+            if let radius = argument[CONSTANTS.KEYS.ELEMENTS.CORNER.RADIUS] as? Double {
+                button.layer.cornerRadius = CGFloat(radius)
             }
             if let hide = argument[CONSTANTS.KEYS.ELEMENTS.HIDDEN] as? Bool {
                 button.isHidden = hide
@@ -103,9 +103,9 @@ final class Global {
             if let numLines = argument[CONSTANTS.KEYS.ELEMENTS.NUMLINES] as? Int {
                 label.numberOfLines = numLines
             }
-            if let radius = argument[CONSTANTS.KEYS.ELEMENTS.CORNER.RADIUS] as? CGFloat {
+            if let radius = argument[CONSTANTS.KEYS.ELEMENTS.CORNER.RADIUS] as? Double {
                 label.layer.masksToBounds = true
-                label.layer.cornerRadius = radius
+                label.layer.cornerRadius = CGFloat(radius)
             }
         }
         return document
@@ -115,6 +115,16 @@ final class Global {
         var document: [String: Any] = [String: Any]()
         let customButton: CustomizeButton! = CustomizeButton(withFrame: frame, argument: argument)
         document[CONSTANTS.KEYS.ELEMENTS.SELF] = customButton
+        if let argument = argument, let tag = argument[CONSTANTS.KEYS.ELEMENTS.TAG] as? Int {
+            document[CONSTANTS.KEYS.ELEMENTS.TAG] = tag
+        }
+        return document
+    }
+    
+    public func createCustomThumbElement(withFrame frame: CGRect, _ argument: [String: Any]! = nil) -> [String: Any] {
+        var document: [String: Any] = [String: Any]()
+        let customThumb: CustomizeThumb! = CustomizeThumb(withFrame: frame, argument: argument)
+        document[CONSTANTS.KEYS.ELEMENTS.SELF] = customThumb
         if let argument = argument, let tag = argument[CONSTANTS.KEYS.ELEMENTS.TAG] as? Int {
             document[CONSTANTS.KEYS.ELEMENTS.TAG] = tag
         }
@@ -135,11 +145,11 @@ final class Global {
             if let color = argument[CONSTANTS.KEYS.ELEMENTS.COLOR.BACKGROUND] as? UIColor {
                 superView.backgroundColor = color
             }
-            if let alpha = argument[CONSTANTS.KEYS.ELEMENTS.ALPHA] as? CGFloat {
-                superView.alpha = alpha
+            if let alpha = argument[CONSTANTS.KEYS.ELEMENTS.ALPHA] as? Double {
+                superView.alpha = CGFloat(alpha)
             }
-            if let radius = argument[CONSTANTS.KEYS.ELEMENTS.CORNER.RADIUS] as? CGFloat {
-                superView.layer.cornerRadius = radius
+            if let radius = argument[CONSTANTS.KEYS.ELEMENTS.CORNER.RADIUS] as? Double {
+                superView.layer.cornerRadius = CGFloat(radius)
             }
             if let clips = argument[CONSTANTS.KEYS.ELEMENTS.CLIPS] as? Bool {
                 superView.clipsToBounds = clips
@@ -168,7 +178,7 @@ final class Global {
             if let text = argument[CONSTANTS.KEYS.ELEMENTS.TEXT] as? String {
                 textView.text = text
             }
-            if let enable = argument[CONSTANTS.KEYS.ELEMENTS.ENABLE] as? Bool {
+            if let enable = argument[CONSTANTS.KEYS.ELEMENTS.ALLOW.ENABLE] as? Bool {
                 textView.isEditable = enable
             }
             if let color = argument[CONSTANTS.KEYS.ELEMENTS.COLOR.LINK] as? UIColor {

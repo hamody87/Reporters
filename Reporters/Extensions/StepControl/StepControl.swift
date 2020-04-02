@@ -28,15 +28,14 @@ class StepControl: UIView {
     override func draw(_ rect: CGRect) {
         super.draw(rect)
         var widthStep: CGFloat = ((self.frame.width - DEFAULT.MARGIN * CGFloat(self.steps - 1)) / CGFloat(self.steps)).rounded(.down)
-        var originX = self.frame.width - widthStep
+        var originX = CONSTANTS.SCREEN.LEFT_DIRECTION ? 0 : self.frame.width - widthStep
         for i in 0..<self.steps {
             let contextRef: CGContext! = UIGraphicsGetCurrentContext()
             contextRef.setFillColor(UIColor.white.cgColor)
-//
-            contextRef.setAlpha((self.nextStep > i) ? 0.2 : 1.0)
+            contextRef.setAlpha((self.nextStep > i) ? 1.0 : 0.4)
             contextRef.fill(CGRect(x: originX, y: 0, width: widthStep, height: self.frame.height))
             contextRef.fillPath()
-            originX -= widthStep + DEFAULT.MARGIN
+            originX = CONSTANTS.SCREEN.LEFT_DIRECTION ? originX + widthStep + DEFAULT.MARGIN : originX - (widthStep + DEFAULT.MARGIN)
             if i + 1 == self.steps {
                 widthStep = self.frame.width - originX
             }

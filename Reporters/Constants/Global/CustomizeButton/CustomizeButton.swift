@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CustomizeButton: UIView {
+class CustomizeButton: SuperView {
     
     // MARK: - Declare Basic Variables
     
@@ -31,18 +31,18 @@ class CustomizeButton: UIView {
         self.coreBtn.backgroundColor = color
     }
     
-//    setTextColorButton
-    
     // MARK: - Interstitial CustomizeButton
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
-    required init?(withFrame frame: CGRect!, argument: [String: Any]! = nil) {
-        super.init(frame: frame)
+    required init?(withFrame frame: CGRect!, delegate: SuperViewDelegate?) {
+        super.init(withFrame: frame, delegate: delegate)!
+    }
 
-            
+    required convenience init?(withFrame frame: CGRect!, argument: [String: Any]! = nil) {
+        self.init(withFrame: frame, delegate: nil)
         if let view: SuperView = CONSTANTS.GLOBAL.createSuperViewElement(withFrame: self.bounds, {
             var argument: [String: Any] = [String: Any]()
             argument[CONSTANTS.KEYS.ELEMENTS.COLOR.BACKGROUND] = UIColor.black
@@ -69,7 +69,7 @@ class CustomizeButton: UIView {
             self.enableTouch(true)
         }
         if let argument = argument {
-            if let enable = argument[CONSTANTS.KEYS.ELEMENTS.ENABLE] as? Bool {
+            if let enable = argument[CONSTANTS.KEYS.ELEMENTS.ALLOW.ENABLE] as? Bool {
                 self.enableTouch(enable)
             }
             if let text = argument[CONSTANTS.KEYS.ELEMENTS.TEXT] as? String {
@@ -94,7 +94,6 @@ class CustomizeButton: UIView {
                 self.textBtn.textAlignment = alignment
             }
             if let action = argument[CONSTANTS.KEYS.ELEMENTS.BUTTON.SELF] as? [String: Any], let selector = action[CONSTANTS.KEYS.ELEMENTS.BUTTON.SELECTOR] as? Selector, let target = action[CONSTANTS.KEYS.ELEMENTS.BUTTON.TARGET] {
-
                 if let event = action[CONSTANTS.KEYS.ELEMENTS.BUTTON.EVENT]  as? UIControl.Event  {
                     self.touchBtn.addTarget(target, action: selector, for: event)
                 } else {

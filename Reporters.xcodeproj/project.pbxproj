@@ -15,6 +15,7 @@
 		F30AC60C24312C2C00CEA545 /* VerificationCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F30AC60B24312C2C00CEA545 /* VerificationCodeView.swift */; };
 		F30AC613243355DE00CEA545 /* SignUpUserDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F30AC612243355DE00CEA545 /* SignUpUserDetailsView.swift */; };
 		F30AC617243372E600CEA545 /* StepControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = F30AC616243372E600CEA545 /* StepControl.swift */; };
+		F30AC61B24364A7700CEA545 /* CustomizeThumb.swift in Sources */ = {isa = PBXBuildFile; fileRef = F30AC61A24364A7700CEA545 /* CustomizeThumb.swift */; };
 		F36B68A5241C3D3400D91162 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36B68A4241C3D3400D91162 /* AppDelegate.swift */; };
 		F36B68AB241C3D3600D91162 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F36B68AA241C3D3600D91162 /* Assets.xcassets */; };
 		F36B68B1241C3D3600D91162 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F36B68AF241C3D3600D91162 /* LaunchScreen.storyboard */; };
@@ -52,6 +53,7 @@
 		F30AC611243219C400CEA545 /* Reporters.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Reporters.entitlements; sourceTree = "<group>"; };
 		F30AC612243355DE00CEA545 /* SignUpUserDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpUserDetailsView.swift; sourceTree = "<group>"; };
 		F30AC616243372E600CEA545 /* StepControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepControl.swift; sourceTree = "<group>"; };
+		F30AC61A24364A7700CEA545 /* CustomizeThumb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomizeThumb.swift; sourceTree = "<group>"; };
 		F36B68A1241C3D3400D91162 /* Reporters.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Reporters.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F36B68A4241C3D3400D91162 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F36B68AA241C3D3600D91162 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -143,6 +145,14 @@
 			path = CoreData;
 			sourceTree = "<group>";
 		};
+		F30AC61924364A6300CEA545 /* CustomizeThumb */ = {
+			isa = PBXGroup;
+			children = (
+				F30AC61A24364A7700CEA545 /* CustomizeThumb.swift */,
+			);
+			path = CustomizeThumb;
+			sourceTree = "<group>";
+		};
 		F36B6898241C3D3400D91162 = {
 			isa = PBXGroup;
 			children = (
@@ -226,6 +236,7 @@
 		F3A14C192420D61000A375D1 /* Global */ = {
 			isa = PBXGroup;
 			children = (
+				F30AC61924364A6300CEA545 /* CustomizeThumb */,
 				F3A14C402421843200A375D1 /* CustomizeButton */,
 				F3A14C1A2420D62100A375D1 /* Global.swift */,
 			);
@@ -461,6 +472,7 @@
 				F30AC60C24312C2C00CEA545 /* VerificationCodeView.swift in Sources */,
 				F3A14C4A2424235D00A375D1 /* PhoneNumberView.swift in Sources */,
 				F3A14C1B2420D62100A375D1 /* Global.swift in Sources */,
+				F30AC61B24364A7700CEA545 /* CustomizeThumb.swift in Sources */,
 				F3A14C182420D22A00A375D1 /* CONSTANTS.swift in Sources */,
 				F3A14C432421844400A375D1 /* CustomizeButton.swift in Sources */,
 				F3A14C5024254F8800A375D1 /* ExpressProgress.swift in Sources */,
