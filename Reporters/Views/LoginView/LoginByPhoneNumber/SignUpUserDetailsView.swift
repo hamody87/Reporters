@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import Firebase
+import FirebaseDatabase
 
 class SignUpUserDetailsView: TemplateLoginView {
     
@@ -65,7 +67,7 @@ class SignUpUserDetailsView: TemplateLoginView {
         switch self.stepControl.presentStep() - 1 {
             
         case StepTag.fullName.rawValue:
-            if self.textFieldReference[self.stepControl.presentStep() - 1].text?.count ?? 0 >= 3 {
+            if self.textFieldReference[self.stepControl.presentStep() - 1].text?.trimmingCharacters(in: .whitespacesAndNewlines).count ?? 0 >= 3 {
                 self.customizeButtonReference[self.stepControl.presentStep() - 1].enableTouch(true)
             } else {
                 self.customizeButtonReference[self.stepControl.presentStep() - 1].enableTouch(false)
@@ -87,7 +89,6 @@ class SignUpUserDetailsView: TemplateLoginView {
     }
     
     @objc private func nextStep(_ sender: UIButton) {
-        
         switch self.stepControl.presentStep() - 1 {
             
         case StepTag.fullName.rawValue:
@@ -100,7 +101,6 @@ class SignUpUserDetailsView: TemplateLoginView {
             break
             
         }
-        
         self.endEditingTextField()
         self.stepControl.next()
         self.showNextStep()
@@ -109,7 +109,94 @@ class SignUpUserDetailsView: TemplateLoginView {
     @objc private func presentCountriesList() {
         var argument: [String: Any] = [String: Any]()
         argument[CONSTANTS.KEYS.JSON.FIELD.COUNTRY.CODE] = self.selectedCode
+        argument[CONSTANTS.KEYS.ELEMENTS.HIDDEN] = true
         self.transitionToChildOverlapContainer(viewName: "CountriesList", argument, .coverVertical, false, nil)
+    }
+    
+    @objc private func registerNewUser() {
+        let progress: ExpressProgress! = ExpressProgress(showProgressAddedTo: self)
+        progress.showProgress()
+        var userInfoForCloud: [String: Any] = [String: Any]()
+        if let fullName: String = self.textFieldReference[StepTag.fullName.rawValue].text {
+            userInfoForCloud[CONSTANTS.KEYS.JSON.FIELD.NAME] = fullName.trimmingCharacters(in: .whitespacesAndNewlines).capitalizingFirstLetterOfSentence()
+        }
+        userInfoForCloud[CONSTANTS.KEYS.JSON.FIELD.LEVEL] = CONSTANTS.KEYS.ELEMENTS.LEVELS.RECEIVER
+        if let arg: [String: Any] = self.arguments as? [String: Any] {
+            if let phoneCode: Int = arg[CONSTANTS.KEYS.JSON.FIELD.PHONE.CODE] as? Int, let phoneNumber: Int = arg[CONSTANTS.KEYS.JSON.FIELD.PHONE.NUMBER] as? Int {
+                var phone: [String: Any] = [String: Any]()
+                phone[CONSTANTS.KEYS.JSON.FIELD.PHONE.CODE] = phoneCode
+                phone[CONSTANTS.KEYS.JSON.FIELD.PHONE.NUMBER] = phoneNumber
+                userInfoForCloud[CONSTANTS.KEYS.JSON.FIELD.PHONE.SELF] = phone
+            }
+            if let userID: String = arg[CONSTANTS.KEYS.JSON.FIELD.ID.USER] as? String {
+                userInfoForCloud[CONSTANTS.KEYS.JSON.FIELD.ID.USER] = userID
+            }
+        }
+        var date: [String: Any] = [String: Any]()
+        date[CONSTANTS.KEYS.JSON.FIELD.DATE.REGISTER] = Date()
+        date[CONSTANTS.KEYS.JSON.FIELD.DATE.LOGIN] = Date()
+        userInfoForCloud[CONSTANTS.KEYS.JSON.FIELD.DATE.SELF] = date
+        var info: [String: Any] = [String: Any]()
+        var app: [String: Any] = [String: Any]()
+        app[CONSTANTS.KEYS.JSON.FIELD.INFO.APP.VERSION] = CONSTANTS.INFO.APP.BUNDLE.VERSION
+        info[CONSTANTS.KEYS.JSON.FIELD.INFO.APP.SELF] = app
+        var device: [String: Any] = [String: Any]()
+        device[CONSTANTS.KEYS.JSON.FIELD.INFO.DEVICE.TYPE] = CONSTANTS.DEVICE.MODEL
+        device[CONSTANTS.KEYS.JSON.FIELD.INFO.DEVICE.OPERATING_SYSTEM] = "iOS \(CONSTANTS.DEVICE.VERSION)"
+        info[CONSTANTS.KEYS.JSON.FIELD.INFO.DEVICE.SELF] = device
+        userInfoForCloud[CONSTANTS.KEYS.JSON.FIELD.INFO.SELF] = info
+        var country: [String: Any] = [String: Any]()
+        country[CONSTANTS.KEYS.JSON.FIELD.COUNTRY.NAME] = CONSTANTS.INFO.GLOBAL.COUNTRY.NAME(code: self.selectedCode)
+        country[CONSTANTS.KEYS.JSON.FIELD.COUNTRY.CODE] = self.selectedCode
+        userInfoForCloud[CONSTANTS.KEYS.JSON.FIELD.COUNTRY.SELF] = country
+        let db = Firestore.firestore()
+        db.collection(CONSTANTS.KEYS.JSON.COLLECTION.USERS).document(userInfoForCloud[CONSTANTS.KEYS.JSON.FIELD.ID.USER] as! String).setData(userInfoForCloud) { err in
+            if let _ = err {
+                progress.stopProgress(isSuccess: false, "\("ERROR_OCCURRED".localized), \("TRY_LATER".localized)", nil)
+            } else {
+                
+
+                let datatHandler: DatatHandler = DatatHandler.init()
+                datatHandler.loginUser(withData: userInfoForCloud, {
+                    let query: CoreDataStack = CoreDataStack(withCoreData: "CoreData")
+                    var sqlInfo: [String: Any] = [String: Any]()
+                    sqlInfo[CONSTANTS.KEYS.SQL.NAME_ENTITY] = CONSTANTS.KEYS.SQL.ENTITY.USER
+                    if let data: [Any] = query.fetchRequest(sqlInfo)  {
+                        print(data)
+                    }
+                    self.transitionToChildOverlapContainer(viewName: "LandingView", nil, .coverVertical, false, {
+                        if let thumb: UIImage = self.thumbView.getThumb() {
+                            datatHandler.uploadThmub("dasdadsdsa43r43", thumb, 0.25, {
+                                print("YES")
+                            }, {
+                                print("NO")
+                            })
+                        }
+                    })
+                }, {
+                    progress.stopProgress(isSuccess: false, "\("ERROR_OCCURRED".localized), \("TRY_LATER".localized)", nil)
+                })
+
+                ///self.transitionToChildOverlapContainer(viewName: "LandingView", nil, .coverVertical, false, nil)
+//                var userInfoForRealtime: [String: Any] = [String: Any]()
+//                let randomKey: String = CONSTANTS.INFO.GLOBAL.RANDOM_KEY(length: 40)
+//                userInfoForCloud[CONSTANTS.KEYS.JSON.FIELD.RANDOM_KEY] = randomKey
+//                userInfoForRealtime[CONSTANTS.KEYS.JSON.FIELD.RANDOM_KEY] = randomKey
+//                userInfoForRealtime[CONSTANTS.KEYS.JSON.FIELD.NAME.SELF] = userInfoForCloud[CONSTANTS.KEYS.JSON.FIELD.NAME.SELF]
+//                userInfoForRealtime[CONSTANTS.KEYS.JSON.FIELD.THUMB] = userInfoForCloud[CONSTANTS.KEYS.JSON.FIELD.THUMB]
+//                Database.database().reference().child("\(CONSTANTS.KEYS.JSON.COLLECTION.USERS)/\(userInfoForCloud[CONSTANTS.KEYS.JSON.FIELD.USER_ID] as! String)").setValue(userInfoForRealtime) { (error, reference) in
+//                    if let error = error {
+//                        progress.errorProgress(withMessage: error.localizedDescription.localized, nil)
+//                        return
+//                    }
+//                    CONSTANTS.INFO.APP.DATA.USER.DATA.ADD(data: userInfoForCloud)
+//                    progress.doneProgress({
+//                        self.transitionToChildOverlapContainer(viewName: "LandingView", nil, .coverVertical, false, nil)
+//                    })
+//                }
+            }
+        }
+        
     }
     
     // MARK: - Override Methods
@@ -344,7 +431,7 @@ class SignUpUserDetailsView: TemplateLoginView {
             argument[CONSTANTS.KEYS.ELEMENTS.DELEGATE] = self
             argument[CONSTANTS.KEYS.ELEMENTS.COLOR.BACKGROUND] = UIColor.black
             argument[CONSTANTS.KEYS.ELEMENTS.TEXT] = "FINISH".localized
-            argument[CONSTANTS.KEYS.ELEMENTS.BUTTON.SELF] = [CONSTANTS.KEYS.ELEMENTS.BUTTON.TARGET: self, CONSTANTS.KEYS.ELEMENTS.BUTTON.SELECTOR: #selector(self.nextStep(_ :))]
+            argument[CONSTANTS.KEYS.ELEMENTS.BUTTON.SELF] = [CONSTANTS.KEYS.ELEMENTS.BUTTON.TARGET: self, CONSTANTS.KEYS.ELEMENTS.BUTTON.SELECTOR: #selector(self.registerNewUser)]
             argument[CONSTANTS.KEYS.ELEMENTS.COLOR.TEXT] = UIColor.white
             argument[CONSTANTS.KEYS.ELEMENTS.FONT] = CONSTANTS.GLOBAL.createFont(ofSize: 20.0, false)
             return argument

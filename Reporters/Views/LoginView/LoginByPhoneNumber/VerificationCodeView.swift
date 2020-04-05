@@ -41,76 +41,48 @@ class VerificationCodeView: TemplateLoginView {
     }
 
     @objc private func authenticationCode(_ sender: UIButton) {
-        
         self.authenticationCodeTextField.endEditing(true)
         let progress: ExpressProgress! = ExpressProgress(showProgressAddedTo: self)
         progress.showProgress()
         let credential = PhoneAuthProvider.provider().credential(withVerificationID: self.verificationID, verificationCode: self.authenticationCodeTextField.text ?? "0")
         Auth.auth().signIn(with: credential) { (authResult, error) in
             if let error = error {
-                print(error.localizedDescription.localized)
                 progress.stopProgress(isSuccess: false, error.localizedDescription.localized, {
                     self.authenticationCodeTextField.becomeFirstResponder()
                 })
                 return
             }
-            if let user = Auth.auth().currentUser {
-                
-                
-                let db = Firestore.firestore()
-                db.collection(CONSTANTS.KEYS.JSON.COLLECTION.USERS).document(user.uid).getDocument() { (document, error) in
-                    if let error = error {
-                        progress.stopProgress(isSuccess: false, error.localizedDescription.localized, {
-                            self.authenticationCodeTextField.becomeFirstResponder()
-                        })
-                        return
-                    }
-//                    if let document = document, document.exists, var argument: [String: Any] = document.data() {
-//                        var date: [String: Any] = [String: Any]()
-//                        date[CONSTANTS.KEYS.JSON.FIELD.DATE.REGISTER] = Date()
-//                        date[CONSTANTS.KEYS.JSON.FIELD.DATE.LOGIN] = Date()
-//                        if let dateDic: [String: Any] = argument[CONSTANTS.KEYS.JSON.FIELD.DATE.SELF] as? [String: Any], let registerDate: Timestamp = dateDic[CONSTANTS.KEYS.JSON.FIELD.DATE.REGISTER] as? Timestamp {
-//                            date[CONSTANTS.KEYS.JSON.FIELD.DATE.REGISTER] = registerDate.dateValue()
-//                        }
-//                        argument[CONSTANTS.KEYS.JSON.FIELD.DATE.SELF] = date
-//                        var appInfo: [String: Any] = [String: Any]()
-//                        appInfo[CONSTANTS.KEYS.JSON.FIELD.APP_INFO.VERSION] = CONSTANTS.INFO.APP.BUNDLE.VERSION
-//                        appInfo[CONSTANTS.KEYS.JSON.FIELD.APP_INFO.DEVICE] = CONSTANTS.DEVICE.MODEL
-//                        appInfo[CONSTANTS.KEYS.JSON.FIELD.APP_INFO.OPERATING_SYSTEM] = "iOS \(CONSTANTS.DEVICE.VERSION)"
-//                        argument[CONSTANTS.KEYS.JSON.FIELD.APP_INFO.SELF] = appInfo
-//                        db.collection(CONSTANTS.KEYS.JSON.COLLECTION.USERS).document(argument[CONSTANTS.KEYS.JSON.FIELD.USER_ID] as! String).updateData([CONSTANTS.KEYS.JSON.FIELD.DATE.SELF: date, CONSTANTS.KEYS.JSON.FIELD.APP_INFO.SELF: appInfo]) { error in
-//                            if let error = error {
-//                                progress.errorProgress(withMessage: error.localizedDescription.localized, {
-//                                    self.authenticationCodeTextField.becomeFirstResponder()
-//                                })
-//                                return
-//                            }
-//                            let randomKey: String = CONSTANTS.INFO.GLOBAL.RANDOM_KEY(length: 40)
-//                            Database.database().reference().child("\(CONSTANTS.KEYS.JSON.COLLECTION.USERS)/\(argument[CONSTANTS.KEYS.JSON.FIELD.USER_ID] as! String)/\(CONSTANTS.KEYS.JSON.FIELD.RANDOM_KEY)").setValue(randomKey) { (error, reference) in
-//                                if let error = error {
-//                                    progress.errorProgress(withMessage: error.localizedDescription.localized, {
-//                                        self.authenticationCodeTextField.becomeFirstResponder()
-//                                    })
-//                                    return
-//                                }
-//                                argument[CONSTANTS.KEYS.JSON.FIELD.RANDOM_KEY] = randomKey
-//                                CONSTANTS.INFO.APP.DATA.USER.DATA.ADD(data: argument)
-//                                progress.doneProgress({
-//                                    self.transitionToChildOverlapContainer(viewName: "LandingView", nil, .coverVertical, false, nil)
-//                                })
-//                            }
-//                        }
-//                        return
-//                    }
-                    var argument: [String: Any]! = self.arguments as? [String: Any]
-                    argument[CONSTANTS.KEYS.JSON.FIELD.ID.USER] = user.uid
-                    self.transitionToChildOverlapContainer(viewName: "SignUpUserDetailsView", argument, .coverLeft, false, {
-                        progress.hideProgress(nil)
-                    })
-                }
+            guard let user = Auth.auth().currentUser else {
+                progress.stopProgress(isSuccess: false, "\("ERROR_OCCURRED".localized), \("TRY_LATER".localized)", nil)
                 return
             }
-            progress.hideProgress(nil)
+            let db = Firestore.firestore()
+            db.collection(CONSTANTS.KEYS.JSON.COLLECTION.USERS).document(user.uid).getDocument() { (document, error) in
+                if let _ = error {
+                    progress.stopProgress(isSuccess: false, "\("ERROR_OCCURRED".localized), \("TRY_LATER".localized)", nil)
+                    return
+                }
+                if let document = document, document.exists, let argument: [String: Any] = document.data() {
+                    let datatHandler: DatatHandler = DatatHandler.init()
+                    datatHandler.loginUser(withData: argument, {
+                        let query: CoreDataStack = CoreDataStack(withCoreData: "CoreData")
+                        var sqlInfo: [String: Any] = [String: Any]()
+                        sqlInfo[CONSTANTS.KEYS.SQL.NAME_ENTITY] = CONSTANTS.KEYS.SQL.ENTITY.USER
+                        if let data: [Any] = query.fetchRequest(sqlInfo)  {
+                            print(data)
+                        }
+                        self.transitionToChildOverlapContainer(viewName: "LandingView", nil, .coverVertical, false, nil)
+                    }, {
+                        progress.stopProgress(isSuccess: false, "\("ERROR_OCCURRED".localized), \("TRY_LATER".localized)", nil)
+                    })
+                    return
+                }
+                var argument: [String: Any]! = self.arguments as? [String: Any]
+                argument[CONSTANTS.KEYS.JSON.FIELD.ID.USER] = user.uid
+                self.transitionToChildOverlapContainer(viewName: "SignUpUserDetailsView", argument, .coverLeft, false, {
+                    progress.hideProgress(nil)
+                })
+            }
         }
     }
 

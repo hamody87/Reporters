@@ -14,28 +14,17 @@ extension CustomizeThumb: UINavigationControllerDelegate {
 extension CustomizeThumb: UIImagePickerControllerDelegate {
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-//        var imageRequest: UIImage!
-//        if let image = info[.editedImage] as? UIImage {
-//            imageRequest = image
-//        } else if let image = info[.originalImage] as? UIImage {
-//            imageRequest = image
-//        }
-//        if let _ = imageRequest {
-//            for i: Int in 0..<self.photos.count {
-//                guard let _: UIImage = self.photos[i] else {
-//                    if let imageView: UIImageView = self.photoView[i].viewWithTag(DEFAULT.PHOTOS.TAGS.IMAGE) as? UIImageView, let btnAdd: UIButton = self.photoView[i].viewWithTag(DEFAULT.PHOTOS.TAGS.BTN.ADD) as? UIButton, let btnRemove: UIButton = self.photoView[i].viewWithTag(DEFAULT.PHOTOS.TAGS.BTN.REMOVE) as? UIButton {
-//                        imageView.image = imageRequest
-//                        imageView.isHidden = false
-//                        btnAdd.isHidden = true
-//                        btnRemove.isHidden = false
-//                        self.photos[i] = imageRequest
-//                    }
-//                    self.customizeButtonReference[self.stepControl.presentStep() - 1].enableTouch(true)
-//                    picker.dismiss(animated: true, completion: nil)
-//                    return
-//                }
-//            }
-//        }
+        var imageRequest: UIImage!
+        if let image = info[.editedImage] as? UIImage {
+            imageRequest = image
+        } else if let image = info[.originalImage] as? UIImage {
+            imageRequest = image
+        }
+        if let imageRequest = imageRequest {
+            self.imageView.isHidden = false
+            self.imageView.image = imageRequest
+
+        }
         picker.dismiss(animated: true, completion: nil)
     }
     
@@ -51,16 +40,25 @@ class CustomizeThumb: SuperView {
     
     private var labelThumb: UILabel!
     private var updateView: SuperView!
+    private var imageView: UIImageView!
     
     // MARK: - Private Methods
     
     @objc private func uploadPhoto(_ sender: UIButton) {
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        if let _ = self.imageView.image {
+            let deletePhoto = UIAlertAction(title: "DELETE_PHOTO".localized, style: .default, handler: { _ in
+                self.imageView.image = nil
+            })
+            deletePhoto.setValue(UIColor.red, forKey: "titleTextColor")
+            alertController.addAction(deletePhoto)
+        }
         alertController.addAction(UIAlertAction(title: "TAKE_PHOTO".localized, style: .default, handler: { _ in
             if UIImagePickerController.isSourceTypeAvailable(.camera) {
                 let pickerController = UIImagePickerController()
                 pickerController.delegate = self
                 pickerController.sourceType = .camera
+                pickerController.allowsEditing = true
                 DispatchQueue.main.async {
                     self.superViewController()?.present(pickerController, animated: true, completion: nil)
                 }
@@ -71,6 +69,7 @@ class CustomizeThumb: SuperView {
                 let pickerController = UIImagePickerController()
                 pickerController.delegate = self
                 pickerController.sourceType = .photoLibrary
+                pickerController.allowsEditing = true
                 DispatchQueue.main.async {
                     self.superViewController()?.present(pickerController, animated: true, completion: nil)
                 }
@@ -81,6 +80,10 @@ class CustomizeThumb: SuperView {
     }
     
     // MARK: - Public Methods
+    
+    public func getThumb() -> UIImage! {
+        return imageView.image
+    }
     
     public func thumbWithPath(_ path: String) {
     }
@@ -112,6 +115,16 @@ class CustomizeThumb: SuperView {
             self.labelThumb = labelThumb
             self.addSubview(self.labelThumb)
         }
+        
+        if let imageView: UIImageView = CONSTANTS.GLOBAL.createImageViewElement(withFrame: self.bounds, {
+            var arg: [String: Any] = [String: Any]()
+            arg[CONSTANTS.KEYS.ELEMENTS.HIDDEN] = true
+            return arg
+        }())[CONSTANTS.KEYS.ELEMENTS.SELF] as? UIImageView {
+            self.imageView = imageView
+            self.addSubview(self.imageView)
+        }
+        
         if let updateView: SuperView = CONSTANTS.GLOBAL.createSuperViewElement(withFrame: CGRect(x: 0, y: self.labelThumb.frame.height * (2 / 3), width: self.labelThumb.frame.width, height: self.labelThumb.frame.height * (1 / 3)), {
             var arg: [String: Any] = [String: Any]()
             arg[CONSTANTS.KEYS.ELEMENTS.HIDDEN] = true

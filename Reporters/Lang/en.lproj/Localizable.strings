@@ -22,6 +22,7 @@
 "FINISH" = "Finish";
 "UPDATE" = "Update";
 "NONE" = "None";
+"DELETE_PHOTO" = "Delete photo";
 "TAKE_PHOTO" = "Take photo";
 "CHOOSE_PHOTO" = "Choose photo";
 
@@ -44,6 +45,8 @@
 "ENTER_PHONE_NUMBER" = "Enter your phone number";
 "VERIFICATION_CODE" = "Verification Code";
 "VERIFICATION_CODE_SENT_SUCCESSFULLY" = "Verification code sent successfully";
+"ERROR_OCCURRED" = "An error occurred";
+"TRY_LATER" = "Try later";
 
 // Firebase errors
 "TOO_SHORT" = "The phone number you entered is too short.";

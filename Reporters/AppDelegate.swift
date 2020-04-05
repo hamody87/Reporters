@@ -20,6 +20,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ContainerControllerDelega
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         FirebaseApp.configure()
 //        self.launchOptions = launchOptions
+        
+        
+        UserDefaults.standard.set(false, forKey: CONSTANTS.KEYS.USERDEFAULTS.USER.LOGIN)
         self.window = UIWindow(frame: UIScreen.main.bounds)
         if let window = self.window {
             self.containerController = ContainerController(withDelegate: self as ContainerControllerDelegate)

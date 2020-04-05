@@ -136,6 +136,7 @@ extension CountriesList: UITableViewDataSource {
                     if let code: Int = item["code"] as? Int {
                         codeCountry.text = "+\(code)"
                     }
+                    codeCountry.isHidden = self.disappearPhoneCode
                     cellView.backgroundColor = .clear
                     if let value: String = item["value"] as? String, value == self.codeSelected {
                         cellView.backgroundColor = UIColor(named: "Background/Fourth")
@@ -172,14 +173,21 @@ class CountriesList: TemplateLoginView {
     private var tableView: UITableView!
     private var data: Array<Any>!
     private var codeSelected: String!
+    private var disappearPhoneCode: Bool = false
     
     // MARK: - Override Methods
 
     override func loadSuperView(anArgument: Any!) {
         super.loadSuperView(anArgument: anArgument)
-        if let arg: [String: Any] = self.arguments as? [String: Any], let code: String = arg[CONSTANTS.KEYS.JSON.FIELD.COUNTRY.CODE] as? String {
-            self.codeSelected = code
+        if let arg: [String: Any] = self.arguments as? [String: Any] {
+            if let code: String = arg[CONSTANTS.KEYS.JSON.FIELD.COUNTRY.CODE] as? String {
+                self.codeSelected = code
+            }
+            if let disappear: Bool = arg[CONSTANTS.KEYS.ELEMENTS.HIDDEN] as? Bool {
+                self.disappearPhoneCode = disappear
+            }
         }
+        
         self.tableView.dataSource = self as UITableViewDataSource
         self.tableView.delegate = self as UITableViewDelegate
     }

@@ -16,6 +16,12 @@
 		F30AC613243355DE00CEA545 /* SignUpUserDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F30AC612243355DE00CEA545 /* SignUpUserDetailsView.swift */; };
 		F30AC617243372E600CEA545 /* StepControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = F30AC616243372E600CEA545 /* StepControl.swift */; };
 		F30AC61B24364A7700CEA545 /* CustomizeThumb.swift in Sources */ = {isa = PBXBuildFile; fileRef = F30AC61A24364A7700CEA545 /* CustomizeThumb.swift */; };
+		F30AC61D243903BC00CEA545 /* LandingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F30AC61C243903BC00CEA545 /* LandingView.swift */; };
+		F30AC6202439044E00CEA545 /* DatatHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F30AC61F2439044E00CEA545 /* DatatHandler.swift */; };
+		F30AC6232439F0E200CEA545 /* CoreData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F30AC6212439F0E200CEA545 /* CoreData.xcdatamodeld */; };
+		F30AC6252439F13500CEA545 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = F30AC6242439F13500CEA545 /* CoreDataStack.swift */; };
+		F30AC628243A8BE800CEA545 /* NotificationAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = F30AC627243A8BE800CEA545 /* NotificationAlert.swift */; };
+		F30AC62A243A8DEE00CEA545 /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = F30AC629243A8DEE00CEA545 /* Queue.swift */; };
 		F36B68A5241C3D3400D91162 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36B68A4241C3D3400D91162 /* AppDelegate.swift */; };
 		F36B68AB241C3D3600D91162 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F36B68AA241C3D3600D91162 /* Assets.xcassets */; };
 		F36B68B1241C3D3600D91162 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F36B68AF241C3D3600D91162 /* LaunchScreen.storyboard */; };
@@ -54,6 +60,12 @@
 		F30AC612243355DE00CEA545 /* SignUpUserDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpUserDetailsView.swift; sourceTree = "<group>"; };
 		F30AC616243372E600CEA545 /* StepControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepControl.swift; sourceTree = "<group>"; };
 		F30AC61A24364A7700CEA545 /* CustomizeThumb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomizeThumb.swift; sourceTree = "<group>"; };
+		F30AC61C243903BC00CEA545 /* LandingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingView.swift; sourceTree = "<group>"; };
+		F30AC61F2439044E00CEA545 /* DatatHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatatHandler.swift; sourceTree = "<group>"; };
+		F30AC6222439F0E200CEA545 /* CoreData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreData.xcdatamodel; sourceTree = "<group>"; };
+		F30AC6242439F13500CEA545 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
+		F30AC627243A8BE800CEA545 /* NotificationAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationAlert.swift; sourceTree = "<group>"; };
+		F30AC629243A8DEE00CEA545 /* Queue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Queue.swift; sourceTree = "<group>"; };
 		F36B68A1241C3D3400D91162 /* Reporters.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Reporters.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F36B68A4241C3D3400D91162 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F36B68AA241C3D3600D91162 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -141,6 +153,8 @@
 		F30AC6182433A11400CEA545 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
+				F30AC6212439F0E200CEA545 /* CoreData.xcdatamodeld */,
+				F30AC6242439F13500CEA545 /* CoreDataStack.swift */,
 			);
 			path = CoreData;
 			sourceTree = "<group>";
@@ -151,6 +165,22 @@
 				F30AC61A24364A7700CEA545 /* CustomizeThumb.swift */,
 			);
 			path = CustomizeThumb;
+			sourceTree = "<group>";
+		};
+		F30AC61E2439043800CEA545 /* DatatHandler */ = {
+			isa = PBXGroup;
+			children = (
+				F30AC61F2439044E00CEA545 /* DatatHandler.swift */,
+			);
+			path = DatatHandler;
+			sourceTree = "<group>";
+		};
+		F30AC626243A8BDA00CEA545 /* NotificationAlert */ = {
+			isa = PBXGroup;
+			children = (
+				F30AC627243A8BE800CEA545 /* NotificationAlert.swift */,
+			);
+			path = NotificationAlert;
 			sourceTree = "<group>";
 		};
 		F36B6898241C3D3400D91162 = {
@@ -176,6 +206,7 @@
 			children = (
 				F30AC611243219C400CEA545 /* Reporters.entitlements */,
 				F30AC6182433A11400CEA545 /* CoreData */,
+				F30AC61E2439043800CEA545 /* DatatHandler */,
 				F3A14C1C2420DD5000A375D1 /* Lang */,
 				F3A14C162420D21D00A375D1 /* Constants */,
 				F3A14C212420DDC000A375D1 /* Extensions */,
@@ -254,6 +285,7 @@
 		F3A14C212420DDC000A375D1 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				F30AC626243A8BDA00CEA545 /* NotificationAlert */,
 				F30AC615243372DD00CEA545 /* StepControl */,
 				F30AC6082430F18D00CEA545 /* UITableViewCell */,
 				F3A14C4D24254F7600A375D1 /* ExpressProgress */,
@@ -283,6 +315,7 @@
 			isa = PBXGroup;
 			children = (
 				F3A14C282420E28F00A375D1 /* Stack.swift */,
+				F30AC629243A8DEE00CEA545 /* Queue.swift */,
 			);
 			path = DataStructure;
 			sourceTree = "<group>";
@@ -328,6 +361,7 @@
 		F3A14C54242927D100A375D1 /* LandingView */ = {
 			isa = PBXGroup;
 			children = (
+				F30AC61C243903BC00CEA545 /* LandingView.swift */,
 			);
 			path = LandingView;
 			sourceTree = "<group>";
@@ -457,6 +491,7 @@
 				F36B68A5241C3D3400D91162 /* AppDelegate.swift in Sources */,
 				F30AC60A2430F1AD00CEA545 /* NoneDesignCell.swift in Sources */,
 				F3A14C132420264300A375D1 /* ContainerController.swift in Sources */,
+				F30AC6252439F13500CEA545 /* CoreDataStack.swift in Sources */,
 				F30AC6072430F11900CEA545 /* CountriesList.swift in Sources */,
 				F3A14C4C24242A1300A375D1 /* UIColorExtension.swift in Sources */,
 				F3A14C3424212D1800A375D1 /* UILabelExtension.swift in Sources */,
@@ -466,9 +501,13 @@
 				F3A14C302420EA0F00A375D1 /* LoginView.swift in Sources */,
 				F3A14C262420E22F00A375D1 /* SuperView.swift in Sources */,
 				F30AC602242EBE2E00CEA545 /* UIViewExtension.swift in Sources */,
+				F30AC628243A8BE800CEA545 /* NotificationAlert.swift in Sources */,
+				F30AC61D243903BC00CEA545 /* LandingView.swift in Sources */,
 				F3A14C292420E28F00A375D1 /* Stack.swift in Sources */,
 				F3A14C3624212D3F00A375D1 /* UITextViewExtension.swift in Sources */,
+				F30AC62A243A8DEE00CEA545 /* Queue.swift in Sources */,
 				F3A14C152420265300A375D1 /* OverlapContainer.swift in Sources */,
+				F30AC6232439F0E200CEA545 /* CoreData.xcdatamodeld in Sources */,
 				F30AC60C24312C2C00CEA545 /* VerificationCodeView.swift in Sources */,
 				F3A14C4A2424235D00A375D1 /* PhoneNumberView.swift in Sources */,
 				F3A14C1B2420D62100A375D1 /* Global.swift in Sources */,
@@ -476,6 +515,7 @@
 				F3A14C182420D22A00A375D1 /* CONSTANTS.swift in Sources */,
 				F3A14C432421844400A375D1 /* CustomizeButton.swift in Sources */,
 				F3A14C5024254F8800A375D1 /* ExpressProgress.swift in Sources */,
+				F30AC6202439044E00CEA545 /* DatatHandler.swift in Sources */,
 				F30AC617243372E600CEA545 /* StepControl.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -694,6 +734,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		F30AC6212439F0E200CEA545 /* CoreData.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				F30AC6222439F0E200CEA545 /* CoreData.xcdatamodel */,
+			);
+			currentVersion = F30AC6222439F0E200CEA545 /* CoreData.xcdatamodel */;
+			path = CoreData.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = F36B6899241C3D3400D91162 /* Project object */;
 }

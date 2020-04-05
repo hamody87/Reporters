@@ -22,4 +22,14 @@ extension String {
         return NSLocalizedString(self, tableName: nil, bundle: Bundle.main, value: "", comment: withComment)
     }
     
+    func capitalizingFirstLetterOfSentence() -> String {
+        var result: String = ""
+        for word in self.trimmingCharacters(in: .whitespacesAndNewlines).components(separatedBy: " ") {
+            if word != "" {
+                result = "\(result) \(word.prefix(1).uppercased() + word.lowercased().dropFirst())"
+            }
+        }
+        return result.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+    
 }

@@ -12,12 +12,12 @@ final class ExpressProgress: UIView {
     
     struct DEFAULT {
         
-        static let BACKGROUND: String = "Background/ExpressProgress/Basic"
+        static let BACKGROUND: String = "Background/Extensions/Basic"
         static let ALPHA: CGFloat = 0.8
         
         struct CIRCLE {
             
-            static let BACKGROUND: String = "Background/ExpressProgress/Secondary"
+            static let BACKGROUND: String = "Background/Extensions/Secondary"
             static let RADIUS: CGFloat = 30.0
             
             struct LINE {
@@ -133,7 +133,7 @@ final class ExpressProgress: UIView {
             self.putMessage(self.newMessage)
             self.progressStatus = self.isSuccess ? .done : .error
             self.setNeedsDisplay()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 4.0) {
                 self.hideProgress(self.completion)
             }
         }

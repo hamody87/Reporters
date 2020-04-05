@@ -12,6 +12,17 @@ public class CONSTANTS {
     
     static let GLOBAL: Global = Global()
     
+    struct APPDELEGATE {
+        
+        static func WINDOW() -> UIWindow! {
+            if let app = UIApplication.shared.delegate as? AppDelegate, let window = app.window {
+                return window
+            }
+            return nil
+        }
+        
+    }
+    
     struct INFO {
         
         struct APP {
@@ -298,9 +309,9 @@ public class CONSTANTS {
             }
             
             static func LANDING_VIEW() -> String {
-//                if APP.DATA.USER.IS_LOGIN() {
-//                    return "LandingView"
-//                }
+                if UserDefaults.standard.bool(forKey: KEYS.USERDEFAULTS.USER.LOGIN) {
+                    return "LandingView"
+                }
                 return "LoginView"
             }
             
@@ -422,8 +433,9 @@ public class CONSTANTS {
             func mapToDevice(identifier: String) -> String {
                 #if os(iOS)
                 switch identifier {
-                case "iPod5,1":                                 return "iPod Touch 5"
-                case "iPod7,1":                                 return "iPod Touch 6"
+                case "iPod5,1":                                 return "iPod touch (5th generation)"
+                case "iPod7,1":                                 return "iPod touch (6th generation)"
+                case "iPod9,1":                                 return "iPod touch (7th generation)"
                 case "iPhone3,1", "iPhone3,2", "iPhone3,3":     return "iPhone 4"
                 case "iPhone4,1":                               return "iPhone 4s"
                 case "iPhone5,1", "iPhone5,2":                  return "iPhone 5"
@@ -442,23 +454,31 @@ public class CONSTANTS {
                 case "iPhone11,2":                              return "iPhone XS"
                 case "iPhone11,4", "iPhone11,6":                return "iPhone XS Max"
                 case "iPhone11,8":                              return "iPhone XR"
+                case "iPhone12,1":                              return "iPhone 11"
+                case "iPhone12,3":                              return "iPhone 11 Pro"
+                case "iPhone12,5":                              return "iPhone 11 Pro Max"
                 case "iPad2,1", "iPad2,2", "iPad2,3", "iPad2,4":return "iPad 2"
-                case "iPad3,1", "iPad3,2", "iPad3,3":           return "iPad 3"
-                case "iPad3,4", "iPad3,5", "iPad3,6":           return "iPad 4"
+                case "iPad3,1", "iPad3,2", "iPad3,3":           return "iPad (3rd generation)"
+                case "iPad3,4", "iPad3,5", "iPad3,6":           return "iPad (4th generation)"
+                case "iPad6,11", "iPad6,12":                    return "iPad (5th generation)"
+                case "iPad7,5", "iPad7,6":                      return "iPad (6th generation)"
+                case "iPad7,11", "iPad7,12":                    return "iPad (7th generation)"
                 case "iPad4,1", "iPad4,2", "iPad4,3":           return "iPad Air"
                 case "iPad5,3", "iPad5,4":                      return "iPad Air 2"
-                case "iPad6,11", "iPad6,12":                    return "iPad 5"
-                case "iPad7,5", "iPad7,6":                      return "iPad 6"
-                case "iPad2,5", "iPad2,6", "iPad2,7":           return "iPad Mini"
-                case "iPad4,4", "iPad4,5", "iPad4,6":           return "iPad Mini 2"
-                case "iPad4,7", "iPad4,8", "iPad4,9":           return "iPad Mini 3"
-                case "iPad5,1", "iPad5,2":                      return "iPad Mini 4"
+                case "iPad11,4", "iPad11,5":                    return "iPad Air (3rd generation)"
+                case "iPad2,5", "iPad2,6", "iPad2,7":           return "iPad mini"
+                case "iPad4,4", "iPad4,5", "iPad4,6":           return "iPad mini 2"
+                case "iPad4,7", "iPad4,8", "iPad4,9":           return "iPad mini 3"
+                case "iPad5,1", "iPad5,2":                      return "iPad mini 4"
+                case "iPad11,1", "iPad11,2":                    return "iPad mini (5th generation)"
                 case "iPad6,3", "iPad6,4":                      return "iPad Pro (9.7-inch)"
-                case "iPad6,7", "iPad6,8":                      return "iPad Pro (12.9-inch)"
-                case "iPad7,1", "iPad7,2":                      return "iPad Pro (12.9-inch) (2nd generation)"
                 case "iPad7,3", "iPad7,4":                      return "iPad Pro (10.5-inch)"
                 case "iPad8,1", "iPad8,2", "iPad8,3", "iPad8,4":return "iPad Pro (11-inch)"
+                case "iPad8,9", "iPad8,10":                     return "iPad Pro (11-inch) (2nd generation)"
+                case "iPad6,7", "iPad6,8":                      return "iPad Pro (12.9-inch)"
+                case "iPad7,1", "iPad7,2":                      return "iPad Pro (12.9-inch) (2nd generation)"
                 case "iPad8,5", "iPad8,6", "iPad8,7", "iPad8,8":return "iPad Pro (12.9-inch) (3rd generation)"
+                case "iPad8,11", "iPad8,12":                    return "iPad Pro (12.9-inch) (4th generation)"
                 case "AppleTV5,3":                              return "Apple TV"
                 case "AppleTV6,2":                              return "Apple TV 4K"
                 case "AudioAccessory1,1":                       return "HomePod"
@@ -474,6 +494,7 @@ public class CONSTANTS {
                 }
                 #endif
             }
+
             return mapToDevice(identifier: identifier)
         }()
         
@@ -597,6 +618,33 @@ public class CONSTANTS {
     
     struct KEYS {
         
+        struct USERDEFAULTS {
+            
+            struct USER {
+                static let LOGIN: String = "isLogin"
+            }
+            
+        }
+
+        struct SQL {
+            
+            struct ENTITY {
+                static let USER: String = "User"
+            }
+            static let FIELDS: String = "fields"
+            static let NAME_ENTITY: String = "nameEntity"
+            static let FROM: String = "from"
+            static let WHERE: String = "where"
+            struct ORDER_BY {
+                static let SELF: String = "order by"
+                static let KEYWORD: String = "keyword"
+                static let SORT: String = "sort"
+                static let ASC: String = "asc"
+                static let DESC: String = "desc"
+            }
+            
+        }
+        
         struct ELEMENTS {
             static let SELF: String = "element"
             static let TAG: String = "tag"
@@ -638,6 +686,10 @@ public class CONSTANTS {
                     static let RIGHT: String = "right"
                 }
             }
+            struct LEVELS {
+                static let RECEIVER: String = "receiver"
+                static let REPORTER: String = "reporter"
+            }
         }
         
         struct JSON {
@@ -665,6 +717,30 @@ public class CONSTANTS {
                     static let CODE: String = "code"
                     static let NAME: String = "name"
                 }
+                
+                struct DATE {
+                    static let SELF: String = "date"
+                    static let REGISTER: String = "register"
+                    static let LOGIN: String = "login"
+                    static let UPDATE: String = "update"
+                }
+                
+                struct INFO {
+                    static let SELF: String = "info"
+                    struct APP {
+                        static let SELF: String = "app"
+                        static let VERSION: String = "version"
+                    }
+                    struct DEVICE {
+                        static let SELF: String = "device"
+                        static let TYPE: String = "type"
+                        static let OPERATING_SYSTEM: String = "operatingSystem"
+                    }
+                }
+                
+                static let NAME: String = "fullName"
+                static let LEVEL: String = "level"
+                static let RANDOM_KEY: String = "randomKey"
                 
             }
             
