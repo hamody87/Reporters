@@ -204,12 +204,6 @@ class LoginView: SuperView {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
             self.activateDemoMessages()
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-            NotificationAlert.shared().nextNotification("Your photo has successfully uploaded".localized, "Great".localized, nil)
-            NotificationAlert.shared().nextNotification("Your photo has successfully uploaded".localized, "Great".localized, nil)
-            NotificationAlert.shared().nextNotification("Your photo has successfully uploaded".localized, "Great".localized, nil)
-            NotificationAlert.shared().nextNotification("Your photo has successfully uploaded".localized, "Great".localized, nil)
-        }
     }
     
 }

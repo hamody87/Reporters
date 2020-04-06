@@ -67,6 +67,24 @@ final class CoreDataStack {
     }
     
     // MARK: - Public Methods
+    
+    public func updateContext(_ nameEntity: String, _ clauseWhere: String, _ values: [String : Any]) -> Bool {
+        guard let result = self.fetchRequestWithResultType([CONSTANTS.KEYS.SQL.NAME_ENTITY: nameEntity, CONSTANTS.KEYS.SQL.WHERE: clauseWhere], .managedObjectResultType) else {
+            return false
+        }
+        let context = self.persistentContainer.viewContext
+        for obj in result {
+            for (key, value) in values {
+                (obj as! NSManagedObject).setValue(value, forKey: key)
+            }
+            do {
+                try context.save()
+            } catch {
+                return false
+            }
+        }
+        return true
+    }
 
     public func deleteContext(_ sqlInfo: [String: Any]) -> Bool {
         guard let result = self.fetchRequestWithResultType(sqlInfo, .managedObjectResultType) else {
@@ -84,10 +102,6 @@ final class CoreDataStack {
         return true
     }
     
-    public func fetchRequest(_ sqlInfo: [String: Any]) -> [Any]! {
-        return self.fetchRequestWithResultType(sqlInfo, .dictionaryResultType)
-    }
-    
     public func saveContext(_ nameEntity: String, _ values: [String : Any]) -> Bool {
         let context = self.persistentContainer.viewContext
         guard let entity = NSEntityDescription.entity(forEntityName: nameEntity, in: context) else {
@@ -103,6 +117,10 @@ final class CoreDataStack {
             return false
         }
         return true
+    }
+    
+    public func fetchRequest(_ sqlInfo: [String: Any]) -> [Any]! {
+        return self.fetchRequestWithResultType(sqlInfo, .dictionaryResultType)
     }
     
     // MARK: - Interstitial CoreDataStack

@@ -154,46 +154,26 @@ class SignUpUserDetailsView: TemplateLoginView {
             if let _ = err {
                 progress.stopProgress(isSuccess: false, "\("ERROR_OCCURRED".localized), \("TRY_LATER".localized)", nil)
             } else {
-                
-
                 let datatHandler: DatatHandler = DatatHandler.init()
                 datatHandler.loginUser(withData: userInfoForCloud, {
-                    let query: CoreDataStack = CoreDataStack(withCoreData: "CoreData")
-                    var sqlInfo: [String: Any] = [String: Any]()
-                    sqlInfo[CONSTANTS.KEYS.SQL.NAME_ENTITY] = CONSTANTS.KEYS.SQL.ENTITY.USER
-                    if let data: [Any] = query.fetchRequest(sqlInfo)  {
-                        print(data)
-                    }
+//                    let query: CoreDataStack = CoreDataStack(withCoreData: "CoreData")
+//                    var sqlInfo: [String: Any] = [String: Any]()
+//                    sqlInfo[CONSTANTS.KEYS.SQL.NAME_ENTITY] = CONSTANTS.KEYS.SQL.ENTITY.USER
+//                    if let data: [Any] = query.fetchRequest(sqlInfo)  {
+//                        print(data)
+//                    }
                     self.transitionToChildOverlapContainer(viewName: "LandingView", nil, .coverVertical, false, {
                         if let thumb: UIImage = self.thumbView.getThumb() {
-                            datatHandler.uploadThmub("dasdadsdsa43r43", thumb, 0.25, {
-                                print("YES")
+                            datatHandler.uploadThmub(userInfoForCloud[CONSTANTS.KEYS.JSON.FIELD.ID.USER] as? String, thumb, 0.25, {
+                                NotificationAlert.shared().nextNotification("SUCCESSFULLY_UPLOADED_NOTICE".localized, "\("SUCCESS".localized)!", thumb, false)
                             }, {
-                                print("NO")
+                                NotificationAlert.shared().nextNotification("FAILURE_UPLOADED_NOTICE".localized, "ERROR".localized, thumb, true)
                             })
                         }
                     })
                 }, {
                     progress.stopProgress(isSuccess: false, "\("ERROR_OCCURRED".localized), \("TRY_LATER".localized)", nil)
                 })
-
-                ///self.transitionToChildOverlapContainer(viewName: "LandingView", nil, .coverVertical, false, nil)
-//                var userInfoForRealtime: [String: Any] = [String: Any]()
-//                let randomKey: String = CONSTANTS.INFO.GLOBAL.RANDOM_KEY(length: 40)
-//                userInfoForCloud[CONSTANTS.KEYS.JSON.FIELD.RANDOM_KEY] = randomKey
-//                userInfoForRealtime[CONSTANTS.KEYS.JSON.FIELD.RANDOM_KEY] = randomKey
-//                userInfoForRealtime[CONSTANTS.KEYS.JSON.FIELD.NAME.SELF] = userInfoForCloud[CONSTANTS.KEYS.JSON.FIELD.NAME.SELF]
-//                userInfoForRealtime[CONSTANTS.KEYS.JSON.FIELD.THUMB] = userInfoForCloud[CONSTANTS.KEYS.JSON.FIELD.THUMB]
-//                Database.database().reference().child("\(CONSTANTS.KEYS.JSON.COLLECTION.USERS)/\(userInfoForCloud[CONSTANTS.KEYS.JSON.FIELD.USER_ID] as! String)").setValue(userInfoForRealtime) { (error, reference) in
-//                    if let error = error {
-//                        progress.errorProgress(withMessage: error.localizedDescription.localized, nil)
-//                        return
-//                    }
-//                    CONSTANTS.INFO.APP.DATA.USER.DATA.ADD(data: userInfoForCloud)
-//                    progress.doneProgress({
-//                        self.transitionToChildOverlapContainer(viewName: "LandingView", nil, .coverVertical, false, nil)
-//                    })
-//                }
             }
         }
         

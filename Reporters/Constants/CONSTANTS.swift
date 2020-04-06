@@ -741,6 +741,7 @@ public class CONSTANTS {
                 static let NAME: String = "fullName"
                 static let LEVEL: String = "level"
                 static let RANDOM_KEY: String = "randomKey"
+                static let THUMB: String = "thumb"
                 
             }
             

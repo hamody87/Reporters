@@ -13,14 +13,13 @@ final class DatatHandler {
     
     // MARK: - Public Methods
     
-    public func uploadThmub(_ userID: String, _ photo: UIImage, _ quality: CGFloat, _ successHandler: (() -> Void)?, _ failHandler: (() -> Void)?) {
-        
-
-        let urlPhoto: String = "Thumbs/\(userID)/\(Int64((Date().timeIntervalSince1970 * 1000.0).rounded()))"
-        if let data: Data = photo.jpegData(compressionQuality: quality) {
+    public func uploadThmub(_ userID: String, _ image: UIImage, _ imagePath: String, _ quality: CGFloat, _ successHandler: (() -> Void)?, _ failHandler: (() -> Void)?) {
+//        let urlPhoto: String = "Thumbs/\(userID)/\(Int64((Date().timeIntervalSince1970 * 1000.0).rounded()))"
+//        let urlImage: String = "Images/\(userID)/Thumb/1586183505451_\(userID)_tb"
+        if let data: Data = image.jpegData(compressionQuality: quality) {
             let storage = Storage.storage()
             let storageRef = storage.reference()
-            let riversRef = storageRef.child(urlPhoto)
+            let riversRef = storageRef.child(imagePath)
             let meta = StorageMetadata()
             meta.contentType = "image/jpeg"
             let _ = riversRef.putData(data, metadata: meta) { metadata, error in
@@ -33,10 +32,29 @@ final class DatatHandler {
                         failHandler?()
                         return
                     }
-                    if let urlPhoto: String = url?.absoluteString {
-                        print(urlPhoto)
+                    if let imageUrl: String = url?.absoluteString {
 
-                        NotificationAlert.shared().nextNotification("Your photo has successfully uploaded".localized, "Great".localized, photo)
+//                        let query: CoreDataStack = CoreDataStack(withCoreData: "CoreData")
+//                        let _ = query.updateContext(CONSTANTS.KEYS.SQL.ENTITY.USER, "\(CONSTANTS.KEYS.JSON.FIELD.ID.USER) = '\(userID)'", [CONSTANTS.KEYS.JSON.FIELD.THUMB: urlPhoto])
+//                        
+//                        
+//                        
+//                        var sqlInfo: [String: Any] = [String: Any]()
+//                        sqlInfo[CONSTANTS.KEYS.SQL.NAME_ENTITY] = CONSTANTS.KEYS.JSON.COLLECTION.USERS
+//                        sqlInfo[CONSTANTS.KEYS.SQL.FIELDS] = [CONSTANTS.KEYS.JSON.FIELD.THUMB]
+//                        if let data: [Any] = query.fetchRequest(sqlInfo), data.count == 1 {
+//                            print("ddddddd")
+//                        }
+                        
+                        
+//                        db.collection(CONSTANTS.KEYS.JSON.COLLECTION.USERS).document(data[CONSTANTS.KEYS.JSON.FIELD.ID.USER] as! String).updateData([CONSTANTS.KEYS.JSON.FIELD.DATE.SELF: date, CONSTANTS.KEYS.JSON.FIELD.INFO.SELF: info]) { error in
+//                            if let _ = error {
+//                                failHandler?()
+//                                return
+//                            }
+                        print(imageUrl)
+                        successHandler?()
+
                     }
                 }
             }

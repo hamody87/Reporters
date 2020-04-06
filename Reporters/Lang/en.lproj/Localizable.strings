@@ -25,6 +25,11 @@
 "DELETE_PHOTO" = "Delete photo";
 "TAKE_PHOTO" = "Take photo";
 "CHOOSE_PHOTO" = "Choose photo";
+"SUCCESS" = "Success";
+"ERROR" = "Error";
+
+"SUCCESSFULLY_UPLOADED_NOTICE" = "Your photo has successfully uploaded";
+"FAILURE_UPLOADED_NOTICE" = "Failed to upload";
 
 "SIGNUP_FIRST_TITLE_1" = "Personal";
 "SIGNUP_SECOND_TITLE_1" = "Name";

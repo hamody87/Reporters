@@ -207,6 +207,20 @@ class PhoneNumberView: TemplateLoginView {
             self.button = customButton
             self.safeAreaView.addSubview(self.button)
         }
+
+
+//        let query: CoreDataStack = CoreDataStack(withCoreData: "CoreData")
+////        let _ = query.updateContext(CONSTANTS.KEYS.SQL.ENTITY.USER, "userID = WnFUkkAXaPeVxqvT5qZOnN5Bm553", [CONSTANTS.KEYS.JSON.FIELD.THUMB: "YESSSSSSS :)"])
+//        let _ = query.updateContext(CONSTANTS.KEYS.SQL.ENTITY.USER, "userID = 'WnFUkkAXaPeVxqvT5qZOnN5Bm553'", [CONSTANTS.KEYS.JSON.FIELD.THUMB: "YESSSSSSS :)"])
+//        
+//        
+//        
+//        var sqlInfo: [String: Any] = [String: Any]()
+//        sqlInfo[CONSTANTS.KEYS.SQL.NAME_ENTITY] = CONSTANTS.KEYS.SQL.ENTITY.USER
+//        if let data: [Any] = query.fetchRequest(sqlInfo)  {
+//            print(data)
+//        }
+        
     }
     
 }

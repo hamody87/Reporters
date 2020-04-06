@@ -45,6 +45,7 @@
 		F3A14C4C24242A1300A375D1 /* UIColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A14C4B24242A1300A375D1 /* UIColorExtension.swift */; };
 		F3A14C5024254F8800A375D1 /* ExpressProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A14C4E24254F8800A375D1 /* ExpressProgress.swift */; };
 		F3A14C5124254F8800A375D1 /* Images_ExpressProgress.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F3A14C4F24254F8800A375D1 /* Images_ExpressProgress.xcassets */; };
+		F3E734B4243B65CE00C67DD9 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3E734B3243B65CE00C67DD9 /* CoreData.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -95,6 +96,7 @@
 		F3A14C4B24242A1300A375D1 /* UIColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorExtension.swift; sourceTree = "<group>"; };
 		F3A14C4E24254F8800A375D1 /* ExpressProgress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExpressProgress.swift; sourceTree = "<group>"; };
 		F3A14C4F24254F8800A375D1 /* Images_ExpressProgress.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images_ExpressProgress.xcassets; sourceTree = "<group>"; };
+		F3E734B3243B65CE00C67DD9 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +105,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				20B3F2DAF2C094889F8B5B57 /* Pods_Reporters.framework in Frameworks */,
+				F3E734B4243B65CE00C67DD9 /* CoreData.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -121,6 +124,7 @@
 		7C868386ADEA453C933BBDFB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F3E734B3243B65CE00C67DD9 /* CoreData.framework */,
 				257719D2283C7AC5460378A9 /* Pods_Reporters.framework */,
 			);
 			name = Frameworks;
