@@ -157,7 +157,7 @@ class LoginView: SuperView {
         originY -= (CONSTANTS.SCREEN.MARGIN(2) + DEFAULT.BUTTONS.HEIGHT)
         self.safeAreaView.addSubview(CONSTANTS.GLOBAL.createCustomButtonElement(withFrame: CGRect(x: CONSTANTS.SCREEN.MARGIN(3), y: originY, width: self.safeAreaView.frame.width - CONSTANTS.SCREEN.MARGIN(6), height: DEFAULT.BUTTONS.HEIGHT), {
             var argument: [String: Any] = [String: Any]()
-            argument[CONSTANTS.KEYS.ELEMENTS.CORNER.RADIUS] = DEFAULT.BUTTONS.HEIGHT / 2.0
+            argument[CONSTANTS.KEYS.ELEMENTS.CORNER.SELF] = [CONSTANTS.KEYS.ELEMENTS.CORNER.DIRECTION: [UIRectCorner.allCorners], CONSTANTS.KEYS.ELEMENTS.CORNER.RADIUS: DEFAULT.BUTTONS.HEIGHT / 2.0]
             argument[CONSTANTS.KEYS.ELEMENTS.DELEGATE] = self
             argument[CONSTANTS.KEYS.ELEMENTS.COLOR.BACKGROUND] = UIColor.white
             argument[CONSTANTS.KEYS.ELEMENTS.TEXT] = "AGREE_AND_CONTINUE".localized

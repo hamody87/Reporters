@@ -1,17 +1,17 @@
 //
-//  CustomizeThumb.swift
+//  CustomizeImage.swift
 //  Reporters
 //
-//  Created by Muhammad Jbara on 02/04/2020.
+//  Created by Muhammad Jbara on 08/04/2020.
 //  Copyright © 2020 Muhammad Jbara. All rights reserved.
 //
 
 import UIKit
 
-extension CustomizeThumb: UINavigationControllerDelegate {
+extension CustomizeImage: UINavigationControllerDelegate {
 }
 
-extension CustomizeThumb: UIImagePickerControllerDelegate {
+extension CustomizeImage: UIImagePickerControllerDelegate {
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         var imageRequest: UIImage!
@@ -34,13 +34,15 @@ extension CustomizeThumb: UIImagePickerControllerDelegate {
     
 }
 
-class CustomizeThumb: SuperView {
+class CustomizeImage: SuperView {
     
     // MARK: - Declare Basic Variables
     
-    private var labelThumb: UILabel!
+    private var labelImage: UILabel!
     private var updateView: SuperView!
     private var imageView: UIImageView!
+    private var asyncImageView: AsyncImageView!
+    private var uploadIndicator: UIActivityIndicatorView!
     
     // MARK: - Private Methods
     
@@ -81,15 +83,27 @@ class CustomizeThumb: SuperView {
     
     // MARK: - Public Methods
     
-    public func getThumb() -> UIImage! {
+    public func getImage() -> UIImage! {
         return imageView.image
     }
     
-    public func thumbWithPath(_ path: String) {
+    public func imageWithUrl(_ url: String) {
+        self.asyncImageView.isHidden = false
+        self.asyncImageView.setImage(withUrl: NSURL(string: url)!)
     }
     
-    public func thumbWithName(_ name: String) {
-        self.labelThumb.text = name.prefix(1).uppercased()
+    public func imageWithName(_ name: String) {
+        self.labelImage.text = name.prefix(1).uppercased()
+        self.asyncImageView.isHidden = true
+        self.asyncImageView.setImage(withUrl: nil)
+    }
+    
+    public func startUploadingImage() {
+        self.uploadIndicator.startAnimating()
+    }
+    
+    @objc public func endUploadingImage() {
+        self.uploadIndicator.stopAnimating()
     }
     
     // MARK: - Interstitial CustomizeButton
@@ -105,17 +119,24 @@ class CustomizeThumb: SuperView {
     required convenience init?(withFrame frame: CGRect!, argument: [String: Any]! = nil) {
         self.init(withFrame: frame, delegate: argument[CONSTANTS.KEYS.ELEMENTS.DELEGATE] as? SuperViewDelegate)
         self.backgroundColor = UIColor.white
-        if let labelThumb: UILabel = CONSTANTS.GLOBAL.createLabelElement(withFrame: self.bounds, {
+
+        if let corner: [String: Any] = argument[CONSTANTS.KEYS.ELEMENTS.CORNER.SELF] as? [String: Any], let direction: [UIRectCorner] = corner[CONSTANTS.KEYS.ELEMENTS.CORNER.DIRECTION] as? [UIRectCorner], let radius: NSNumber = corner[CONSTANTS.KEYS.ELEMENTS.CORNER.RADIUS] as? NSNumber {
+            var cornersToRound: UIRectCorner = []
+            for next in direction {
+                cornersToRound.insert(next)
+            }
+            self.roundCorners(corners: cornersToRound, radius: CGFloat(radius.floatValue))
+        }
+        if let labelImage: UILabel = CONSTANTS.GLOBAL.createLabelElement(withFrame: self.bounds, {
             var arg: [String: Any] = [String: Any]()
-            arg[CONSTANTS.KEYS.ELEMENTS.FONT] = CONSTANTS.GLOBAL.createFont(ofSize: self.bounds.width / 2.0 + 15.0, true)
+            arg[CONSTANTS.KEYS.ELEMENTS.FONT] = CONSTANTS.GLOBAL.createFont(ofSize: self.bounds.width * 0.7, true)
             arg[CONSTANTS.KEYS.ELEMENTS.ALIGNMENT] = NSTextAlignment.center
             arg[CONSTANTS.KEYS.ELEMENTS.COLOR.TEXT] = argument[CONSTANTS.KEYS.ELEMENTS.COLOR.TEXT]
             return arg
         }())[CONSTANTS.KEYS.ELEMENTS.SELF] as? UILabel {
-            self.labelThumb = labelThumb
-            self.addSubview(self.labelThumb)
+            self.labelImage = labelImage
+            self.addSubview(self.labelImage)
         }
-        
         if let imageView: UIImageView = CONSTANTS.GLOBAL.createImageViewElement(withFrame: self.bounds, {
             var arg: [String: Any] = [String: Any]()
             arg[CONSTANTS.KEYS.ELEMENTS.HIDDEN] = true
@@ -124,8 +145,7 @@ class CustomizeThumb: SuperView {
             self.imageView = imageView
             self.addSubview(self.imageView)
         }
-        
-        if let updateView: SuperView = CONSTANTS.GLOBAL.createSuperViewElement(withFrame: CGRect(x: 0, y: self.labelThumb.frame.height * (2 / 3), width: self.labelThumb.frame.width, height: self.labelThumb.frame.height * (1 / 3)), {
+        if let updateView: SuperView = CONSTANTS.GLOBAL.createSuperViewElement(withFrame: CGRect(x: 0, y: self.labelImage.frame.height * (2 / 3), width: self.labelImage.frame.width, height: self.labelImage.frame.height * (1 / 3)), {
             var arg: [String: Any] = [String: Any]()
             arg[CONSTANTS.KEYS.ELEMENTS.HIDDEN] = true
             return arg
@@ -163,6 +183,13 @@ class CustomizeThumb: SuperView {
                 return arg
             }())[CONSTANTS.KEYS.ELEMENTS.SELF] as! UIButton)
         }
+        
+        self.asyncImageView = AsyncImageView(withFrame: self.bounds)
+        self.addSubview(self.asyncImageView)
+        
+        self.uploadIndicator = UIActivityIndicatorView(style: .gray)
+        self.uploadIndicator.center = CGPoint(x: self.frame.width / 2.0, y: self.frame.height / 2.0)
+        self.addSubview(self.uploadIndicator)
     }
     
 }

@@ -14,9 +14,8 @@ final class DatatHandler {
     // MARK: - Public Methods
     
     public func uploadThmub(_ userID: String, _ image: UIImage, _ imagePath: String, _ quality: CGFloat, _ successHandler: (() -> Void)?, _ failHandler: (() -> Void)?) {
-//        let urlPhoto: String = "Thumbs/\(userID)/\(Int64((Date().timeIntervalSince1970 * 1000.0).rounded()))"
-//        let urlImage: String = "Images/\(userID)/Thumb/1586183505451_\(userID)_tb"
         if let data: Data = image.jpegData(compressionQuality: quality) {
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: CONSTANTS.KEYS.NOTIFICATION.CHANGE.WILL.THUMB), object: nil, userInfo: nil)
             let storage = Storage.storage()
             let storageRef = storage.reference()
             let riversRef = storageRef.child(imagePath)
@@ -33,28 +32,16 @@ final class DatatHandler {
                         return
                     }
                     if let imageUrl: String = url?.absoluteString {
-
-//                        let query: CoreDataStack = CoreDataStack(withCoreData: "CoreData")
-//                        let _ = query.updateContext(CONSTANTS.KEYS.SQL.ENTITY.USER, "\(CONSTANTS.KEYS.JSON.FIELD.ID.USER) = '\(userID)'", [CONSTANTS.KEYS.JSON.FIELD.THUMB: urlPhoto])
-//                        
-//                        
-//                        
-//                        var sqlInfo: [String: Any] = [String: Any]()
-//                        sqlInfo[CONSTANTS.KEYS.SQL.NAME_ENTITY] = CONSTANTS.KEYS.JSON.COLLECTION.USERS
-//                        sqlInfo[CONSTANTS.KEYS.SQL.FIELDS] = [CONSTANTS.KEYS.JSON.FIELD.THUMB]
-//                        if let data: [Any] = query.fetchRequest(sqlInfo), data.count == 1 {
-//                            print("ddddddd")
-//                        }
-                        
-                        
-//                        db.collection(CONSTANTS.KEYS.JSON.COLLECTION.USERS).document(data[CONSTANTS.KEYS.JSON.FIELD.ID.USER] as! String).updateData([CONSTANTS.KEYS.JSON.FIELD.DATE.SELF: date, CONSTANTS.KEYS.JSON.FIELD.INFO.SELF: info]) { error in
-//                            if let _ = error {
-//                                failHandler?()
-//                                return
-//                            }
-                        print(imageUrl)
-                        successHandler?()
-
+                        let db = Firestore.firestore()
+                        db.collection(CONSTANTS.KEYS.JSON.COLLECTION.USERS).document(userID).updateData([CONSTANTS.KEYS.JSON.FIELD.THUMB: imageUrl]) { error in
+                            let query: CoreDataStack = CoreDataStack(withCoreData: "CoreData")
+                            if query.updateContext(CONSTANTS.KEYS.SQL.ENTITY.USER, "\(CONSTANTS.KEYS.JSON.FIELD.ID.USER) = '\(userID)'", [CONSTANTS.KEYS.JSON.FIELD.THUMB: imageUrl]) {
+                                NotificationCenter.default.post(name: NSNotification.Name(rawValue: CONSTANTS.KEYS.NOTIFICATION.CHANGE.DID.THUMB), object: nil, userInfo: nil)
+                                successHandler?()
+                                return
+                            }
+                            failHandler?()
+                        }
                     }
                 }
             }
@@ -95,6 +82,7 @@ final class DatatHandler {
                 arg[CONSTANTS.KEYS.JSON.FIELD.LEVEL] = data[CONSTANTS.KEYS.JSON.FIELD.LEVEL]
                 arg[CONSTANTS.KEYS.JSON.FIELD.PHONE.SELF] = data[CONSTANTS.KEYS.JSON.FIELD.PHONE.SELF]
                 arg[CONSTANTS.KEYS.JSON.FIELD.COUNTRY.SELF] = data[CONSTANTS.KEYS.JSON.FIELD.COUNTRY.SELF]
+                arg[CONSTANTS.KEYS.JSON.FIELD.THUMB] = data[CONSTANTS.KEYS.JSON.FIELD.THUMB]
                 arg[CONSTANTS.KEYS.JSON.FIELD.RANDOM_KEY] = randomKey
                 if let registerDate: Date = date[CONSTANTS.KEYS.JSON.FIELD.DATE.REGISTER] as? Date, let loginDate: Date = date[CONSTANTS.KEYS.JSON.FIELD.DATE.LOGIN] as? Date {
                     date[CONSTANTS.KEYS.JSON.FIELD.DATE.REGISTER] = "\(Int64((registerDate.timeIntervalSince1970 * 1000.0).rounded()))"

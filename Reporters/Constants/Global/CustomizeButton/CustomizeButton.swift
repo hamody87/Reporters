@@ -78,8 +78,12 @@ class CustomizeButton: SuperView {
             if let color = argument[CONSTANTS.KEYS.ELEMENTS.COLOR.BACKGROUND] as? UIColor {
                 self.coreBtn.backgroundColor = color
             }
-            if let radius = argument[CONSTANTS.KEYS.ELEMENTS.CORNER.RADIUS] as? CGFloat {
-                self.coreBtn.layer.cornerRadius = radius
+            if let corner: [String: Any] = argument[CONSTANTS.KEYS.ELEMENTS.CORNER.SELF] as? [String: Any], let direction: [UIRectCorner] = corner[CONSTANTS.KEYS.ELEMENTS.CORNER.DIRECTION] as? [UIRectCorner], let radius: NSNumber = corner[CONSTANTS.KEYS.ELEMENTS.CORNER.RADIUS] as? NSNumber {
+                var cornersToRound: UIRectCorner = []
+                for next in direction {
+                    cornersToRound.insert(next)
+                }
+                self.roundCorners(corners: cornersToRound, radius: CGFloat(radius.floatValue))
             }
             if let color = argument[CONSTANTS.KEYS.ELEMENTS.COLOR.TEXT] as? UIColor {
                 self.textBtn.textColor = color

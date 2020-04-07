@@ -30,8 +30,8 @@ final class Global {
         let imageView: UIImageView = UIImageView(frame: frame)
         document[CONSTANTS.KEYS.ELEMENTS.SELF] = imageView
         if let argument = argument {
-            if let tag = argument[CONSTANTS.KEYS.ELEMENTS.TAG] as? Int {
-                document[CONSTANTS.KEYS.ELEMENTS.TAG] = tag
+            if let tag: NSNumber = argument[CONSTANTS.KEYS.ELEMENTS.TAG] as? NSNumber {
+                document[CONSTANTS.KEYS.ELEMENTS.TAG] = tag.intValue
             }
             if let color = argument[CONSTANTS.KEYS.ELEMENTS.COLOR.BACKGROUND] as? UIColor {
                 imageView.backgroundColor = color
@@ -51,8 +51,8 @@ final class Global {
         let button: UIButton = UIButton(frame: frame)
         document[CONSTANTS.KEYS.ELEMENTS.SELF] = button
         if let argument = argument {
-            if let tag = argument[CONSTANTS.KEYS.ELEMENTS.TAG] as? Int {
-                document[CONSTANTS.KEYS.ELEMENTS.TAG] = tag
+            if let tag: NSNumber = argument[CONSTANTS.KEYS.ELEMENTS.TAG] as? NSNumber {
+                document[CONSTANTS.KEYS.ELEMENTS.TAG] = tag.intValue
             }
             if let color = argument[CONSTANTS.KEYS.ELEMENTS.COLOR.BACKGROUND] as? UIColor {
                 button.backgroundColor = color
@@ -60,8 +60,12 @@ final class Global {
             if let image = argument[CONSTANTS.KEYS.ELEMENTS.IMAGE] as? UIImage {
                 button.setImage(image, for: UIControl.State.normal)
             }
-            if let radius = argument[CONSTANTS.KEYS.ELEMENTS.CORNER.RADIUS] as? Double {
-                button.layer.cornerRadius = CGFloat(radius)
+            if let corner: [String: Any] = argument[CONSTANTS.KEYS.ELEMENTS.CORNER.SELF] as? [String: Any], let direction: [UIRectCorner] = corner[CONSTANTS.KEYS.ELEMENTS.CORNER.DIRECTION] as? [UIRectCorner], let radius: NSNumber = corner[CONSTANTS.KEYS.ELEMENTS.CORNER.RADIUS] as? NSNumber {
+                var cornersToRound: UIRectCorner = []
+                for next in direction {
+                    cornersToRound.insert(next)
+                }
+                button.roundCorners(corners: cornersToRound, radius: CGFloat(radius.floatValue))
             }
             if let hide = argument[CONSTANTS.KEYS.ELEMENTS.HIDDEN] as? Bool {
                 button.isHidden = hide
@@ -82,8 +86,8 @@ final class Global {
         let label: UILabel = UILabel(frame: frame)
         document[CONSTANTS.KEYS.ELEMENTS.SELF] = label
         if let argument = argument {
-            if let tag = argument[CONSTANTS.KEYS.ELEMENTS.TAG] as? Int {
-                document[CONSTANTS.KEYS.ELEMENTS.TAG] = tag
+            if let tag: NSNumber = argument[CONSTANTS.KEYS.ELEMENTS.TAG] as? NSNumber {
+                document[CONSTANTS.KEYS.ELEMENTS.TAG] = tag.intValue
             }
             if let color = argument[CONSTANTS.KEYS.ELEMENTS.COLOR.BACKGROUND] as? UIColor {
                 label.backgroundColor = color
@@ -100,12 +104,12 @@ final class Global {
             if let alignment = argument[CONSTANTS.KEYS.ELEMENTS.ALIGNMENT] as? NSTextAlignment {
                 label.textAlignment = alignment
             }
-            if let numLines = argument[CONSTANTS.KEYS.ELEMENTS.NUMLINES] as? Int {
-                label.numberOfLines = numLines
+            if let numLines: NSNumber = argument[CONSTANTS.KEYS.ELEMENTS.NUMLINES] as? NSNumber {
+                label.numberOfLines = numLines.intValue
             }
-            if let radius = argument[CONSTANTS.KEYS.ELEMENTS.CORNER.RADIUS] as? Double {
+            if let radius: NSNumber = argument[CONSTANTS.KEYS.ELEMENTS.CORNER.RADIUS] as? NSNumber {
                 label.layer.masksToBounds = true
-                label.layer.cornerRadius = CGFloat(radius)
+                label.layer.cornerRadius = CGFloat(radius.floatValue)
             }
         }
         return document
@@ -115,18 +119,18 @@ final class Global {
         var document: [String: Any] = [String: Any]()
         let customButton: CustomizeButton! = CustomizeButton(withFrame: frame, argument: argument)
         document[CONSTANTS.KEYS.ELEMENTS.SELF] = customButton
-        if let argument = argument, let tag = argument[CONSTANTS.KEYS.ELEMENTS.TAG] as? Int {
-            document[CONSTANTS.KEYS.ELEMENTS.TAG] = tag
+        if let argument = argument, let tag: NSNumber = argument[CONSTANTS.KEYS.ELEMENTS.TAG] as? NSNumber {
+            document[CONSTANTS.KEYS.ELEMENTS.TAG] = tag.intValue
         }
         return document
     }
     
     public func createCustomThumbElement(withFrame frame: CGRect, _ argument: [String: Any]! = nil) -> [String: Any] {
         var document: [String: Any] = [String: Any]()
-        let customThumb: CustomizeThumb! = CustomizeThumb(withFrame: frame, argument: argument)
-        document[CONSTANTS.KEYS.ELEMENTS.SELF] = customThumb
-        if let argument = argument, let tag = argument[CONSTANTS.KEYS.ELEMENTS.TAG] as? Int {
-            document[CONSTANTS.KEYS.ELEMENTS.TAG] = tag
+        let customImage: CustomizeImage! = CustomizeImage(withFrame: frame, argument: argument)
+        document[CONSTANTS.KEYS.ELEMENTS.SELF] = customImage
+        if let argument = argument, let tag: NSNumber = argument[CONSTANTS.KEYS.ELEMENTS.TAG] as? NSNumber {
+            document[CONSTANTS.KEYS.ELEMENTS.TAG] = tag.intValue
         }
         return document
     }
@@ -139,17 +143,17 @@ final class Global {
             if let delegate = argument[CONSTANTS.KEYS.ELEMENTS.DELEGATE] as? SuperViewDelegate {
                 superView.delegate = delegate
             }
-            if let tag = argument[CONSTANTS.KEYS.ELEMENTS.TAG] as? Int {
-                document[CONSTANTS.KEYS.ELEMENTS.TAG] = tag
+            if let tag: NSNumber = argument[CONSTANTS.KEYS.ELEMENTS.TAG] as? NSNumber {
+                document[CONSTANTS.KEYS.ELEMENTS.TAG] = tag.intValue
             }
             if let color = argument[CONSTANTS.KEYS.ELEMENTS.COLOR.BACKGROUND] as? UIColor {
                 superView.backgroundColor = color
             }
-            if let alpha = argument[CONSTANTS.KEYS.ELEMENTS.ALPHA] as? Double {
-                superView.alpha = CGFloat(alpha)
+            if let alpha: NSNumber = argument[CONSTANTS.KEYS.ELEMENTS.ALPHA] as? NSNumber {
+                superView.alpha = CGFloat(alpha.floatValue)
             }
-            if let radius = argument[CONSTANTS.KEYS.ELEMENTS.CORNER.RADIUS] as? Double {
-                superView.layer.cornerRadius = CGFloat(radius)
+            if let radius: NSNumber = argument[CONSTANTS.KEYS.ELEMENTS.CORNER.RADIUS] as? NSNumber {
+                superView.layer.cornerRadius = CGFloat(radius.floatValue)
             }
             if let clips = argument[CONSTANTS.KEYS.ELEMENTS.CLIPS] as? Bool {
                 superView.clipsToBounds = clips
@@ -163,8 +167,8 @@ final class Global {
         let textView: UITextView = UITextView(frame: frame)
         document[CONSTANTS.KEYS.ELEMENTS.SELF] = textView
         if let argument = argument {
-            if let tag = argument[CONSTANTS.KEYS.ELEMENTS.TAG] as? Int {
-                document[CONSTANTS.KEYS.ELEMENTS.TAG] = tag
+            if let tag: NSNumber = argument[CONSTANTS.KEYS.ELEMENTS.TAG] as? NSNumber {
+                document[CONSTANTS.KEYS.ELEMENTS.TAG] = tag.intValue
             }
             if let delegate = argument[CONSTANTS.KEYS.ELEMENTS.DELEGATE] as? UITextViewDelegate {
                 textView.delegate = delegate
@@ -193,8 +197,8 @@ final class Global {
         let textView: UITextField = UITextField(frame: frame)
         document[CONSTANTS.KEYS.ELEMENTS.SELF] = textView
         if let argument = argument {
-            if let tag = argument[CONSTANTS.KEYS.ELEMENTS.TAG] as? Int {
-                document[CONSTANTS.KEYS.ELEMENTS.TAG] = tag
+            if let tag: NSNumber = argument[CONSTANTS.KEYS.ELEMENTS.TAG] as? NSNumber {
+                document[CONSTANTS.KEYS.ELEMENTS.TAG] = tag.intValue
             }
             if let delegate = argument[CONSTANTS.KEYS.ELEMENTS.DELEGATE] as? UITextFieldDelegate {
                 textView.delegate = delegate
@@ -223,11 +227,11 @@ final class Global {
             if let returnKey = argument[CONSTANTS.KEYS.ELEMENTS.KEYBOARD.RETURNKEY] as? UIReturnKeyType {
                 textView.returnKeyType = returnKey
             }
-            if let left = argument[CONSTANTS.KEYS.ELEMENTS.TEXTFIELD.MARGIN.LEFT] as? NSNumber {
+            if let left: NSNumber = argument[CONSTANTS.KEYS.ELEMENTS.TEXTFIELD.MARGIN.LEFT] as? NSNumber {
                 textView.leftView = UIView(frame: CGRect(x: 0, y: 0, width: CGFloat(left.floatValue), height: textView.frame.height))
                 textView.leftViewMode = .always
             }
-            if let right = argument[CONSTANTS.KEYS.ELEMENTS.TEXTFIELD.MARGIN.RIGHT] as? NSNumber {
+            if let right: NSNumber = argument[CONSTANTS.KEYS.ELEMENTS.TEXTFIELD.MARGIN.RIGHT] as? NSNumber {
                 textView.rightView = UIView(frame: CGRect(x: 0, y: 0, width: CGFloat(right.floatValue), height: textView.frame.height))
                 textView.rightViewMode = .always
             }

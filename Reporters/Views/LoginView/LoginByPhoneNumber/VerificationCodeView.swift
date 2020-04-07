@@ -65,12 +65,6 @@ class VerificationCodeView: TemplateLoginView {
                 if let document = document, document.exists, let argument: [String: Any] = document.data() {
                     let datatHandler: DatatHandler = DatatHandler.init()
                     datatHandler.loginUser(withData: argument, {
-                        let query: CoreDataStack = CoreDataStack(withCoreData: "CoreData")
-                        var sqlInfo: [String: Any] = [String: Any]()
-                        sqlInfo[CONSTANTS.KEYS.SQL.NAME_ENTITY] = CONSTANTS.KEYS.SQL.ENTITY.USER
-                        if let data: [Any] = query.fetchRequest(sqlInfo)  {
-                            print(data)
-                        }
                         self.transitionToChildOverlapContainer(viewName: "LandingView", nil, .coverVertical, false, nil)
                     }, {
                         progress.stopProgress(isSuccess: false, "\("ERROR_OCCURRED".localized), \("TRY_LATER".localized)", nil)

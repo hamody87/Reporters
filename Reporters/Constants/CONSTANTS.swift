@@ -625,6 +625,18 @@ public class CONSTANTS {
             }
             
         }
+        
+        struct NOTIFICATION {
+            struct CHANGE {
+                struct WILL {
+                    static let THUMB: String = "willChangeThumb"
+                }
+                struct DID {
+                    static let THUMB: String = "didChangeThumb"
+                }
+            }
+            
+        }
 
         struct SQL {
             
@@ -655,7 +667,9 @@ public class CONSTANTS {
                 static let LINK: String = "linkColor"
             }
             struct CORNER {
-                static let RADIUS: String = "cornerRadius"
+                static let SELF: String = "corner"
+                static let DIRECTION: String = "direction"
+                static let RADIUS: String = "radius"
             }
             static let FONT: String = "font"
             static let TEXT: String = "text"

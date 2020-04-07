@@ -40,7 +40,7 @@ class SignUpUserDetailsView: TemplateLoginView {
     private var flag: UIImageView!
     private var phoneCode: UILabel!
     private var selectedCode: String = CONSTANTS.INFO.GLOBAL.COUNTRY.CODE
-    private var thumbView: CustomizeThumb!
+    private var imageView: CustomizeImage!
     
     // MARK: - Private Methods
     
@@ -93,7 +93,7 @@ class SignUpUserDetailsView: TemplateLoginView {
             
         case StepTag.fullName.rawValue:
             if let fullName: String = self.textFieldReference[StepTag.fullName.rawValue].text {
-                self.thumbView.thumbWithName(fullName)
+                self.imageView.imageWithName(fullName)
             }
             break
             
@@ -133,8 +133,9 @@ class SignUpUserDetailsView: TemplateLoginView {
             }
         }
         var date: [String: Any] = [String: Any]()
-        date[CONSTANTS.KEYS.JSON.FIELD.DATE.REGISTER] = Date()
-        date[CONSTANTS.KEYS.JSON.FIELD.DATE.LOGIN] = Date()
+        let dateNow: Date = Date()
+        date[CONSTANTS.KEYS.JSON.FIELD.DATE.REGISTER] = dateNow
+        date[CONSTANTS.KEYS.JSON.FIELD.DATE.LOGIN] = dateNow
         userInfoForCloud[CONSTANTS.KEYS.JSON.FIELD.DATE.SELF] = date
         var info: [String: Any] = [String: Any]()
         var app: [String: Any] = [String: Any]()
@@ -163,8 +164,8 @@ class SignUpUserDetailsView: TemplateLoginView {
 //                        print(data)
 //                    }
                     self.transitionToChildOverlapContainer(viewName: "LandingView", nil, .coverVertical, false, {
-                        if let thumb: UIImage = self.thumbView.getThumb() {
-                            datatHandler.uploadThmub(userInfoForCloud[CONSTANTS.KEYS.JSON.FIELD.ID.USER] as? String, thumb, 0.25, {
+                        if let thumb: UIImage = self.imageView.getImage(), let userID: String = userInfoForCloud[CONSTANTS.KEYS.JSON.FIELD.ID.USER] as? String {
+                            datatHandler.uploadThmub(userID, thumb, "Images/\(userID)/Thumb/\(Int64((dateNow.timeIntervalSince1970 * 1000.0).rounded()))_\(userID)_tb", 0.25, {
                                 NotificationAlert.shared().nextNotification("SUCCESSFULLY_UPLOADED_NOTICE".localized, "\("SUCCESS".localized)!", thumb, false)
                             }, {
                                 NotificationAlert.shared().nextNotification("FAILURE_UPLOADED_NOTICE".localized, "ERROR".localized, thumb, true)
@@ -396,15 +397,15 @@ class SignUpUserDetailsView: TemplateLoginView {
         }())[CONSTANTS.KEYS.ELEMENTS.SELF] as! UILabel)
         origin.y += 45.0 + CONSTANTS.SCREEN.MARGIN(2)
         
-        if let thumbView: CustomizeThumb = CONSTANTS.GLOBAL.createCustomThumbElement(withFrame: CGRect(x: origin.x - CONSTANTS.SCREEN.MARGIN(3) + (self.mainScrollView.frame.width - 150.0) / 2.0, y: origin.y, width: 150.0, height: 150.0), {
+        if let imageView: CustomizeImage = CONSTANTS.GLOBAL.createCustomThumbElement(withFrame: CGRect(x: origin.x - CONSTANTS.SCREEN.MARGIN(3) + (self.mainScrollView.frame.width - 150.0) / 2.0, y: origin.y, width: 150.0, height: 150.0), {
             var argument: [String: Any] = [String: Any]()
             argument[CONSTANTS.KEYS.ELEMENTS.DELEGATE] = self
             argument[CONSTANTS.KEYS.ELEMENTS.ALLOW.UPDATE] = true
             argument[CONSTANTS.KEYS.ELEMENTS.COLOR.TEXT] = UIColor(named: "Background/LoginView/Basic")
             return argument
-        }())[CONSTANTS.KEYS.ELEMENTS.SELF] as? CustomizeThumb {
-            self.thumbView = thumbView
-            self.mainScrollView.addSubview(self.thumbView)
+        }())[CONSTANTS.KEYS.ELEMENTS.SELF] as? CustomizeImage {
+            self.imageView = imageView
+            self.mainScrollView.addSubview(self.imageView)
         }
         if let customButton: CustomizeButton = CONSTANTS.GLOBAL.createCustomButtonElement(withFrame: CGRect(x: origin.x, y: self.mainScrollView.frame.height - 50.0, width: self.mainScrollView.frame.width - CONSTANTS.SCREEN.MARGIN(6), height: 50.0), {
             var argument: [String: Any] = [String: Any]()

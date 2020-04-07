@@ -22,7 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ContainerControllerDelega
 //        self.launchOptions = launchOptions
         
         
-        UserDefaults.standard.set(false, forKey: CONSTANTS.KEYS.USERDEFAULTS.USER.LOGIN)
+//        UserDefaults.standard.set(false, forKey: CONSTANTS.KEYS.USERDEFAULTS.USER.LOGIN)
         self.window = UIWindow(frame: UIScreen.main.bounds)
         if let window = self.window {
             self.containerController = ContainerController(withDelegate: self as ContainerControllerDelegate)

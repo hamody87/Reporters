@@ -15,7 +15,6 @@
 		F30AC60C24312C2C00CEA545 /* VerificationCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F30AC60B24312C2C00CEA545 /* VerificationCodeView.swift */; };
 		F30AC613243355DE00CEA545 /* SignUpUserDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F30AC612243355DE00CEA545 /* SignUpUserDetailsView.swift */; };
 		F30AC617243372E600CEA545 /* StepControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = F30AC616243372E600CEA545 /* StepControl.swift */; };
-		F30AC61B24364A7700CEA545 /* CustomizeThumb.swift in Sources */ = {isa = PBXBuildFile; fileRef = F30AC61A24364A7700CEA545 /* CustomizeThumb.swift */; };
 		F30AC61D243903BC00CEA545 /* LandingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F30AC61C243903BC00CEA545 /* LandingView.swift */; };
 		F30AC6202439044E00CEA545 /* DatatHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F30AC61F2439044E00CEA545 /* DatatHandler.swift */; };
 		F30AC6232439F0E200CEA545 /* CoreData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F30AC6212439F0E200CEA545 /* CoreData.xcdatamodeld */; };
@@ -46,6 +45,10 @@
 		F3A14C5024254F8800A375D1 /* ExpressProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A14C4E24254F8800A375D1 /* ExpressProgress.swift */; };
 		F3A14C5124254F8800A375D1 /* Images_ExpressProgress.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F3A14C4F24254F8800A375D1 /* Images_ExpressProgress.xcassets */; };
 		F3E734B4243B65CE00C67DD9 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3E734B3243B65CE00C67DD9 /* CoreData.framework */; };
+		F3E734B9243C9AEA00C67DD9 /* TabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3E734B8243C9AEA00C67DD9 /* TabBarView.swift */; };
+		F3E734BD243D33B300C67DD9 /* CustomizeImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3E734BC243D33B300C67DD9 /* CustomizeImage.swift */; };
+		F3E734C2243D387400C67DD9 /* AsyncImageConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3E734BF243D387300C67DD9 /* AsyncImageConnection.swift */; };
+		F3E734C3243D387400C67DD9 /* AsyncImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3E734C0243D387400C67DD9 /* AsyncImageView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -60,7 +63,6 @@
 		F30AC611243219C400CEA545 /* Reporters.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Reporters.entitlements; sourceTree = "<group>"; };
 		F30AC612243355DE00CEA545 /* SignUpUserDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpUserDetailsView.swift; sourceTree = "<group>"; };
 		F30AC616243372E600CEA545 /* StepControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepControl.swift; sourceTree = "<group>"; };
-		F30AC61A24364A7700CEA545 /* CustomizeThumb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomizeThumb.swift; sourceTree = "<group>"; };
 		F30AC61C243903BC00CEA545 /* LandingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingView.swift; sourceTree = "<group>"; };
 		F30AC61F2439044E00CEA545 /* DatatHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatatHandler.swift; sourceTree = "<group>"; };
 		F30AC6222439F0E200CEA545 /* CoreData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreData.xcdatamodel; sourceTree = "<group>"; };
@@ -97,6 +99,10 @@
 		F3A14C4E24254F8800A375D1 /* ExpressProgress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExpressProgress.swift; sourceTree = "<group>"; };
 		F3A14C4F24254F8800A375D1 /* Images_ExpressProgress.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images_ExpressProgress.xcassets; sourceTree = "<group>"; };
 		F3E734B3243B65CE00C67DD9 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		F3E734B8243C9AEA00C67DD9 /* TabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarView.swift; sourceTree = "<group>"; };
+		F3E734BC243D33B300C67DD9 /* CustomizeImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomizeImage.swift; sourceTree = "<group>"; };
+		F3E734BF243D387300C67DD9 /* AsyncImageConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsyncImageConnection.swift; sourceTree = "<group>"; };
+		F3E734C0243D387400C67DD9 /* AsyncImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsyncImageView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -163,12 +169,12 @@
 			path = CoreData;
 			sourceTree = "<group>";
 		};
-		F30AC61924364A6300CEA545 /* CustomizeThumb */ = {
+		F30AC61924364A6300CEA545 /* CustomizeImage */ = {
 			isa = PBXGroup;
 			children = (
-				F30AC61A24364A7700CEA545 /* CustomizeThumb.swift */,
+				F3E734BC243D33B300C67DD9 /* CustomizeImage.swift */,
 			);
-			path = CustomizeThumb;
+			path = CustomizeImage;
 			sourceTree = "<group>";
 		};
 		F30AC61E2439043800CEA545 /* DatatHandler */ = {
@@ -271,7 +277,7 @@
 		F3A14C192420D61000A375D1 /* Global */ = {
 			isa = PBXGroup;
 			children = (
-				F30AC61924364A6300CEA545 /* CustomizeThumb */,
+				F30AC61924364A6300CEA545 /* CustomizeImage */,
 				F3A14C402421843200A375D1 /* CustomizeButton */,
 				F3A14C1A2420D62100A375D1 /* Global.swift */,
 			);
@@ -289,6 +295,7 @@
 		F3A14C212420DDC000A375D1 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				F3E734BE243D385D00C67DD9 /* AsyncImage */,
 				F30AC626243A8BDA00CEA545 /* NotificationAlert */,
 				F30AC615243372DD00CEA545 /* StepControl */,
 				F30AC6082430F18D00CEA545 /* UITableViewCell */,
@@ -365,9 +372,27 @@
 		F3A14C54242927D100A375D1 /* LandingView */ = {
 			isa = PBXGroup;
 			children = (
+				F3E734B5243C965700C67DD9 /* TabBarView */,
 				F30AC61C243903BC00CEA545 /* LandingView.swift */,
 			);
 			path = LandingView;
+			sourceTree = "<group>";
+		};
+		F3E734B5243C965700C67DD9 /* TabBarView */ = {
+			isa = PBXGroup;
+			children = (
+				F3E734B8243C9AEA00C67DD9 /* TabBarView.swift */,
+			);
+			path = TabBarView;
+			sourceTree = "<group>";
+		};
+		F3E734BE243D385D00C67DD9 /* AsyncImage */ = {
+			isa = PBXGroup;
+			children = (
+				F3E734BF243D387300C67DD9 /* AsyncImageConnection.swift */,
+				F3E734C0243D387400C67DD9 /* AsyncImageView.swift */,
+			);
+			path = AsyncImage;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -493,6 +518,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F36B68A5241C3D3400D91162 /* AppDelegate.swift in Sources */,
+				F3E734C2243D387400C67DD9 /* AsyncImageConnection.swift in Sources */,
 				F30AC60A2430F1AD00CEA545 /* NoneDesignCell.swift in Sources */,
 				F3A14C132420264300A375D1 /* ContainerController.swift in Sources */,
 				F30AC6252439F13500CEA545 /* CoreDataStack.swift in Sources */,
@@ -501,6 +527,8 @@
 				F3A14C3424212D1800A375D1 /* UILabelExtension.swift in Sources */,
 				F3A14C232420DF3200A375D1 /* StringExtension.swift in Sources */,
 				F3A14C482423EB6500A375D1 /* TemplateLoginView.swift in Sources */,
+				F3E734B9243C9AEA00C67DD9 /* TabBarView.swift in Sources */,
+				F3E734C3243D387400C67DD9 /* AsyncImageView.swift in Sources */,
 				F30AC613243355DE00CEA545 /* SignUpUserDetailsView.swift in Sources */,
 				F3A14C302420EA0F00A375D1 /* LoginView.swift in Sources */,
 				F3A14C262420E22F00A375D1 /* SuperView.swift in Sources */,
@@ -512,10 +540,10 @@
 				F30AC62A243A8DEE00CEA545 /* Queue.swift in Sources */,
 				F3A14C152420265300A375D1 /* OverlapContainer.swift in Sources */,
 				F30AC6232439F0E200CEA545 /* CoreData.xcdatamodeld in Sources */,
+				F3E734BD243D33B300C67DD9 /* CustomizeImage.swift in Sources */,
 				F30AC60C24312C2C00CEA545 /* VerificationCodeView.swift in Sources */,
 				F3A14C4A2424235D00A375D1 /* PhoneNumberView.swift in Sources */,
 				F3A14C1B2420D62100A375D1 /* Global.swift in Sources */,
-				F30AC61B24364A7700CEA545 /* CustomizeThumb.swift in Sources */,
 				F3A14C182420D22A00A375D1 /* CONSTANTS.swift in Sources */,
 				F3A14C432421844400A375D1 /* CustomizeButton.swift in Sources */,
 				F3A14C5024254F8800A375D1 /* ExpressProgress.swift in Sources */,
