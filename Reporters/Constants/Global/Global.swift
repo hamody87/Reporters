@@ -146,6 +146,16 @@ final class Global {
             if let tag: NSNumber = argument[CONSTANTS.KEYS.ELEMENTS.TAG] as? NSNumber {
                 document[CONSTANTS.KEYS.ELEMENTS.TAG] = tag.intValue
             }
+            if let corner: [String: Any] = argument[CONSTANTS.KEYS.ELEMENTS.CORNER.SELF] as? [String: Any], let direction: [UIRectCorner] = corner[CONSTANTS.KEYS.ELEMENTS.CORNER.DIRECTION] as? [UIRectCorner], let radius: NSNumber = corner[CONSTANTS.KEYS.ELEMENTS.CORNER.RADIUS] as? NSNumber {
+                var cornersToRound: UIRectCorner = []
+                for next in direction {
+                    cornersToRound.insert(next)
+                }
+                superView.roundCorners(corners: cornersToRound, radius: CGFloat(radius.floatValue))
+            }
+            if let mask = argument[CONSTANTS.KEYS.ELEMENTS.MASK] as? UIImage {
+                superView.layer.mask = UIImageView(image: mask).layer
+            }
             if let color = argument[CONSTANTS.KEYS.ELEMENTS.COLOR.BACKGROUND] as? UIColor {
                 superView.backgroundColor = color
             }

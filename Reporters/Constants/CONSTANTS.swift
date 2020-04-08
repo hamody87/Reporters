@@ -43,7 +43,7 @@ public class CONSTANTS {
             }
             
             struct ONESIGNAL {
-                static let ID: String = "17aecdf1-b07b-4f8c-bb85-b446c9bd2a58"
+                static let ID: String = "776b385f-8f0c-4dab-bc77-3c1e34a24cd2"
             }
             
         }
@@ -679,6 +679,7 @@ public class CONSTANTS {
             static let IMAGE: String = "image"
             static let HIDDEN: String = "hidden"
             static let CLIPS: String = "clips"
+            static let MASK: String = "mask"
             struct ALLOW {
                 static let ENABLE: String = "enable"
                 static let UPDATE: String = "update"

@@ -9,9 +9,25 @@
 import UIKit
 
 class TabBarView: SuperView {
+    
     // MARK: - Declare Basic Variables
 
     private var thumbView: CustomizeImage!
+    private var addBtnView: SuperView!
+    private var scrollDownBtn: ScrollDownBtn!
+    
+    // MARK: - Private Methods
+    
+    @objc private func showThumb() {
+        self.thumbView.endUploadingImage()
+        let query: CoreDataStack = CoreDataStack(withCoreData: "CoreData")
+        var sqlInfo: [String: Any] = [String: Any]()
+        sqlInfo[CONSTANTS.KEYS.SQL.NAME_ENTITY] = CONSTANTS.KEYS.SQL.ENTITY.USER
+        sqlInfo[CONSTANTS.KEYS.SQL.FIELDS] = [CONSTANTS.KEYS.JSON.FIELD.THUMB]
+        if let data: [Any] = query.fetchRequest(sqlInfo), data.count == 1, let info: [String: Any] = data[0] as? [String: Any], let urlImage: String = info[CONSTANTS.KEYS.JSON.FIELD.THUMB] as? String {
+            self.thumbView.imageWithUrl(urlImage)
+        }
+    }
     
     // MARK: - Override Methods
 
@@ -23,17 +39,6 @@ class TabBarView: SuperView {
     
     @objc private func startUploadingThumb() {
         self.thumbView.startUploadingImage()
-    }
-    
-    @objc private func showThumb() {
-        self.thumbView.endUploadingImage()
-        let query: CoreDataStack = CoreDataStack(withCoreData: "CoreData")
-        var sqlInfo: [String: Any] = [String: Any]()
-        sqlInfo[CONSTANTS.KEYS.SQL.NAME_ENTITY] = CONSTANTS.KEYS.SQL.ENTITY.USER
-        sqlInfo[CONSTANTS.KEYS.SQL.FIELDS] = [CONSTANTS.KEYS.JSON.FIELD.THUMB]
-        if let data: [Any] = query.fetchRequest(sqlInfo), data.count == 1, let info: [String: Any] = data[0] as? [String: Any], let urlImage: String = info[CONSTANTS.KEYS.JSON.FIELD.THUMB] as? String {
-            self.thumbView.imageWithUrl(urlImage)
-        }
     }
     
     // MARK: - Interstitial SuperView
@@ -64,12 +69,38 @@ class TabBarView: SuperView {
             sqlInfo[CONSTANTS.KEYS.SQL.FIELDS] = [CONSTANTS.KEYS.JSON.FIELD.NAME, CONSTANTS.KEYS.JSON.FIELD.THUMB]
             if let data: [Any] = query.fetchRequest(sqlInfo), data.count == 1, let info: [String: Any] = data[0] as? [String: Any], let fullName: String = info[CONSTANTS.KEYS.JSON.FIELD.NAME] as? String {
                 self.thumbView.imageWithName(fullName)
-                print(info)
                 if let urlImage: String = info[CONSTANTS.KEYS.JSON.FIELD.THUMB] as? String {
                     self.thumbView.imageWithUrl(urlImage)
                 }
             }
         }
+        if let img_addIcon: UIImage = UIImage(named: "\(self.classDir())AddIcon") {
+            if let addBtnView: SuperView = CONSTANTS.GLOBAL.createSuperViewElement(withFrame: CGRect(x: 0, y: CONSTANTS.SCREEN.MARGIN() + 1.0, width: 0, height: sizeAllow), nil)[CONSTANTS.KEYS.ELEMENTS.SELF] as? SuperView {
+                self.addBtnView = addBtnView
+                self.addSubview(self.addBtnView)
+                if let label: UILabel = CONSTANTS.GLOBAL.createLabelElement(withFrame: CGRect.zero, {
+                    var argument: [String: Any] = [String: Any]()
+                    argument[CONSTANTS.KEYS.ELEMENTS.TEXT] = "SEND_MESSAGE".localized
+                    argument[CONSTANTS.KEYS.ELEMENTS.FONT] = CONSTANTS.GLOBAL.createFont(ofSize: 14.0, false)
+                    argument[CONSTANTS.KEYS.ELEMENTS.COLOR.TEXT] = UIColor.white
+                    return argument
+                }())[CONSTANTS.KEYS.ELEMENTS.SELF] as? UILabel {
+                    label.frame = CGRect(x: 0, y: self.addBtnView.frame.height - label.heightOfString(), width: label.widthOfString(), height: label.heightOfString())
+                    self.addBtnView.frame = CGRect(x: (self.frame.width - label.frame.width) / 2.0, y: self.addBtnView.frame.origin.y, width: label.frame.width, height: self.addBtnView.frame.height)
+                    self.addBtnView.addSubview(label)
+                    self.addBtnView.addSubview(CONSTANTS.GLOBAL.createImageViewElement(withFrame: CGRect(x: (self.addBtnView.frame.width - img_addIcon.size.width) / 2.0, y: 0, width: img_addIcon.size.width, height: img_addIcon.size.height), {
+                        var argument: [String: Any] = [String: Any]()
+                        argument[CONSTANTS.KEYS.ELEMENTS.IMAGE] = img_addIcon
+                        return argument
+                    }())[CONSTANTS.KEYS.ELEMENTS.SELF] as! UIImageView)
+                }
+            }
+        }
+        
+        
+        self.scrollDownBtn = ScrollDownBtn(withFrame: CGRect(x: self.frame.width - CONSTANTS.SCREEN.MARGIN(2) - sizeAllow, y: CONSTANTS.SCREEN.MARGIN(), width: sizeAllow, height: sizeAllow), delegate: self)
+        self.addSubview(self.scrollDownBtn)
+        
         NotificationCenter.default.addObserver(self, selector: #selector(self.startUploadingThumb), name: NSNotification.Name(rawValue: CONSTANTS.KEYS.NOTIFICATION.CHANGE.WILL.THUMB), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.showThumb), name: NSNotification.Name(rawValue: CONSTANTS.KEYS.NOTIFICATION.CHANGE.DID.THUMB), object: nil)
     }
