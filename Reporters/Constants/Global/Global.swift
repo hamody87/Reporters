@@ -18,6 +18,27 @@ import UIKit
 
 final class Global {
     
+    public func updateUserInfo(_ data: [String: Any]) -> Bool {
+        if let userInfo: [String: Any] = CONSTANTS.GLOBAL.getUserInfo([CONSTANTS.KEYS.JSON.FIELD.ID.USER]), let userID: String = userInfo[CONSTANTS.KEYS.JSON.FIELD.ID.USER] as? String {
+            let query: CoreDataStack = CoreDataStack(withCoreData: "CoreData")
+            if query.updateContext(CONSTANTS.KEYS.SQL.ENTITY.USER, "\(CONSTANTS.KEYS.JSON.FIELD.ID.USER) = '\(userID)'", data) {
+                return true
+            }
+        }
+        return false
+    }
+    
+    public func getUserInfo(_ fields: [String]! = nil) -> [String: Any]! {
+        let query: CoreDataStack = CoreDataStack(withCoreData: "CoreData")
+        var sqlInfo: [String: Any] = [String: Any]()
+        sqlInfo[CONSTANTS.KEYS.SQL.NAME_ENTITY] = CONSTANTS.KEYS.SQL.ENTITY.USER
+        sqlInfo[CONSTANTS.KEYS.SQL.FIELDS] = fields
+        if let data: [Any] = query.fetchRequest(sqlInfo), data.count == 1, let info: [String: Any] = data[0] as? [String: Any] {
+            return info
+        }
+        return nil
+    }
+    
     public func createFont(ofSize size: CGFloat, _ bold: Bool) -> UIFont {
         guard let font: UIFont = UIFont(name: (bold ? "FONT_FAMILT_BOLD".localized : "FONT_FAMILT_LIGHT".localized), size: 16.0) else {
             return bold ? UIFont.boldSystemFont(ofSize: size) : UIFont.systemFont(ofSize: size)

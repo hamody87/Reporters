@@ -157,12 +157,6 @@ class SignUpUserDetailsView: TemplateLoginView {
             } else {
                 let datatHandler: DatatHandler = DatatHandler.init()
                 datatHandler.loginUser(withData: userInfoForCloud, {
-//                    let query: CoreDataStack = CoreDataStack(withCoreData: "CoreData")
-//                    var sqlInfo: [String: Any] = [String: Any]()
-//                    sqlInfo[CONSTANTS.KEYS.SQL.NAME_ENTITY] = CONSTANTS.KEYS.SQL.ENTITY.USER
-//                    if let data: [Any] = query.fetchRequest(sqlInfo)  {
-//                        print(data)
-//                    }
                     self.transitionToChildOverlapContainer(viewName: "LandingView", nil, .coverVertical, false, {
                         if let thumb: UIImage = self.imageView.getImage(), let userID: String = userInfoForCloud[CONSTANTS.KEYS.JSON.FIELD.ID.USER] as? String {
                             datatHandler.uploadThmub(userID, thumb, "Images/\(userID)/Thumb/\(Int64((dateNow.timeIntervalSince1970 * 1000.0).rounded()))_\(userID)_tb", 0.25, {

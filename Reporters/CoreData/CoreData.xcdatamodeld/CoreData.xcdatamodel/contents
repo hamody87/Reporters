@@ -5,12 +5,13 @@
         <attribute name="date" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData"/>
         <attribute name="fullName" optional="YES" attributeType="String"/>
         <attribute name="level" optional="YES" attributeType="String"/>
+        <attribute name="notification" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData"/>
         <attribute name="phone" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData"/>
         <attribute name="randomKey" optional="YES" attributeType="String"/>
         <attribute name="thumb" optional="YES" attributeType="String"/>
         <attribute name="userID" optional="YES" attributeType="String"/>
     </entity>
     <elements>
-        <element name="User" positionX="246.65625" positionY="336.66796875" width="128" height="163"/>
+        <element name="User" positionX="246.65625" positionY="336.66796875" width="128" height="178"/>
     </elements>
 </model>

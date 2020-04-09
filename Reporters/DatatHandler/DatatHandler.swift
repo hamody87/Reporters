@@ -71,7 +71,7 @@ final class DatatHandler {
                 return
             }
             let randomKey: String = CONSTANTS.INFO.GLOBAL.RANDOM_KEY(length: 40)
-            Database.database().reference().child("\(CONSTANTS.KEYS.JSON.COLLECTION.USERS)/\(data[CONSTANTS.KEYS.JSON.FIELD.ID.USER] as! String)/\(CONSTANTS.KEYS.JSON.FIELD.RANDOM_KEY)").setValue(randomKey) { (error, reference) in
+            Database.database().reference().child("\(CONSTANTS.KEYS.JSON.COLLECTION.USERS)/\(data[CONSTANTS.KEYS.JSON.FIELD.ID.USER] as! String)").setValue([CONSTANTS.KEYS.JSON.FIELD.RANDOM_KEY: randomKey]) { (error, reference) in
                 if let _ = error {
                     failHandler?()
                     return

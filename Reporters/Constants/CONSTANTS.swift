@@ -624,6 +624,11 @@ public class CONSTANTS {
                 static let LOGIN: String = "isLogin"
             }
             
+            struct NOTIFICATION {
+                static let ACCEPTED: String = "accepted"
+                static let TOKEN: String = "deviceToken"
+            }
+            
         }
         
         struct NOTIFICATION {
@@ -757,6 +762,13 @@ public class CONSTANTS {
                 static let LEVEL: String = "level"
                 static let RANDOM_KEY: String = "randomKey"
                 static let THUMB: String = "thumb"
+                
+                struct NOTIFICATIONS {
+                    static let SELF: String = "notification"
+                    static let ONESIGNAL: String = "onesignalID"
+                    static let TOKEN: String = "deviceToken"
+                    static let ACTIVE: String = "isActive"
+                }
                 
             }
             

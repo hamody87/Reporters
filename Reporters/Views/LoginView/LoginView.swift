@@ -204,6 +204,9 @@ class LoginView: SuperView {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
             self.activateDemoMessages()
         }
+        
+        
+//        print(CONSTANTS.GLOBAL.getUserInfo())
     }
     
 }

@@ -20,11 +20,7 @@ class TabBarView: SuperView {
     
     @objc private func showThumb() {
         self.thumbView.endUploadingImage()
-        let query: CoreDataStack = CoreDataStack(withCoreData: "CoreData")
-        var sqlInfo: [String: Any] = [String: Any]()
-        sqlInfo[CONSTANTS.KEYS.SQL.NAME_ENTITY] = CONSTANTS.KEYS.SQL.ENTITY.USER
-        sqlInfo[CONSTANTS.KEYS.SQL.FIELDS] = [CONSTANTS.KEYS.JSON.FIELD.THUMB]
-        if let data: [Any] = query.fetchRequest(sqlInfo), data.count == 1, let info: [String: Any] = data[0] as? [String: Any], let urlImage: String = info[CONSTANTS.KEYS.JSON.FIELD.THUMB] as? String {
+        if let userInfo: [String: Any] = CONSTANTS.GLOBAL.getUserInfo([CONSTANTS.KEYS.JSON.FIELD.THUMB]), let urlImage: String = userInfo[CONSTANTS.KEYS.JSON.FIELD.THUMB] as? String {
             self.thumbView.imageWithUrl(urlImage)
         }
     }
@@ -54,7 +50,7 @@ class TabBarView: SuperView {
         topBorder.backgroundColor = UIColor(named: "Background/Border")
         self.addSubview(topBorder)
         let sizeAllow: CGFloat = self.frame.height - 1.0 - CONSTANTS.SCREEN.MARGIN(2) - CONSTANTS.SCREEN.SAFE_AREA.BOTTOM()
-        if let thumbView: CustomizeImage = CONSTANTS.GLOBAL.createCustomThumbElement(withFrame: CGRect(x: CONSTANTS.SCREEN.MARGIN(2), y: CONSTANTS.SCREEN.MARGIN() + 1.0, width: sizeAllow, height: sizeAllow), {
+        if let thumbView: CustomizeImage = CONSTANTS.GLOBAL.createCustomThumbElement(withFrame: CGRect(x: CONSTANTS.SCREEN.MARGIN(2), y: CONSTANTS.SCREEN.MARGIN(1) + 1.0, width: sizeAllow, height: sizeAllow), {
             var argument: [String: Any] = [String: Any]()
             argument[CONSTANTS.KEYS.ELEMENTS.DELEGATE] = self
             argument[CONSTANTS.KEYS.ELEMENTS.COLOR.TEXT] = UIColor(named: "Background/LoginView/Basic")
@@ -63,19 +59,15 @@ class TabBarView: SuperView {
         }())[CONSTANTS.KEYS.ELEMENTS.SELF] as? CustomizeImage {
             self.thumbView = thumbView
             self.addSubview(self.thumbView)
-            let query: CoreDataStack = CoreDataStack(withCoreData: "CoreData")
-            var sqlInfo: [String: Any] = [String: Any]()
-            sqlInfo[CONSTANTS.KEYS.SQL.NAME_ENTITY] = CONSTANTS.KEYS.SQL.ENTITY.USER
-            sqlInfo[CONSTANTS.KEYS.SQL.FIELDS] = [CONSTANTS.KEYS.JSON.FIELD.NAME, CONSTANTS.KEYS.JSON.FIELD.THUMB]
-            if let data: [Any] = query.fetchRequest(sqlInfo), data.count == 1, let info: [String: Any] = data[0] as? [String: Any], let fullName: String = info[CONSTANTS.KEYS.JSON.FIELD.NAME] as? String {
+            if let userInfo: [String: Any] = CONSTANTS.GLOBAL.getUserInfo([CONSTANTS.KEYS.JSON.FIELD.NAME, CONSTANTS.KEYS.JSON.FIELD.THUMB]), let fullName: String = userInfo[CONSTANTS.KEYS.JSON.FIELD.NAME] as? String {
                 self.thumbView.imageWithName(fullName)
-                if let urlImage: String = info[CONSTANTS.KEYS.JSON.FIELD.THUMB] as? String {
+                if let urlImage: String = userInfo[CONSTANTS.KEYS.JSON.FIELD.THUMB] as? String {
                     self.thumbView.imageWithUrl(urlImage)
                 }
             }
         }
         if let img_addIcon: UIImage = UIImage(named: "\(self.classDir())AddIcon") {
-            if let addBtnView: SuperView = CONSTANTS.GLOBAL.createSuperViewElement(withFrame: CGRect(x: 0, y: CONSTANTS.SCREEN.MARGIN() + 1.0, width: 0, height: sizeAllow), nil)[CONSTANTS.KEYS.ELEMENTS.SELF] as? SuperView {
+            if let addBtnView: SuperView = CONSTANTS.GLOBAL.createSuperViewElement(withFrame: CGRect(x: 0, y: CONSTANTS.SCREEN.MARGIN(1) + 1.0, width: 0, height: sizeAllow), nil)[CONSTANTS.KEYS.ELEMENTS.SELF] as? SuperView {
                 self.addBtnView = addBtnView
                 self.addSubview(self.addBtnView)
                 if let label: UILabel = CONSTANTS.GLOBAL.createLabelElement(withFrame: CGRect.zero, {
@@ -96,11 +88,8 @@ class TabBarView: SuperView {
                 }
             }
         }
-        
-        
-        self.scrollDownBtn = ScrollDownBtn(withFrame: CGRect(x: self.frame.width - CONSTANTS.SCREEN.MARGIN(2) - sizeAllow, y: CONSTANTS.SCREEN.MARGIN(), width: sizeAllow, height: sizeAllow), delegate: self)
+        self.scrollDownBtn = ScrollDownBtn(withFrame: CGRect(x: self.frame.width - CONSTANTS.SCREEN.MARGIN(2) - sizeAllow, y: CONSTANTS.SCREEN.MARGIN(1) + 1.0, width: sizeAllow, height: sizeAllow), delegate: self)
         self.addSubview(self.scrollDownBtn)
-        
         NotificationCenter.default.addObserver(self, selector: #selector(self.startUploadingThumb), name: NSNotification.Name(rawValue: CONSTANTS.KEYS.NOTIFICATION.CHANGE.WILL.THUMB), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.showThumb), name: NSNotification.Name(rawValue: CONSTANTS.KEYS.NOTIFICATION.CHANGE.DID.THUMB), object: nil)
     }
