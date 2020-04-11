@@ -90,6 +90,7 @@ class TabBarView: SuperView {
         }
         self.scrollDownBtn = ScrollDownBtn(withFrame: CGRect(x: self.frame.width - CONSTANTS.SCREEN.MARGIN(2) - sizeAllow, y: CONSTANTS.SCREEN.MARGIN(1) + 1.0, width: sizeAllow, height: sizeAllow), delegate: self)
         self.addSubview(self.scrollDownBtn)
+        self.scrollDownBtn.isHidden = true
         NotificationCenter.default.addObserver(self, selector: #selector(self.startUploadingThumb), name: NSNotification.Name(rawValue: CONSTANTS.KEYS.NOTIFICATION.CHANGE.WILL.THUMB), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.showThumb), name: NSNotification.Name(rawValue: CONSTANTS.KEYS.NOTIFICATION.CHANGE.DID.THUMB), object: nil)
     }

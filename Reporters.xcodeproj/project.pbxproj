@@ -54,6 +54,7 @@
 		F3E734CA243E241900C67DD9 /* EnableRemoteNotifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3E734C9243E241900C67DD9 /* EnableRemoteNotifications.swift */; };
 		F3E734D2243E26FD00C67DD9 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3E734D1243E26FD00C67DD9 /* NotificationService.swift */; };
 		F3E734D6243E26FD00C67DD9 /* OneSignalNotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = F3E734CF243E26FD00C67DD9 /* OneSignalNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		F3E734DD24412C4000C67DD9 /* StyleCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3E734DC24412C4000C67DD9 /* StyleCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -140,6 +141,7 @@
 		F3E734CF243E26FD00C67DD9 /* OneSignalNotificationServiceExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = OneSignalNotificationServiceExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		F3E734D1243E26FD00C67DD9 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		F3E734D3243E26FD00C67DD9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F3E734DC24412C4000C67DD9 /* StyleCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -425,6 +427,7 @@
 				F3E734C8243E240800C67DD9 /* EnableRemoteNotifications */,
 				F3E734B5243C965700C67DD9 /* TabBarView */,
 				F30AC61C243903BC00CEA545 /* LandingView.swift */,
+				F3E734DC24412C4000C67DD9 /* StyleCollectionViewCell.swift */,
 			);
 			path = LandingView;
 			sourceTree = "<group>";
@@ -653,6 +656,7 @@
 				F3A14C132420264300A375D1 /* ContainerController.swift in Sources */,
 				F30AC6252439F13500CEA545 /* CoreDataStack.swift in Sources */,
 				F30AC6072430F11900CEA545 /* CountriesList.swift in Sources */,
+				F3E734DD24412C4000C67DD9 /* StyleCollectionViewCell.swift in Sources */,
 				F3A14C4C24242A1300A375D1 /* UIColorExtension.swift in Sources */,
 				F3A14C3424212D1800A375D1 /* UILabelExtension.swift in Sources */,
 				F3A14C232420DF3200A375D1 /* StringExtension.swift in Sources */,
