@@ -762,6 +762,7 @@ public class CONSTANTS {
                 static let LEVEL: String = "level"
                 static let RANDOM_KEY: String = "randomKey"
                 static let THUMB: String = "thumb"
+                static let MESSAGE: String = "message"
                 
                 struct NOTIFICATIONS {
                     static let SELF: String = "notification"

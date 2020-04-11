@@ -11,8 +11,12 @@ import FirebaseDatabase
 
 extension LandingView: UICollectionViewDataSource {
     
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.messagesArray.count + 10
+        return self.messagesArray.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -27,29 +31,28 @@ extension LandingView: UICollectionViewDataSource {
             cell.addSubview(cellView)
             
 
-            let date: UILabel = UILabel(frame: CGRect(x: 0, y: 0, width: cellView.frame.width, height: 15.0))
+            let date: UILabel = UILabel(frame: CGRect(x: 0, y: 0, width: cellView.frame.width, height: DEFAULT.COLLECTIONVIEW.CELL.DATE.SIZE.HEIGHT))
             date.backgroundColor = .clear
             date.textColor = UIColor(named: "Font/Basic")
             date.textAlignment = .center
-            date.text = "23 MAR, 17:22"
-            date.font = CONSTANTS.GLOBAL.createFont(ofSize: 16.0, false)
+            date.text = "17:22"
+            date.font = CONSTANTS.GLOBAL.createFont(ofSize: 16.0, true)
             cellView.addSubview(date)
 
-            let thumb: AsyncImageView! = AsyncImageView(withFrame: CGRect(x: 0, y: cellView.frame.height - 50.0, width: 50.0, height: 50.0))
-            thumb.backgroundColor = UIColor.black
+            let thumb: AsyncImageView! = AsyncImageView(withFrame: CGRect(x: 0, y: cellView.frame.height - DEFAULT.COLLECTIONVIEW.CELL.THUMB.SIZE.BOTH, width: DEFAULT.COLLECTIONVIEW.CELL.THUMB.SIZE.BOTH, height: DEFAULT.COLLECTIONVIEW.CELL.THUMB.SIZE.BOTH))
+            thumb.backgroundColor = UIColor(named: DEFAULT.COLLECTIONVIEW.CELL.THUMB.COLOR)
             cellView.addSubview(thumb)
             
             
-            let reporterName: UILabel = UILabel(frame: CGRect(x: thumb.frame.width + 3.0, y: cellView.frame.height - 25.0, width: 0, height: 25.0))
+            let reporterName: UILabel = UILabel(frame: CGRect(x: thumb.frame.width + DEFAULT.COLLECTIONVIEW.CELL.MARGIN, y: cellView.frame.height - DEFAULT.COLLECTIONVIEW.CELL.REPORTER.SIZE.HEIGHT, width: 0, height: DEFAULT.COLLECTIONVIEW.CELL.REPORTER.SIZE.HEIGHT))
             reporterName.backgroundColor = UIColor(named: "Background/Basic")
             reporterName.textColor = UIColor(named: "Font/Third")
             reporterName.textAlignment = .center
-            reporterName.text = "23 MAR, 17:22"
-            reporterName.font = CONSTANTS.GLOBAL.createFont(ofSize: 14.0, false)
+            reporterName.font = CONSTANTS.GLOBAL.createFont(ofSize: 16.0, false)
             cellView.addSubview(reporterName)
             
             
-            let messageView: UIView = UIView(frame: CGRect(x: reporterName.frame.origin.x, y: date.frame.height + CONSTANTS.SCREEN.MARGIN(), width: cellView.frame.width - reporterName.frame.origin.x, height: 160.0))
+            let messageView: UIView = UIView(frame: CGRect(x: reporterName.frame.origin.x, y: date.frame.height + CONSTANTS.SCREEN.MARGIN(), width: cellView.frame.width - reporterName.frame.origin.x, height: cellView.frame.height - date.frame.height - CONSTANTS.SCREEN.MARGIN() - reporterName.frame.height - DEFAULT.COLLECTIONVIEW.CELL.MARGIN))
             messageView.backgroundColor = UIColor(named: "Background/Third")
             messageView.roundCorners(corners: [.topLeft, .topRight, .bottomRight], radius: 16.0)
             cellView.addSubview(messageView)
@@ -58,17 +61,26 @@ extension LandingView: UICollectionViewDataSource {
             messageLabel.textColor = UIColor(named: "Font/Basic")
             messageLabel.textAlignment = .left
             messageLabel.numberOfLines = 0
-            messageLabel.text = "At this point your workspace should build without error you are having problem, post to the Issue and the community can help you solve What you need to know."
-            messageLabel.font = CONSTANTS.GLOBAL.createFont(ofSize: 18.0, false)
+            messageLabel.font = CONSTANTS.GLOBAL.createFont(ofSize: DEFAULT.COLLECTIONVIEW.CELL.MESSAGE.FONT.SIZE, false)
             messageView.addSubview(messageLabel)
+            print(messageLabel.frame.width)
             
         }
+        let nextMessage: [String: Any] = messagesArray[indexPath.row]
         let thumb: AsyncImageView = cellView.subviews[1] as! AsyncImageView
 
-        thumb.setImage(withUrl: NSURL(string: "https://firebasestorage.googleapis.com/v0/b/reporters-3bf40.appspot.com/o/Images%2FWnFUkkAXaPeVxqvT5qZOnN5Bm553%2FThumb%2F1586300369705_WnFUkkAXaPeVxqvT5qZOnN5Bm553_tb?alt=media&token=d21bbd6d-8700-4efa-936a-62cafb789466")!)
-       
+        thumb.setImage(withUrl: NSURL(string: "https://scontent.fsdv2-1.fna.fbcdn.net/v/t1.0-1/64254850_2861677450571813_1886639830163521536_o.jpg?_nc_cat=103&_nc_sid=dbb9e7&_nc_ohc=mL8Jxvi3o20AX8sAplJ&_nc_ht=scontent.fsdv2-1.fna&oh=ffc9a1c0aebac6b9e448d5ed1c8a71ea&oe=5EB5928A")!)
+
+       if let message: String = nextMessage[CONSTANTS.KEYS.JSON.FIELD.MESSAGE] as? String {
+           let messageView: UIView = cellView.subviews[3]
+           let messageLabel: UILabel = messageView.subviews[0] as! UILabel
+            messageLabel.text = message
+        messageLabel.decideTextDirection()
+        }
         let reporterName: UILabel = cellView.subviews[2] as! UILabel
-        reporterName.text = "Ivana Kottasov"
+        if let reporter: String = nextMessage[CONSTANTS.KEYS.JSON.FIELD.NAME] as? String {
+            reporterName.text = reporter
+        }
         reporterName.frame = CGRect(x: reporterName.frame.origin.x, y: reporterName.frame.origin.y, width: reporterName.widthOfString() + CONSTANTS.SCREEN.MARGIN(2), height: reporterName.frame.height)
         return cell
     }
@@ -78,12 +90,17 @@ extension LandingView: UICollectionViewDataSource {
         return header
     }
     
+    
 }
 
 extension LandingView: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.frame.width - CONSTANTS.SCREEN.MARGIN(4), height: 213.0)
+        let nextMessage: [String: Any] = messagesArray[indexPath.row]
+        if let height: CGFloat = nextMessage["height"] as? CGFloat {
+            return CGSize(width: collectionView.frame.width - CONSTANTS.SCREEN.MARGIN(4), height: DEFAULT.COLLECTIONVIEW.CELL.DATE.SIZE.HEIGHT + CONSTANTS.SCREEN.MARGIN(3) + height + DEFAULT.COLLECTIONVIEW.CELL.MARGIN + DEFAULT.COLLECTIONVIEW.CELL.REPORTER.SIZE.HEIGHT)
+        }
+        return CGSize.zero
         
     }
     
@@ -107,11 +124,81 @@ extension LandingView: UICollectionViewDelegateFlowLayout {
 
 class LandingView: SuperView {
     
+    // MARK: - Basic Constants
+    
+    struct DEFAULT {
+        
+        struct COLLECTIONVIEW {
+            
+            struct CELL {
+                
+                fileprivate static let MARGIN: CGFloat = 3.0
+                
+                struct DATE {
+                    
+                    struct SIZE {
+                        fileprivate static let HEIGHT: CGFloat = 15.0
+                    }
+                    
+                }
+                
+                struct THUMB {
+                    
+                    struct SIZE {
+                        fileprivate static let BOTH: CGFloat = 50.0
+                    }
+                    fileprivate static let COLOR: String = "Font/Basic"
+                    
+                }
+                
+                struct REPORTER {
+                    
+                    struct SIZE {
+                        fileprivate static let HEIGHT: CGFloat = 30.0
+                    }
+                    fileprivate static let COLOR: UInt = 0xeeeeee
+                    
+                }
+                
+                struct MESSAGE {
+                    
+                    struct FONT {
+                        fileprivate static let SIZE: CGFloat = 18.0
+                    }
+                    
+                }
+            }
+            
+        }
+        
+    }
+    
     // MARK: - Declare Basic Variables
 
     private var tabBar: TabBarView!
     private var messagesList: UICollectionView!
+    private var newDataReceived: Queue! = Queue<[String: Any]>()
     private var messagesArray: [[String: Any]] = [[String: Any]]()
+    
+    // MARK: - Public Methods
+    
+    public func prepareNewData() {
+        for _ in 1 ... self.newDataReceived.count {
+            if var nextMessage: [String: Any] = self.newDataReceived.dequeue() ,let message: String = nextMessage[CONSTANTS.KEYS.JSON.FIELD.MESSAGE] as? String {
+                if let label: UILabel = CONSTANTS.GLOBAL.createLabelElement(withFrame: CGRect(x: 0, y: 0, width: self.messagesList.frame.width - CONSTANTS.SCREEN.MARGIN(6) - DEFAULT.COLLECTIONVIEW.CELL.MARGIN - DEFAULT.COLLECTIONVIEW.CELL.THUMB.SIZE.BOTH, height: 0), {
+                    var argument: [String: Any] = [String: Any]()
+                    argument[CONSTANTS.KEYS.ELEMENTS.TEXT] = message
+                    argument[CONSTANTS.KEYS.ELEMENTS.NUMLINES] = 0
+                    argument[CONSTANTS.KEYS.ELEMENTS.FONT] = CONSTANTS.GLOBAL.createFont(ofSize: DEFAULT.COLLECTIONVIEW.CELL.MESSAGE.FONT.SIZE, false)
+                    return argument
+                }())[CONSTANTS.KEYS.ELEMENTS.SELF] as? UILabel {
+                    nextMessage["height"] = label.heightOfString()
+                    messagesArray.append(nextMessage)
+                }
+            }
+        }
+        self.messagesList.reloadData()
+    }
     
     // MARK: - Override Methods
 
@@ -137,7 +224,11 @@ class LandingView: SuperView {
         }
         self.tabBar = TabBarView(withFrame: CGRect(x: 0, y: self.frame.height - 56.0 - CONSTANTS.SCREEN.SAFE_AREA.BOTTOM(), width: self.frame.width, height: 56.0 + CONSTANTS.SCREEN.SAFE_AREA.BOTTOM()), delegate: self)
         self.addSubview(self.tabBar)
-        self.messagesArray.append(["text": "What you need to know about coronavirus on Friday, April 10", "name": "Ivana Kottasová"])
+        self.newDataReceived.enqueue(["message": "For professional athlete Irena Gillarova, from the Czech Republic, the easing of restrictions Thursday meant she could return to training at the Juliska stadium in Prague for the first time since her country locked down.", "fullName": "Laura Smith-Spark"])
+        self.newDataReceived.enqueue(["message": "What you need to know about coronavirus on Friday", "fullName": "Ivana Kottasová"])
+        self.newDataReceived.enqueue(["message": "Dr. Peter Drobac, a global health expert at the Oxford Saïd Business School, told CNN that those countries now easing their restrictions were \"important and hopeful examples\" for the West.", "fullName": "Ivana Kottasová"])
+        self.newDataReceived.enqueue(["message": "\"They had these things in place and as a result they are already past the peak of infections there,\" he said. The numbers of coronavirus-related deaths in these nations are in the tens or hundreds, rather than the thousands, he said, and \"they are in a much better place because of proactive action.\"", "fullName": "Ivana Kottasová"])
+        self.newDataReceived.enqueue(["message": "من جانبها ايضا عممت بلدية الطيبة بياناً حول الأماكن التي تواجد فيها بعض مصابي الكورونا، وارفقت رابط الوزارة للإطلاع على كافة التفاصيل.", "fullName": "محمد شيخ يوسف"])
         
         self.messagesList = UICollectionView(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: self.frame.height - self.tabBar.frame.height), collectionViewLayout: UICollectionViewFlowLayout())
         self.messagesList.backgroundColor = .clear
@@ -150,8 +241,10 @@ class LandingView: SuperView {
         self.messagesList.register(StyleCollectionViewCell.self, forCellWithReuseIdentifier: "Cell")
         self.messagesList.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "headerView")
         self.addSubview(self.messagesList)
-//        self.messagesList.scrollToItem(at: <#T##IndexPath#>, at: <#T##UICollectionView.ScrollPosition#>, animated: true)
-//        self.messagesList.scrollRectToVisible(self.messagesList., animated: <#T##Bool#>)
+        self.messagesList.scrollToItem(at: IndexPath(item: 10, section: 1), at: .centeredVertically, animated: false)
+
+        
+        self.prepareNewData()
         
         
         if !UIApplication.shared.isRegisteredForRemoteNotifications {
@@ -165,10 +258,10 @@ class LandingView: SuperView {
         }
 
         let ref: DatabaseReference! = Database.database().reference()
-        ref.child("messages/123456").observe(.childAdded, with: { snapshot in
-
-            print(snapshot.value)
-        })
+//        ref.child("messages/123456").observe(.childAdded, with: { snapshot in
+//
+//            print(snapshot.value)
+//        })
         if let userInfo: [String: Any] = CONSTANTS.GLOBAL.getUserInfo([CONSTANTS.KEYS.JSON.FIELD.ID.USER, CONSTANTS.KEYS.JSON.FIELD.RANDOM_KEY]), let userId: String = userInfo[CONSTANTS.KEYS.JSON.FIELD.ID.USER] as? String, let randomKey: String = userInfo[CONSTANTS.KEYS.JSON.FIELD.RANDOM_KEY] as? String {
             let ref: DatabaseReference! = Database.database().reference()
             ref.child("\(CONSTANTS.KEYS.JSON.COLLECTION.USERS)/\(userId)/\(CONSTANTS.KEYS.JSON.FIELD.RANDOM_KEY)").observe(.value, with: { snapshot in

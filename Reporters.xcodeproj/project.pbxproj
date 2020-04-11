@@ -424,10 +424,10 @@
 		F3A14C54242927D100A375D1 /* LandingView */ = {
 			isa = PBXGroup;
 			children = (
+				F3E734DE2442095B00C67DD9 /* StyleCollectionViewCell */,
 				F3E734C8243E240800C67DD9 /* EnableRemoteNotifications */,
 				F3E734B5243C965700C67DD9 /* TabBarView */,
 				F30AC61C243903BC00CEA545 /* LandingView.swift */,
-				F3E734DC24412C4000C67DD9 /* StyleCollectionViewCell.swift */,
 			);
 			path = LandingView;
 			sourceTree = "<group>";
@@ -473,6 +473,14 @@
 				F3E734D3243E26FD00C67DD9 /* Info.plist */,
 			);
 			path = OneSignalNotificationServiceExtension;
+			sourceTree = "<group>";
+		};
+		F3E734DE2442095B00C67DD9 /* StyleCollectionViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				F3E734DC24412C4000C67DD9 /* StyleCollectionViewCell.swift */,
+			);
+			path = StyleCollectionViewCell;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
