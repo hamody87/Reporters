@@ -25,6 +25,7 @@
 		F36B68A5241C3D3400D91162 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36B68A4241C3D3400D91162 /* AppDelegate.swift */; };
 		F36B68AB241C3D3600D91162 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F36B68AA241C3D3600D91162 /* Assets.xcassets */; };
 		F36B68B1241C3D3600D91162 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F36B68AF241C3D3600D91162 /* LaunchScreen.storyboard */; };
+		F381D9A72443DB00003CF6B6 /* ArrayExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F381D9A62443DB00003CF6B6 /* ArrayExtension.swift */; };
 		F3A14C132420264300A375D1 /* ContainerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A14C122420264300A375D1 /* ContainerController.swift */; };
 		F3A14C152420265300A375D1 /* OverlapContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A14C142420265300A375D1 /* OverlapContainer.swift */; };
 		F3A14C182420D22A00A375D1 /* CONSTANTS.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A14C172420D22A00A375D1 /* CONSTANTS.swift */; };
@@ -107,6 +108,7 @@
 		F36B68AA241C3D3600D91162 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F36B68B0241C3D3600D91162 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F36B68B2241C3D3600D91162 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F381D9A62443DB00003CF6B6 /* ArrayExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayExtension.swift; sourceTree = "<group>"; };
 		F3A14C122420264300A375D1 /* ContainerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerController.swift; sourceTree = "<group>"; };
 		F3A14C142420265300A375D1 /* OverlapContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlapContainer.swift; sourceTree = "<group>"; };
 		F3A14C172420D22A00A375D1 /* CONSTANTS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CONSTANTS.swift; sourceTree = "<group>"; };
@@ -357,6 +359,7 @@
 				F3A14C3524212D3F00A375D1 /* UITextViewExtension.swift */,
 				F3A14C4B24242A1300A375D1 /* UIColorExtension.swift */,
 				F30AC601242EBE2E00CEA545 /* UIViewExtension.swift */,
+				F381D9A62443DB00003CF6B6 /* ArrayExtension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -661,6 +664,7 @@
 				F36B68A5241C3D3400D91162 /* AppDelegate.swift in Sources */,
 				F3E734C2243D387400C67DD9 /* AsyncImageConnection.swift in Sources */,
 				F30AC60A2430F1AD00CEA545 /* NoneDesignCell.swift in Sources */,
+				F381D9A72443DB00003CF6B6 /* ArrayExtension.swift in Sources */,
 				F3A14C132420264300A375D1 /* ContainerController.swift in Sources */,
 				F30AC6252439F13500CEA545 /* CoreDataStack.swift in Sources */,
 				F30AC6072430F11900CEA545 /* CountriesList.swift in Sources */,

@@ -126,7 +126,6 @@ final class Global {
                 label.textAlignment = alignment
             }
             if let numLines: NSNumber = argument[CONSTANTS.KEYS.ELEMENTS.NUMLINES] as? NSNumber {
-                print("dsssss")
                 label.numberOfLines = numLines.intValue
             }
             if let radius: NSNumber = argument[CONSTANTS.KEYS.ELEMENTS.CORNER.RADIUS] as? NSNumber {
