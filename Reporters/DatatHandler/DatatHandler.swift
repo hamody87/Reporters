@@ -8,14 +8,59 @@
 
 import Foundation
 import Firebase
+import FirebaseDatabase
 
 final class DatatHandler {
     
     // MARK: - Public Methods
     
+    public func initReporterInfoByID(_ reporterID: String) {
+        let ref: DatabaseReference! = Database.database().reference()
+        ref.child(CONSTANTS.KEYS.JSON.COLLECTION.USERS).child(reporterID).child(CONSTANTS.KEYS.JSON.FIELD.INFO.SELF).removeAllObservers()
+        ref.child(CONSTANTS.KEYS.JSON.COLLECTION.USERS).child(reporterID).child(CONSTANTS.KEYS.JSON.FIELD.INFO.SELF).observe(.value, with: { snapshot in
+            if let reporterInfo: [String: Any] = snapshot.value as? [String: Any], let newReporterName: String = reporterInfo[CONSTANTS.KEYS.JSON.FIELD.NAME] as? String, let newReporterThumb: String = reporterInfo[CONSTANTS.KEYS.JSON.FIELD.THUMB] as? String {
+                
+                
+                
+                let query: CoreDataStack = CoreDataStack(withCoreData: "CoreData")
+                if query.updateContext(CONSTANTS.KEYS.SQL.ENTITY.FOLLOWING, "\(CONSTANTS.KEYS.JSON.FIELD.ID.USER) = '\(reporterID)'", [CONSTANTS.KEYS.JSON.FIELD.NAME: reporterName, CONSTANTS.KEYS.JSON.FIELD.THUMB: reporterThumb == "" ? nil : reporterThumb]) {
+                    let ref: DatabaseReference! = Database.database().reference()
+                        
+                        
+                        
+//                        if let newInfo: [String: Any] = snapshot.value as? [String: Any], let newReporterName: String = newInfo[CONSTANTS.KEYS.JSON.FIELD.NAME] as? String, let newReporterThumb: String = newInfo[CONSTANTS.KEYS.JSON.FIELD.THUMB] as? String {
+//                            print("4444 dddsdsdas")
+//                            let query: CoreDataStack = CoreDataStack(withCoreData: "CoreData")
+//                            if newReporterName != reporterName {
+//                                if query.updateContext(CONSTANTS.KEYS.SQL.ENTITY.FOLLOWING, "\(CONSTANTS.KEYS.JSON.FIELD.ID.USER) = '\(reporterID)'", [CONSTANTS.KEYS.JSON.FIELD.NAME: newReporterName]) {
+//                                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: CONSTANTS.KEYS.NOTIFICATION.DID.REPORTER.CHANGE.NAME), object: [CONSTANTS.KEYS.JSON.FIELD.ID.USER: reporterID], userInfo: nil)
+//                                }
+//                            }
+//                            if newReporterThumb != reporterThumb {
+//                                if query.updateContext(CONSTANTS.KEYS.SQL.ENTITY.FOLLOWING, "\(CONSTANTS.KEYS.JSON.FIELD.ID.USER) = '\(reporterID)'", [CONSTANTS.KEYS.JSON.FIELD.THUMB: newReporterThumb]) {
+//                                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: CONSTANTS.KEYS.NOTIFICATION.DID.REPORTER.CHANGE.THUMB), object: [CONSTANTS.KEYS.JSON.FIELD.ID.USER: reporterID], userInfo: nil)
+//                                }
+//                            }
+//                        }
+                }
+            }
+        })
+    }
+    
+    public func initReporters() {
+        let query: CoreDataStack = CoreDataStack(withCoreData: "CoreData")
+        if let reporters: [Any] = query.fetchRequest([CONSTANTS.KEYS.SQL.NAME_ENTITY: CONSTANTS.KEYS.SQL.ENTITY.FOLLOWING]) {
+            for reporter in reporters {
+                if let info: [String: Any] = reporter as? [String: Any], let reporterID: String = info[CONSTANTS.KEYS.JSON.FIELD.ID.USER] as? String {
+                    self.initReporterInfoByID(reporterID)
+                }
+            }
+        }
+    }
+    
     public func uploadThmub(_ userID: String, _ image: UIImage, _ imagePath: String, _ quality: CGFloat, _ successHandler: (() -> Void)?, _ failHandler: (() -> Void)?) {
         if let data: Data = image.jpegData(compressionQuality: quality) {
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: CONSTANTS.KEYS.NOTIFICATION.CHANGE.WILL.THUMB), object: nil, userInfo: nil)
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: CONSTANTS.KEYS.NOTIFICATION.WILL.USER.CHANGE.THUMB), object: nil, userInfo: nil)
             let storage = Storage.storage()
             let storageRef = storage.reference()
             let riversRef = storageRef.child(imagePath)
@@ -36,7 +81,7 @@ final class DatatHandler {
                         db.collection(CONSTANTS.KEYS.JSON.COLLECTION.USERS).document(userID).updateData([CONSTANTS.KEYS.JSON.FIELD.THUMB: imageUrl]) { error in
                             let query: CoreDataStack = CoreDataStack(withCoreData: "CoreData")
                             if query.updateContext(CONSTANTS.KEYS.SQL.ENTITY.USER, "\(CONSTANTS.KEYS.JSON.FIELD.ID.USER) = '\(userID)'", [CONSTANTS.KEYS.JSON.FIELD.THUMB: imageUrl]) {
-                                NotificationCenter.default.post(name: NSNotification.Name(rawValue: CONSTANTS.KEYS.NOTIFICATION.CHANGE.DID.THUMB), object: nil, userInfo: nil)
+                                NotificationCenter.default.post(name: NSNotification.Name(rawValue: CONSTANTS.KEYS.NOTIFICATION.DID.USER.CHANGE.THUMB), object: nil, userInfo: nil)
                                 successHandler?()
                                 return
                             }
@@ -90,8 +135,13 @@ final class DatatHandler {
                     arg[CONSTANTS.KEYS.JSON.FIELD.DATE.SELF] = date
                 }
                 let query: CoreDataStack = CoreDataStack(withCoreData: "CoreData")
-                if query.deleteContext([CONSTANTS.KEYS.SQL.NAME_ENTITY: CONSTANTS.KEYS.SQL.ENTITY.USER]) {
+                if query.deleteContext([CONSTANTS.KEYS.SQL.NAME_ENTITY: CONSTANTS.KEYS.SQL.ENTITY.USER]) && query.deleteContext([CONSTANTS.KEYS.SQL.NAME_ENTITY: CONSTANTS.KEYS.SQL.ENTITY.FOLLOWING]) {
                     if query.saveContext(CONSTANTS.KEYS.SQL.ENTITY.USER, arg) {
+                        if let reportersIDs: [String] = data[CONSTANTS.KEYS.JSON.FIELD.FOLLOWING] as? [String] {
+                            for reporterID: String in reportersIDs {
+                                let _ = query.saveContext(CONSTANTS.KEYS.SQL.ENTITY.FOLLOWING, [CONSTANTS.KEYS.JSON.FIELD.ID.USER: reporterID])
+                            }
+                        }
                         UserDefaults.standard.set(true, forKey: CONSTANTS.KEYS.USERDEFAULTS.USER.LOGIN)
                         successHandler?()
                         return

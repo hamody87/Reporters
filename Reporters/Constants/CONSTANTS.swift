@@ -46,6 +46,8 @@ public class CONSTANTS {
                 static let ID: String = "776b385f-8f0c-4dab-bc77-3c1e34a24cd2"
             }
             
+            
+            
         }
         
         struct GLOBAL {
@@ -632,12 +634,34 @@ public class CONSTANTS {
         }
         
         struct NOTIFICATION {
-            struct CHANGE {
-                struct WILL {
-                    static let THUMB: String = "willChangeThumb"
+
+            struct WILL {
+                struct USER {
+                    struct CHANGE {
+                        static let NAME: String = "userWillChangeName"
+                        static let THUMB: String = "userWillChangeThumb"
+                    }
                 }
-                struct DID {
-                    static let THUMB: String = "didChangeThumb"
+                struct REPORTER {
+                    struct CHANGE {
+                        static let NAME: String = "reporterWillChangeName"
+                        static let THUMB: String = "reporterWillChangeThumb"
+                    }
+                }
+            }
+            
+            struct DID {
+                struct USER {
+                    struct CHANGE {
+                        static let NAME: String = "userDidChangeName"
+                        static let THUMB: String = "userDidChangeThumb"
+                    }
+                }
+                struct REPORTER {
+                    struct CHANGE {
+                        static let NAME: String = "reporterDidChangeName"
+                        static let THUMB: String = "reporterDidChangeThumb"
+                    }
                 }
             }
             
@@ -647,6 +671,7 @@ public class CONSTANTS {
             
             struct ENTITY {
                 static let USER: String = "User"
+                static let FOLLOWING: String = "Following"
             }
             static let FIELDS: String = "fields"
             static let NAME_ENTITY: String = "nameEntity"
@@ -716,6 +741,7 @@ public class CONSTANTS {
 
             struct COLLECTION {
                 static let USERS: String = "Users"
+                static let MESSAGES: String = "Messages"
             }
             
             struct FIELD {
@@ -723,6 +749,7 @@ public class CONSTANTS {
                 struct ID {
                     static let SELF: String = "ID"
                     static let USER: String = "userID"
+                    static let MESSAGE: String = "messageID"
                     static let VERIFICATION: String = "verificationID"
                 }
                 
@@ -763,6 +790,10 @@ public class CONSTANTS {
                 static let RANDOM_KEY: String = "randomKey"
                 static let THUMB: String = "thumb"
                 static let MESSAGE: String = "message"
+                static let READY: String = "ready"
+
+                static let FOLLOWING: String = "following"
+                static let FOLLOWERS: String = "followers"
                 
                 struct NOTIFICATIONS {
                     static let SELF: String = "notification"

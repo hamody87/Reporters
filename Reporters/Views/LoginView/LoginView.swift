@@ -57,8 +57,6 @@ class LoginView: SuperView {
     
     @objc private func loginWithPhoneNumber() {
         self.transitionToChildOverlapContainer(viewName: "PhoneNumberView", nil, .coverVertical, false, nil)
-
-//        self.transitionToChildOverlapContainer(viewName: "SignUpUserDetailsView", nil, .coverVertical, false, nil)
     }
     
     private func activateDemoMessages() {
@@ -205,7 +203,7 @@ class LoginView: SuperView {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
             self.activateDemoMessages()
         }
-        
+
         
 //        print(CONSTANTS.GLOBAL.getUserInfo())
     }

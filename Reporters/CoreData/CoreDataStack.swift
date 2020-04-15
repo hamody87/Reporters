@@ -68,7 +68,7 @@ final class CoreDataStack {
     
     // MARK: - Public Methods
     
-    public func updateContext(_ nameEntity: String, _ clauseWhere: String, _ values: [String : Any]) -> Bool {
+    public func updateContext(_ nameEntity: String, _ clauseWhere: String, _ values: [String : Any?]) -> Bool {
         guard let result = self.fetchRequestWithResultType([CONSTANTS.KEYS.SQL.NAME_ENTITY: nameEntity, CONSTANTS.KEYS.SQL.WHERE: clauseWhere], .managedObjectResultType) else {
             return false
         }
@@ -102,7 +102,7 @@ final class CoreDataStack {
         return true
     }
     
-    public func saveContext(_ nameEntity: String, _ values: [String : Any]) -> Bool {
+    public func saveContext(_ nameEntity: String, _ values: [String : Any?]) -> Bool {
         let context = self.persistentContainer.viewContext
         guard let entity = NSEntityDescription.entity(forEntityName: nameEntity, in: context) else {
             return false

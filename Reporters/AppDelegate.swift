@@ -39,7 +39,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ContainerControllerDelega
     public func modifyNotificationTokens() {
         if UserDefaults.standard.bool(forKey: CONSTANTS.KEYS.USERDEFAULTS.USER.LOGIN) {
             if let userInfo: [String: Any] = CONSTANTS.GLOBAL.getUserInfo([CONSTANTS.KEYS.JSON.FIELD.ID.USER, CONSTANTS.KEYS.JSON.FIELD.NOTIFICATIONS.SELF]), let userID: String = userInfo[CONSTANTS.KEYS.JSON.FIELD.ID.USER] as? String {
-                
                 if let oneSignalID: String = OneSignal.getPermissionSubscriptionState().subscriptionStatus.userId, let deviceToken: String = UserDefaults.standard.string(forKey: CONSTANTS.KEYS.USERDEFAULTS.NOTIFICATION.TOKEN) {
                     if let oldOneSignalID: String = userInfo[CONSTANTS.KEYS.JSON.FIELD.NOTIFICATIONS.ONESIGNAL] as? String, let oldDeviceToken: String = userInfo[CONSTANTS.KEYS.JSON.FIELD.NOTIFICATIONS.TOKEN] as? String, oneSignalID == oldOneSignalID && deviceToken == oldDeviceToken {
                         return
@@ -48,14 +47,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ContainerControllerDelega
                     notification[CONSTANTS.KEYS.JSON.FIELD.NOTIFICATIONS.ONESIGNAL] = oneSignalID
                     notification[CONSTANTS.KEYS.JSON.FIELD.NOTIFICATIONS.TOKEN] = deviceToken
                     notification[CONSTANTS.KEYS.JSON.FIELD.NOTIFICATIONS.ACTIVE] = true
-                    Database.database().reference().child("\(CONSTANTS.KEYS.JSON.COLLECTION.USERS)/\(userID)/\(CONSTANTS.KEYS.JSON.FIELD.NOTIFICATIONS.SELF)").setValue(notification) { (error, reference) in
+                    let db = Firestore.firestore()
+                    db.collection(CONSTANTS.KEYS.JSON.COLLECTION.USERS).document(userID).updateData([CONSTANTS.KEYS.JSON.FIELD.NOTIFICATIONS.SELF: notification]) { error in
                         if let _ = error {
                             return
                         }
-                        var argument: [String: Any] = [String: Any]()
-                        argument[CONSTANTS.KEYS.JSON.FIELD.NOTIFICATIONS.SELF] = notification
-                        let _ = CONSTANTS.GLOBAL.updateUserInfo(argument)
+                        //// HEREEEE
+                        let _ = CONSTANTS.GLOBAL.updateUserInfo([CONSTANTS.KEYS.JSON.FIELD.NOTIFICATIONS.SELF: notification])
                     }
+                    
+                    
+                    
+//                    Database.database().reference().child("\(CONSTANTS.KEYS.JSON.COLLECTION.USERS)/\(userID)/\(CONSTANTS.KEYS.JSON.FIELD.NOTIFICATIONS.SELF)").setValue(notification) { (error, reference) in
+//                        if let _ = error {
+//                            return
+//                        }
+//                        var argument: [String: Any] = [String: Any]()
+//                        argument[CONSTANTS.KEYS.JSON.FIELD.NOTIFICATIONS.SELF] = notification
+//                        let _ = CONSTANTS.GLOBAL.updateUserInfo(argument)
+//                    }
                 }
             }
         }

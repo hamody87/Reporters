@@ -19,7 +19,7 @@ class EnableRemoteNotifications: SuperView {
     // MARK: - Private Methods
     
     private func startCountBadges() {
-        if countBadges > 99 {
+        if self.countBadges > 99 {
             self.badgeNumber.font = CONSTANTS.GLOBAL.createFont(ofSize: 14.0, true)
             self.badgeNumber.text = "+99"
             return
@@ -30,13 +30,13 @@ class EnableRemoteNotifications: SuperView {
             generator.impactOccurred()
             self.startCountBadges()
         }
-        switch countBadges {
+        switch self.countBadges {
         case 1 ... 5:
             self.dispatchAfter -= 0.15
         case 6 ... 9:
             self.dispatchAfter -= 0.25
         default:
-            dispatchAfter = 0.001
+            self.dispatchAfter = 0.001
         }
         self.countBadges += 1
     }
