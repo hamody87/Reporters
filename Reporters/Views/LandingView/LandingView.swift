@@ -180,7 +180,7 @@ class LandingView: SuperView {
             
             struct CELL {
                 
-                fileprivate static let MARGIN: CGFloat = 3.0
+                static let MARGIN: CGFloat = 3.0
                 
                 struct DATE {
                     
@@ -193,7 +193,7 @@ class LandingView: SuperView {
                 struct THUMB {
                     
                     struct SIZE {
-                        fileprivate static let BOTH: CGFloat = 50.0
+                        static let BOTH: CGFloat = 50.0
                     }
                     fileprivate static let COLOR: String = "Font/Basic"
                     
@@ -211,7 +211,7 @@ class LandingView: SuperView {
                 struct MESSAGE {
                     
                     struct FONT {
-                        fileprivate static let SIZE: CGFloat = 17.0
+                        static let SIZE: CGFloat = 17.0
                     }
                     
                 }
@@ -229,31 +229,6 @@ class LandingView: SuperView {
 //    private var messagesArray: [[[String: Any]]] = [[[String: Any]]]()
     private var messagesArray: [[String: Any]] = [[String: Any]]()
     private var sectionViews: [UIView?] = [UIView?]()
-    
-    // MARK: - Private Methods
-    
-    @objc private func reporterDidChangeName(_ notification: NSNotification) {
-        print("reporterDidChangeName \(notification)")
-    }
-    
-    @objc private func reporterDidChangeThumb(_ notification: NSNotification) {
-        print("reporterDidChangeThumb \(notification)")
-    }
-    
-    private func getPresentSection(_ scrollView: UIScrollView) -> UIView? {
-        var heightPreviousSection: CGFloat = 0
-        for i in 0 ..< self.messagesList.numberOfSections {
-            if scrollView.contentOffset.y + CONSTANTS.SCREEN.SAFE_AREA.TOP() <= self.messagesList.rect(forSection: i).height + heightPreviousSection {
-                if scrollView.contentOffset.y + CONSTANTS.SCREEN.SAFE_AREA.TOP() - heightPreviousSection > CONSTANTS.SCREEN.MARGIN(3) + DEFAULT.TABLENVIEW.SECTION.HEIGHT {
-                    return self.sectionViews.getElement(safe: i) ?? nil
-                } else {
-                    return nil
-                }
-            }
-            heightPreviousSection += self.messagesList.rect(forSection: i).height
-        }
-        return nil
-    }
     
     // MARK: - Public Methods
     
@@ -273,6 +248,35 @@ class LandingView: SuperView {
             }
         }
         self.messagesList.reloadData()
+    }
+    
+    // MARK: - Private Methods
+    
+    @objc private func reporterDidChangeName(_ notification: NSNotification) {
+        print("reporterDidChangeName \(notification)")
+    }
+    
+    @objc private func reporterDidChangeThumb(_ notification: NSNotification) {
+        print("reporterDidChangeThumb \(notification)")
+    }
+    
+    @objc private func reloadMessages() {
+        
+    }
+    
+    private func getPresentSection(_ scrollView: UIScrollView) -> UIView? {
+        var heightPreviousSection: CGFloat = 0
+        for i in 0 ..< self.messagesList.numberOfSections {
+            if scrollView.contentOffset.y + CONSTANTS.SCREEN.SAFE_AREA.TOP() <= self.messagesList.rect(forSection: i).height + heightPreviousSection {
+                if scrollView.contentOffset.y + CONSTANTS.SCREEN.SAFE_AREA.TOP() - heightPreviousSection > CONSTANTS.SCREEN.MARGIN(3) + DEFAULT.TABLENVIEW.SECTION.HEIGHT {
+                    return self.sectionViews.getElement(safe: i) ?? nil
+                } else {
+                    return nil
+                }
+            }
+            heightPreviousSection += self.messagesList.rect(forSection: i).height
+        }
+        return nil
     }
     
     // MARK: - Override Methods
@@ -321,35 +325,8 @@ class LandingView: SuperView {
         
         
         self.prepareNewData()
-//          print(  Int64(     (Date().timeIntervalSince1970 * 1000.0).rounded() ) )
-//        print(  Date().description )
         
-//
-//        let currentDate = Date()
-//        print("1--> \(currentDate)")
-//
-//
-//
-//        let db = Firestore.firestore()
-//        db.collection("Messages").document("111").setData(["Date": currentDate]) { err in
-//            if let _ = err {
-//                print("NO")
-//            }
-//            let db = Firestore.firestore()
-//            db.collection("Messages").document("111").getDocument() { (document, error) in
-//                if let document = document, document.exists, let argument: [String: Any] = document.data() {
-//                    if let registerDate: Timestamp = argument["Date"] as? Timestamp {
-//
-//
-//                        let newDate: Double =  (registerDate.dateValue().timeIntervalSince1970 * 1000.0).rounded()
-//                        print("2--> \(newDate)")
-//                        let timeZoneOffsetDate = Date(timeIntervalSince1970: newDate / 1000.0)
-//                        print("3--> \(timeZoneOffsetDate )")
-//                    }
-//                }
-//            }
-//
-//        }
+        
         
           
          // 1) Get the current TimeZone's seconds from GMT. Since I am in Chicago this will be: 60*60*5 (18000)
@@ -392,36 +369,11 @@ class LandingView: SuperView {
 
 
                 
-                let dateFormatter : DateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "ddMMMyyyy"
-                let date = Date()
-                let dateString = dateFormatter.string(from: date)
-                print(dateString)
         //        let interval = date.timeIntervalSince1970
                 
-                
-                
-                dateFormatter.dateFormat = "ddMMMyyyy HH:mm:ss Z"
-        if let theDate = dateFormatter.date(from: "\(dateString) 00:00:00 +0000") {
-        
-   DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-                                                let timestamp: Timestamp = Timestamp(date: theDate)
-                                                        print(timestamp.dateValue())
-                                                                let db = Firestore.firestore()
-                                                        //
-                                                db.collection("Messages").document("m7KmL4LYeQMcH6qXMNcCm0wfWy33").collection(dateString).whereField("date", isGreaterThanOrEqualTo: timestamp).getDocuments() { (querySnapshot, err) in
-                                                    if let _ = err {
-                                                        print("ssssssssss")
-                                                    }
 
-                                                                for document in querySnapshot!.documents {
-                                                                    print(document.data())
-                                                    }
-                                                    print("22222")
-                                                }
-                                        }
-        }
-        
+                             
+//
         /// 0000
 //        let db = Firestore.firestore()
 //        ref.child("messages/789").observe(.childAdded, with: { snapshot in
@@ -476,6 +428,7 @@ class LandingView: SuperView {
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.reporterDidChangeName(_ :)), name: NSNotification.Name(rawValue: CONSTANTS.KEYS.NOTIFICATION.DID.REPORTER.CHANGE.NAME), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.reporterDidChangeThumb(_ :)), name: NSNotification.Name(rawValue: CONSTANTS.KEYS.NOTIFICATION.DID.REPORTER.CHANGE.THUMB), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.reloadMessages), name: NSNotification.Name(rawValue: CONSTANTS.KEYS.NOTIFICATION.RELOAD.MESSAGES), object: nil)
         DatatHandler.init().initReporters()
         if !UIApplication.shared.isRegisteredForRemoteNotifications {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
@@ -488,7 +441,7 @@ class LandingView: SuperView {
         }
         if let userInfo: [String: Any] = CONSTANTS.GLOBAL.getUserInfo([CONSTANTS.KEYS.JSON.FIELD.ID.USER, CONSTANTS.KEYS.JSON.FIELD.RANDOM_KEY]), let userId: String = userInfo[CONSTANTS.KEYS.JSON.FIELD.ID.USER] as? String, let randomKey: String = userInfo[CONSTANTS.KEYS.JSON.FIELD.RANDOM_KEY] as? String {
             let ref: DatabaseReference! = Database.database().reference()
-            ref.child("\(CONSTANTS.KEYS.JSON.COLLECTION.USERS)/\(userId)/\(CONSTANTS.KEYS.JSON.FIELD.RANDOM_KEY)").observe(.value, with: { snapshot in
+            ref.child(CONSTANTS.KEYS.JSON.COLLECTION.USERS).child(userId).child(CONSTANTS.KEYS.JSON.FIELD.RANDOM_KEY).observe(.value, with: { snapshot in
                 if randomKey != snapshot.value as! String {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                         ref.child("\(CONSTANTS.KEYS.JSON.COLLECTION.USERS)/\(userId)/\(CONSTANTS.KEYS.JSON.FIELD.RANDOM_KEY)").removeAllObservers()

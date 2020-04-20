@@ -46,6 +46,19 @@ final class Global {
         return font
     }
     
+    public func getHeightLabel(byText text: String) -> CGFloat {
+        if let label: UILabel = CONSTANTS.GLOBAL.createLabelElement(withFrame: CGRect(x: 0, y: 0, width: CONSTANTS.SCREEN.MIN_SIZE - CONSTANTS.SCREEN.MARGIN(6) - LandingView.DEFAULT.TABLENVIEW.CELL.MARGIN - LandingView.DEFAULT.TABLENVIEW.CELL.THUMB.SIZE.BOTH, height: 0), {
+            var argument: [String: Any] = [String: Any]()
+            argument[CONSTANTS.KEYS.ELEMENTS.TEXT] = text
+            argument[CONSTANTS.KEYS.ELEMENTS.NUMLINES] = 0
+            argument[CONSTANTS.KEYS.ELEMENTS.FONT] = CONSTANTS.GLOBAL.createFont(ofSize: LandingView.DEFAULT.TABLENVIEW.CELL.MESSAGE.FONT.SIZE, false)
+            return argument
+        }())[CONSTANTS.KEYS.ELEMENTS.SELF] as? UILabel {
+            return label.heightOfString()
+        }
+        return 0
+    }
+    
     public func createImageViewElement(withFrame frame: CGRect, _ argument: [String: Any]! = nil) -> [String: Any] {
         var document: [String: Any] = [String: Any]()
         let imageView: UIImageView = UIImageView(frame: frame)

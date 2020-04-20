@@ -12,39 +12,158 @@ import FirebaseDatabase
 
 final class DatatHandler {
     
+    // MARK: - Private Methods
+    
+    private func getFolderMessage(byDate date: Date) -> String {
+        let dateFormatter : DateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "ddMMMyyyy"
+        return dateFormatter.string(from: date)
+    }
+    
+    private func getFoldersWithDates(_ lastUpdate: Double) -> [[String: Any]] {
+        var foldersArr: [[String: Any]] = [[String: Any]]()
+        var dateStart: Date = Date(timeIntervalSince1970: lastUpdate)
+        var numDaysBack: Int = CONSTANTS.INFO.GLOBAL.CALCULATION.DAYS.PASSED(fromDate: dateStart)
+        if numDaysBack < CONSTANTS.INFO.APP.BASIC.NUM_DAYS_TO_SHOW {
+            foldersArr.append(["folder": self.getFolderMessage(byDate: dateStart), "dateToStart": Timestamp(date: dateStart)])
+            if numDaysBack == 0 {
+                return foldersArr
+            }
+        } else {
+            numDaysBack = CONSTANTS.INFO.APP.BASIC.NUM_DAYS_TO_SHOW
+            if let newDateStart: Date = Calendar.current.date(byAdding: .day, value: -CONSTANTS.INFO.APP.BASIC.NUM_DAYS_TO_SHOW, to: Date()) {
+                dateStart = newDateStart
+            }
+        }
+        for i in 1...numDaysBack {
+            if let nextDate: Date = Calendar.current.date(byAdding: .day, value: i, to: dateStart) {
+                foldersArr.append(["folder": self.getFolderMessage(byDate: nextDate)])
+            }
+        }
+        return foldersArr
+    }
+    
+    private func deleteMessages(forReporter reporterID: String, _ messagesID: [String]) {
+        let query: CoreDataStack = CoreDataStack(withCoreData: "CoreData")
+        for messageID in messagesID {
+            let _ = query.deleteContext([CONSTANTS.KEYS.SQL.NAME_ENTITY: CONSTANTS.KEYS.SQL.ENTITY.MESSAGES, CONSTANTS.KEYS.SQL.WHERE: "\(CONSTANTS.KEYS.JSON.FIELD.ID.MESSAGE) = '\(messageID)'"])
+        }
+    }
+    
+    private func saveMessages(forReporter reporterID: String, _ documents: [QueryDocumentSnapshot])  {
+        let query: CoreDataStack = CoreDataStack(withCoreData: "CoreData")
+        var dateLastMessage: Timestamp!
+        var messagesID: [String] = [String]()
+        for document in documents {
+            let messageInfo: [String: Any] = document.data()
+            var values: [String: Any] = [String: Any]()
+            values[CONSTANTS.KEYS.JSON.FIELD.ID.USER] = reporterID
+            messagesID.append(document.documentID)
+            values[CONSTANTS.KEYS.JSON.FIELD.ID.MESSAGE] = document.documentID
+            if let message: String = messageInfo[CONSTANTS.KEYS.JSON.FIELD.MESSAGE] as? String {
+                values[CONSTANTS.KEYS.JSON.FIELD.MESSAGE] = message
+                values[CONSTANTS.KEYS.JSON.FIELD.HEIGHT] = CONSTANTS.GLOBAL.getHeightLabel(byText: message)
+            }
+            if let timestamp: Timestamp = messageInfo[CONSTANTS.KEYS.JSON.FIELD.DATE.SELF] as? Timestamp {
+                dateLastMessage = timestamp
+                values[CONSTANTS.KEYS.JSON.FIELD.DATE.SELF] = timestamp.dateValue()
+            }
+            values[CONSTANTS.KEYS.JSON.FIELD.READ] = false
+            let _ = query.saveContext(CONSTANTS.KEYS.SQL.ENTITY.MESSAGES, values)
+        }
+
+        Database.database().reference().child(CONSTANTS.KEYS.JSON.COLLECTION.USERS).child(reporterID).child(CONSTANTS.KEYS.JSON.FIELD.MESSAGE).setValue([CONSTANTS.KEYS.JSON.FIELD.DATE.UPDATE: dateLastMessage.dateValue().timeIntervalSince1970]) { (error, reference) in
+            if let _ = error {
+                self.deleteMessages(forReporter: reporterID, messagesID)
+                return
+            }
+            let _ = query.updateContext(CONSTANTS.KEYS.SQL.ENTITY.FOLLOWING, "\(CONSTANTS.KEYS.JSON.FIELD.ID.USER) = '\(reporterID)'", [CONSTANTS.KEYS.JSON.FIELD.READY: true, CONSTANTS.KEYS.JSON.FIELD.DATE.UPDATE: dateLastMessage.dateValue().timeIntervalSince1970])
+        }
+        
+        ///observe message and call notification :)
+            //NotificationCenter.default.post(name: NSNotification.Name(rawValue: CONSTANTS.KEYS.NOTIFICATION.RELOAD.MESSAGES), object: nil, userInfo: nil)
+    }
+    
+    private func fetchMessages(forReporter reporterID: String, _ folders: [[String: Any]], _ messages: [[String: Any]]!) {
+        if folders.count == 0 {
+//            for message in messages {
+//                if let date: Timestamp = message["date"] as? Timestamp {
+//
+//                    print(date.dateValue())
+//                }
+//                if let msg: String = message["message"] as? String {
+//
+//                    print(msg)
+//                }
+//
+//            }
+            
+            return
+        }
+        var newMessagesArr: [[String: Any]] = [[String: Any]]()
+        if let messages = messages {
+            newMessagesArr += messages
+        }
+        if let nextFolder: [String: Any] = folders.first, let folder: String = nextFolder["folder"] as? String {
+            let query: Query!
+            if let dateToStart: Timestamp = nextFolder["dateToStart"] as? Timestamp {
+                query = Firestore.firestore().collection(CONSTANTS.KEYS.JSON.COLLECTION.MESSAGES).document(reporterID).collection(folder).order(by: CONSTANTS.KEYS.JSON.FIELD.DATE.SELF, descending: false).whereField(CONSTANTS.KEYS.JSON.FIELD.DATE.SELF, isGreaterThan: dateToStart)
+            } else {
+                query = Firestore.firestore().collection(CONSTANTS.KEYS.JSON.COLLECTION.MESSAGES).document(reporterID).collection(folder).order(by: CONSTANTS.KEYS.JSON.FIELD.DATE.SELF, descending: false)
+            }
+            query.getDocuments { (querySnapshot, err) in
+                guard let documents = querySnapshot?.documents else {
+                    return
+                }
+                for document in documents {
+                    newMessagesArr.append(document.data())
+                }
+                var newFoldersArr: [[String: Any]] = [[String: Any]]()
+                newFoldersArr += folders
+                if newFoldersArr.count > 0 {
+                    newFoldersArr.remove(at: 0)
+                }
+                self.fetchMessages(forReporter: reporterID, newFoldersArr, newMessagesArr)
+            }
+        }
+    }
+    
     // MARK: - Public Methods
     
     public func initReporterInfoByID(_ reporterID: String) {
-        let ref: DatabaseReference! = Database.database().reference()
-        ref.child(CONSTANTS.KEYS.JSON.COLLECTION.USERS).child(reporterID).child(CONSTANTS.KEYS.JSON.FIELD.INFO.SELF).removeAllObservers()
-        ref.child(CONSTANTS.KEYS.JSON.COLLECTION.USERS).child(reporterID).child(CONSTANTS.KEYS.JSON.FIELD.INFO.SELF).observe(.value, with: { snapshot in
-            if let reporterInfo: [String: Any] = snapshot.value as? [String: Any], let newReporterName: String = reporterInfo[CONSTANTS.KEYS.JSON.FIELD.NAME] as? String, let newReporterThumb: String = reporterInfo[CONSTANTS.KEYS.JSON.FIELD.THUMB] as? String {
-                
-                
-                
-                let query: CoreDataStack = CoreDataStack(withCoreData: "CoreData")
-                if query.updateContext(CONSTANTS.KEYS.SQL.ENTITY.FOLLOWING, "\(CONSTANTS.KEYS.JSON.FIELD.ID.USER) = '\(reporterID)'", [CONSTANTS.KEYS.JSON.FIELD.NAME: reporterName, CONSTANTS.KEYS.JSON.FIELD.THUMB: reporterThumb == "" ? nil : reporterThumb]) {
-                    let ref: DatabaseReference! = Database.database().reference()
-                        
-                        
-                        
-//                        if let newInfo: [String: Any] = snapshot.value as? [String: Any], let newReporterName: String = newInfo[CONSTANTS.KEYS.JSON.FIELD.NAME] as? String, let newReporterThumb: String = newInfo[CONSTANTS.KEYS.JSON.FIELD.THUMB] as? String {
-//                            print("4444 dddsdsdas")
-//                            let query: CoreDataStack = CoreDataStack(withCoreData: "CoreData")
-//                            if newReporterName != reporterName {
-//                                if query.updateContext(CONSTANTS.KEYS.SQL.ENTITY.FOLLOWING, "\(CONSTANTS.KEYS.JSON.FIELD.ID.USER) = '\(reporterID)'", [CONSTANTS.KEYS.JSON.FIELD.NAME: newReporterName]) {
-//                                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: CONSTANTS.KEYS.NOTIFICATION.DID.REPORTER.CHANGE.NAME), object: [CONSTANTS.KEYS.JSON.FIELD.ID.USER: reporterID], userInfo: nil)
-//                                }
-//                            }
-//                            if newReporterThumb != reporterThumb {
-//                                if query.updateContext(CONSTANTS.KEYS.SQL.ENTITY.FOLLOWING, "\(CONSTANTS.KEYS.JSON.FIELD.ID.USER) = '\(reporterID)'", [CONSTANTS.KEYS.JSON.FIELD.THUMB: newReporterThumb]) {
-//                                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: CONSTANTS.KEYS.NOTIFICATION.DID.REPORTER.CHANGE.THUMB), object: [CONSTANTS.KEYS.JSON.FIELD.ID.USER: reporterID], userInfo: nil)
-//                                }
-//                            }
-//                        }
+        let query: CoreDataStack = CoreDataStack(withCoreData: "CoreData")
+        var sqlInfo: [String: Any] = [String: Any]()
+        sqlInfo[CONSTANTS.KEYS.SQL.NAME_ENTITY] = CONSTANTS.KEYS.SQL.ENTITY.FOLLOWING
+        sqlInfo[CONSTANTS.KEYS.SQL.WHERE] = "\(CONSTANTS.KEYS.JSON.FIELD.ID.USER) = '\(reporterID)'"
+        if let data: [Any] = query.fetchRequest(sqlInfo), data.count == 1, let oldReporterInfo: [String: Any] = data[0] as? [String: Any] {
+            let ref: DatabaseReference! = Database.database().reference()
+            ref.child(CONSTANTS.KEYS.JSON.COLLECTION.USERS).child(reporterID).child(CONSTANTS.KEYS.JSON.FIELD.INFO.SELF).removeAllObservers()
+            ref.child(CONSTANTS.KEYS.JSON.COLLECTION.USERS).child(reporterID).child(CONSTANTS.KEYS.JSON.FIELD.INFO.SELF).observe(.value, with: { snapshot in
+                if let newReporterInfo: [String: Any] = snapshot.value as? [String: Any], let newReporterName: String = newReporterInfo[CONSTANTS.KEYS.JSON.FIELD.NAME] as? String {
+                        let oldReporterName: String! = oldReporterInfo[CONSTANTS.KEYS.JSON.FIELD.NAME] as? String
+                        if newReporterName != oldReporterName {
+                            if query.updateContext(CONSTANTS.KEYS.SQL.ENTITY.FOLLOWING, "\(CONSTANTS.KEYS.JSON.FIELD.ID.USER) = '\(reporterID)'", [CONSTANTS.KEYS.JSON.FIELD.NAME: newReporterName]) {
+                                NotificationCenter.default.post(name: NSNotification.Name(rawValue: CONSTANTS.KEYS.NOTIFICATION.DID.REPORTER.CHANGE.NAME), object: [CONSTANTS.KEYS.JSON.FIELD.ID.USER: reporterID], userInfo: nil)
+                            }
+                        }
+                        let newReporterThumb: String! = newReporterInfo[CONSTANTS.KEYS.JSON.FIELD.THUMB] as? String
+                        let oldReporterThumb: String! = oldReporterInfo[CONSTANTS.KEYS.JSON.FIELD.THUMB] as? String
+                        if newReporterThumb != oldReporterThumb {
+                            if query.updateContext(CONSTANTS.KEYS.SQL.ENTITY.FOLLOWING, "\(CONSTANTS.KEYS.JSON.FIELD.ID.USER) = '\(reporterID)'", [CONSTANTS.KEYS.JSON.FIELD.THUMB: newReporterThumb]) {
+                                NotificationCenter.default.post(name: NSNotification.Name(rawValue: CONSTANTS.KEYS.NOTIFICATION.DID.REPORTER.CHANGE.THUMB), object: [CONSTANTS.KEYS.JSON.FIELD.ID.USER: reporterID], userInfo: nil)
+                            }
+                        }
                 }
+            })
+            
+            var foldersWithDates: [[String: Any]] = [[String: Any]]()
+            if let lastUpdate: Double = oldReporterInfo[CONSTANTS.KEYS.JSON.FIELD.DATE.UPDATE] as? Double {
+                foldersWithDates = self.getFoldersWithDates(lastUpdate)
+            } else {
+                foldersWithDates.append(["folder": self.getFolderMessage(byDate: Date())])
             }
-        })
+            self.fetchMessages(forReporter: reporterID, foldersWithDates, nil)
+        }
     }
     
     public func initReporters() {
@@ -116,7 +235,7 @@ final class DatatHandler {
                 return
             }
             let randomKey: String = CONSTANTS.INFO.GLOBAL.RANDOM_KEY(length: 40)
-            Database.database().reference().child("\(CONSTANTS.KEYS.JSON.COLLECTION.USERS)/\(data[CONSTANTS.KEYS.JSON.FIELD.ID.USER] as! String)").setValue([CONSTANTS.KEYS.JSON.FIELD.RANDOM_KEY: randomKey]) { (error, reference) in
+            Database.database().reference().child(CONSTANTS.KEYS.JSON.COLLECTION.USERS).child(data[CONSTANTS.KEYS.JSON.FIELD.ID.USER] as! String).setValue([CONSTANTS.KEYS.JSON.FIELD.RANDOM_KEY: randomKey]) { (error, reference) in
                 if let _ = error {
                     failHandler?()
                     return
@@ -135,11 +254,11 @@ final class DatatHandler {
                     arg[CONSTANTS.KEYS.JSON.FIELD.DATE.SELF] = date
                 }
                 let query: CoreDataStack = CoreDataStack(withCoreData: "CoreData")
-                if query.deleteContext([CONSTANTS.KEYS.SQL.NAME_ENTITY: CONSTANTS.KEYS.SQL.ENTITY.USER]) && query.deleteContext([CONSTANTS.KEYS.SQL.NAME_ENTITY: CONSTANTS.KEYS.SQL.ENTITY.FOLLOWING]) {
+                if query.deleteContext([CONSTANTS.KEYS.SQL.NAME_ENTITY: CONSTANTS.KEYS.SQL.ENTITY.USER]) && query.deleteContext([CONSTANTS.KEYS.SQL.NAME_ENTITY: CONSTANTS.KEYS.SQL.ENTITY.FOLLOWING]) && query.deleteContext([CONSTANTS.KEYS.SQL.NAME_ENTITY: CONSTANTS.KEYS.SQL.ENTITY.MESSAGES]) {
                     if query.saveContext(CONSTANTS.KEYS.SQL.ENTITY.USER, arg) {
                         if let reportersIDs: [String] = data[CONSTANTS.KEYS.JSON.FIELD.FOLLOWING] as? [String] {
                             for reporterID: String in reportersIDs {
-                                let _ = query.saveContext(CONSTANTS.KEYS.SQL.ENTITY.FOLLOWING, [CONSTANTS.KEYS.JSON.FIELD.ID.USER: reporterID])
+                                let _ = query.saveContext(CONSTANTS.KEYS.SQL.ENTITY.FOLLOWING, [CONSTANTS.KEYS.JSON.FIELD.ID.USER: reporterID, CONSTANTS.KEYS.JSON.FIELD.READY: false])
                             }
                         }
                         UserDefaults.standard.set(true, forKey: CONSTANTS.KEYS.USERDEFAULTS.USER.LOGIN)

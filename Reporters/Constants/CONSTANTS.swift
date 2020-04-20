@@ -36,17 +36,17 @@ public class CONSTANTS {
             }
             
             struct APPSTORE {
-                
                 static let URL: String = "https://itunes.apple.com/us/app/hkmt-wmw-zt/id665705246?ls=1&mt=8"
                 static let ID: Int = 665705246
-                
             }
             
             struct ONESIGNAL {
                 static let ID: String = "776b385f-8f0c-4dab-bc77-3c1e34a24cd2"
             }
             
-            
+            struct BASIC {
+                static let NUM_DAYS_TO_SHOW: Int = 7
+            }
             
         }
         
@@ -319,6 +319,15 @@ public class CONSTANTS {
             
             struct CALCULATION {
                 
+                struct DAYS {
+                    
+                    static func PASSED(fromDate: Date) -> Int {
+                        let calendar = Calendar.current
+                        return max(calendar.dateComponents([.day], from: calendar.startOfDay(for: fromDate), to: calendar.startOfDay(for: Date())).day ?? 0, 0)
+                    }
+                    
+                }
+                
                 struct TIME {
                     
                     static func HOUR(postDate: Date) -> String {
@@ -381,13 +390,6 @@ public class CONSTANTS {
 
                         }
                         return String(format: "%@ ago".localized, time)
-                    }
-                    
-                    static func AGE(birthday: Date) -> Int {
-                        let now = Date()
-                        let calendar = Calendar.current
-                        let ageComponents = calendar.dateComponents([.year], from: birthday, to: now)
-                        return ageComponents.year!
                     }
                     
                 }
@@ -634,6 +636,10 @@ public class CONSTANTS {
         }
         
         struct NOTIFICATION {
+            
+            struct RELOAD {
+                static let MESSAGES: String = "reloadMessages"
+            }
 
             struct WILL {
                 struct USER {
@@ -672,6 +678,7 @@ public class CONSTANTS {
             struct ENTITY {
                 static let USER: String = "User"
                 static let FOLLOWING: String = "Following"
+                static let MESSAGES: String = "Messages"
             }
             static let FIELDS: String = "fields"
             static let NAME_ENTITY: String = "nameEntity"
@@ -791,6 +798,8 @@ public class CONSTANTS {
                 static let THUMB: String = "thumb"
                 static let MESSAGE: String = "message"
                 static let READY: String = "ready"
+                static let READ: String = "read"
+                static let HEIGHT: String = "height"
 
                 static let FOLLOWING: String = "following"
                 static let FOLLOWERS: String = "followers"
