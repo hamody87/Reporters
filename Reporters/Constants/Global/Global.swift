@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Reachability
 
 @objc public enum ModalTransitionStyle: Int {
     case leftDissolve
@@ -17,6 +18,33 @@ import UIKit
 }
 
 final class Global {
+    
+    private var reachability = try! Reachability()
+    private var isReach: Bool!
+    
+    init() {
+        self.reachability.whenReachable = { reachability in
+            self.isReach = true
+            if reachability.connection == .wifi {
+                print("Reachable via WiFi")
+            } else {
+                print("Reachable via Cellular")
+            }
+        }
+        self.reachability.whenUnreachable = { _ in
+            self.isReach = false
+            print("Not reachable")
+        }
+        do {
+            try self.reachability.startNotifier()
+        } catch {
+            print("Unable to start notifier")
+        }
+    }
+    
+    public func isReachability() -> Bool {
+        return self.isReach
+    }
     
     public func updateUserInfo(_ data: [String: Any]) -> Bool {
         if let userInfo: [String: Any] = CONSTANTS.GLOBAL.getUserInfo([CONSTANTS.KEYS.JSON.FIELD.ID.USER]), let userID: String = userInfo[CONSTANTS.KEYS.JSON.FIELD.ID.USER] as? String {

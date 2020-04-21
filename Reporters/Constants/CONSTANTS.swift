@@ -36,8 +36,8 @@ public class CONSTANTS {
             }
             
             struct APPSTORE {
-                static let URL: String = "https://itunes.apple.com/us/app/hkmt-wmw-zt/id665705246?ls=1&mt=8"
-                static let ID: Int = 665705246
+                static let URL: String = ""
+                static let ID: Int = 11111
             }
             
             struct ONESIGNAL {

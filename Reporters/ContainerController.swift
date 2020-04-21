@@ -360,6 +360,12 @@ class ContainerController: UIViewController {
             self.currentOverlapContainer.overlapContainerDidAppear()
             classInst.loadSuperView(anArgument: nil)
         }
+//        NotificationCenter.default.addObserver(self, selector: #selector(reachabilityChanged(note:)), name: .reachabilityChanged, object: self.reachability)
+//        do {
+//            try self.reachability.startNotifier()
+//        } catch {
+//            print("could not start reachability notifier")
+//        }
     }
     
     // MARK: - Override Variables
