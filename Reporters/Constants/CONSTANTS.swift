@@ -792,17 +792,20 @@ public class CONSTANTS {
                     }
                 }
                 
-                static let NAME: String = "fullName"
-                static let LEVEL: String = "level"
-                static let RANDOM_KEY: String = "randomKey"
-                static let THUMB: String = "thumb"
-                static let MESSAGE: String = "message"
-                static let READY: String = "ready"
-                static let READ: String = "read"
-                static let HEIGHT: String = "height"
-
-                static let FOLLOWING: String = "following"
-                static let FOLLOWERS: String = "followers"
+                struct MESSAGE {
+                    static let SELF: String = "message"
+                    struct ELEMENT {
+                        static let SELF: String = "element"
+                        static let TEXT: String = "text"
+                        static let VIDEO: String = "video"
+                        static let IMAGE: String = "image"
+                    }
+                    struct MEDIA {
+                        static let URL: String = "url"
+                        static let CAPTION: String = "caption"
+                    }
+                    static let HEIGHT: String = "height"
+                }
                 
                 struct NOTIFICATIONS {
                     static let SELF: String = "notification"
@@ -810,6 +813,15 @@ public class CONSTANTS {
                     static let TOKEN: String = "deviceToken"
                     static let ACTIVE: String = "isActive"
                 }
+                
+                static let NAME: String = "fullName"
+                static let LEVEL: String = "level"
+                static let RANDOM_KEY: String = "randomKey"
+                static let THUMB: String = "thumb"
+                static let READY: String = "ready"
+                static let READ: String = "read"
+                static let FOLLOWING: String = "following"
+                static let FOLLOWERS: String = "followers"
                 
             }
             

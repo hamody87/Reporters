@@ -63,20 +63,38 @@ final class DatatHandler {
             values[CONSTANTS.KEYS.JSON.FIELD.ID.USER] = reporterID
             messagesID.append(message.documentID)
             values[CONSTANTS.KEYS.JSON.FIELD.ID.MESSAGE] = message.documentID
-            if let message: String = messageInfo[CONSTANTS.KEYS.JSON.FIELD.MESSAGE] as? String {
-                values[CONSTANTS.KEYS.JSON.FIELD.MESSAGE] = message
-                values[CONSTANTS.KEYS.JSON.FIELD.HEIGHT] = CONSTANTS.GLOBAL.getHeightLabel(byText: message)
+            if let message: [String: Any] = messageInfo[CONSTANTS.KEYS.JSON.FIELD.MESSAGE.SELF] as? [String: Any], let element: String = message[CONSTANTS.KEYS.JSON.FIELD.MESSAGE.ELEMENT.SELF] as? String {
+                var messageArr: [String: Any] = [String: Any]()
+                messageArr[CONSTANTS.KEYS.JSON.FIELD.MESSAGE.ELEMENT.SELF] = element
+                switch element {
+                case CONSTANTS.KEYS.JSON.FIELD.MESSAGE.ELEMENT.IMAGE:
+                    break
+                case CONSTANTS.KEYS.JSON.FIELD.MESSAGE.ELEMENT.VIDEO:
+                    break
+                default:
+                    let text: String = message[CONSTANTS.KEYS.JSON.FIELD.MESSAGE.ELEMENT.TEXT] as! String
+                    messageArr[element] = text
+                    messageArr[CONSTANTS.KEYS.JSON.FIELD.MESSAGE.HEIGHT] = CONSTANTS.GLOBAL.getHeightLabel(byText: text)
+                    break
+                }
+                values[CONSTANTS.KEYS.JSON.FIELD.MESSAGE.SELF] = messageArr
             }
             if let timestamp: Timestamp = messageInfo[CONSTANTS.KEYS.JSON.FIELD.DATE.SELF] as? Timestamp {
                 dateLastMessage = timestamp
                 values[CONSTANTS.KEYS.JSON.FIELD.DATE.SELF] = timestamp.dateValue()
             }
             values[CONSTANTS.KEYS.JSON.FIELD.READ] = false
-            
-            print(values)
-            //let _ = query.saveContext(CONSTANTS.KEYS.SQL.ENTITY.MESSAGES, values)
+            let _ = query.saveContext(CONSTANTS.KEYS.SQL.ENTITY.MESSAGES, values)
         }
-        if query.updateContext(CONSTANTS.KEYS.SQL.ENTITY.FOLLOWING, "\(CONSTANTS.KEYS.JSON.FIELD.ID.USER) = '\(reporterID)'", [CONSTANTS.KEYS.JSON.FIELD.READY: true, CONSTANTS.KEYS.JSON.FIELD.DATE.UPDATE: dateLastMessage.dateValue().timeIntervalSince1970]) {
+        var sqlInfo: [String: Any] = [String: Any]()
+        sqlInfo[CONSTANTS.KEYS.SQL.NAME_ENTITY] = CONSTANTS.KEYS.SQL.ENTITY.FOLLOWING
+        sqlInfo[CONSTANTS.KEYS.SQL.WHERE] = "\(CONSTANTS.KEYS.JSON.FIELD.ID.USER) = '\(reporterID)'"
+        sqlInfo[CONSTANTS.KEYS.SQL.FIELDS] = [CONSTANTS.KEYS.JSON.FIELD.DATE.UPDATE]
+        if let data: [Any] = query.fetchRequest(sqlInfo), data.count == 1, let reporterInfo: [String: Any] = data[0] as? [String: Any], let oldUpdate: Double = reporterInfo[CONSTANTS.KEYS.JSON.FIELD.DATE.UPDATE] as? Double, oldUpdate > dateLastMessage.dateValue().timeIntervalSince1970 {
+            self.initReporterInfoByID(reportersID, index + 1)
+            return
+        }
+        if query.updateContext(CONSTANTS.KEYS.SQL.ENTITY.FOLLOWING, "\(CONSTANTS.KEYS.JSON.FIELD.ID.USER) = '\(reporterID)'", [CONSTANTS.KEYS.JSON.FIELD.DATE.UPDATE: dateLastMessage.dateValue().timeIntervalSince1970]) {
             self.initReporterInfoByID(reportersID, index + 1)
         }
     }
@@ -102,10 +120,9 @@ final class DatatHandler {
             }
             query.getDocuments { (querySnapshot, err) in
                 guard let documents = querySnapshot?.documents else {
-                    // call notification for error it happened ????
+                    self.initReporterInfoByID(reportersID, index + 1)
                     return
                 }
-                print(documents)
                 for document in documents {
                     newMessagesArr.append(document)
                 }
@@ -126,6 +143,7 @@ final class DatatHandler {
             for reporter in reporters {
                 if let info: [String: Any] = reporter as? [String: Any], let reporterID: String = info[CONSTANTS.KEYS.JSON.FIELD.ID.USER] as? String {
                     reportersID.append(reporterID)
+                    let _ = query.updateContext(CONSTANTS.KEYS.SQL.ENTITY.FOLLOWING, "\(CONSTANTS.KEYS.JSON.FIELD.ID.USER) = '\(reporterID)'", [CONSTANTS.KEYS.JSON.FIELD.READY: false])
                 }
             }
         }
@@ -136,41 +154,61 @@ final class DatatHandler {
     
     public func initReporterInfoByID(_ reportersID: [String], _ index: Int) {
         guard let reporterID: String = reportersID.getElement(safe: index) else {
-            ///observe message and call notification :)
-                //NotificationCenter.default.post(name: NSNotification.Name(rawValue: CONSTANTS.KEYS.NOTIFICATION.RELOAD.MESSAGES), object: nil, userInfo: nil)
-            print("Do something !")
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: CONSTANTS.KEYS.NOTIFICATION.RELOAD.MESSAGES), object: nil, userInfo: nil)
+            for reporterID in reportersID {
+                let query: CoreDataStack = CoreDataStack(withCoreData: "CoreData")
+                var sqlInfo: [String: Any] = [String: Any]()
+                sqlInfo[CONSTANTS.KEYS.SQL.NAME_ENTITY] = CONSTANTS.KEYS.SQL.ENTITY.FOLLOWING
+                sqlInfo[CONSTANTS.KEYS.SQL.WHERE] = "\(CONSTANTS.KEYS.JSON.FIELD.ID.USER) = '\(reporterID)'"
+                sqlInfo[CONSTANTS.KEYS.SQL.FIELDS] = [CONSTANTS.KEYS.JSON.FIELD.DATE.UPDATE, CONSTANTS.KEYS.JSON.FIELD.READY]
+                guard let data: [Any] = query.fetchRequest(sqlInfo), data.count == 1, let oldReporterInfo: [String: Any] = data[0] as? [String: Any], let oldUpdate: Double = oldReporterInfo[CONSTANTS.KEYS.JSON.FIELD.DATE.UPDATE] as? Double, let isReady: Bool = oldReporterInfo[CONSTANTS.KEYS.JSON.FIELD.READY] as? Bool, !isReady else {
+                    return
+                }
+                if query.updateContext(CONSTANTS.KEYS.SQL.ENTITY.FOLLOWING, "\(CONSTANTS.KEYS.JSON.FIELD.ID.USER) = '\(reporterID)'", [CONSTANTS.KEYS.JSON.FIELD.READY: true]) {
+                    let ref: DatabaseReference! = Database.database().reference()
+                    ref.child(CONSTANTS.KEYS.JSON.COLLECTION.USERS).child(reporterID).child(CONSTANTS.KEYS.JSON.FIELD.MESSAGE.SELF).child(CONSTANTS.KEYS.JSON.FIELD.DATE.UPDATE).removeAllObservers()
+                    ref.child(CONSTANTS.KEYS.JSON.COLLECTION.USERS).child(reporterID).child(CONSTANTS.KEYS.JSON.FIELD.MESSAGE.SELF).child(CONSTANTS.KEYS.JSON.FIELD.DATE.UPDATE).observe(.value, with: { snapshot in
+                        guard let newUpdate: Double = snapshot.value as? Double else {
+                            return
+                        }
+                        if newUpdate > oldUpdate {
+                            self.initReporterInfoByID([reporterID], 0)
+                        }
+                    })
+                }
+            }
             return
         }
         let query: CoreDataStack = CoreDataStack(withCoreData: "CoreData")
         var sqlInfo: [String: Any] = [String: Any]()
         sqlInfo[CONSTANTS.KEYS.SQL.NAME_ENTITY] = CONSTANTS.KEYS.SQL.ENTITY.FOLLOWING
         sqlInfo[CONSTANTS.KEYS.SQL.WHERE] = "\(CONSTANTS.KEYS.JSON.FIELD.ID.USER) = '\(reporterID)'"
-        if let data: [Any] = query.fetchRequest(sqlInfo), data.count == 1, let oldReporterInfo: [String: Any] = data[0] as? [String: Any] {
-            let ref: DatabaseReference! = Database.database().reference()
-            ref.child(CONSTANTS.KEYS.JSON.COLLECTION.USERS).child(reporterID).child(CONSTANTS.KEYS.JSON.FIELD.INFO.SELF).removeAllObservers()
-            ref.child(CONSTANTS.KEYS.JSON.COLLECTION.USERS).child(reporterID).child(CONSTANTS.KEYS.JSON.FIELD.INFO.SELF).observe(.value, with: { snapshot in
-                if let newReporterInfo: [String: Any] = snapshot.value as? [String: Any], let newReporterName: String = newReporterInfo[CONSTANTS.KEYS.JSON.FIELD.NAME] as? String {
-                    let oldReporterName: String! = oldReporterInfo[CONSTANTS.KEYS.JSON.FIELD.NAME] as? String
-                    if newReporterName != oldReporterName {
-                        if query.updateContext(CONSTANTS.KEYS.SQL.ENTITY.FOLLOWING, "\(CONSTANTS.KEYS.JSON.FIELD.ID.USER) = '\(reporterID)'", [CONSTANTS.KEYS.JSON.FIELD.NAME: newReporterName]) {
-                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: CONSTANTS.KEYS.NOTIFICATION.DID.REPORTER.CHANGE.NAME), object: [CONSTANTS.KEYS.JSON.FIELD.ID.USER: reporterID], userInfo: nil)
+        if let data: [Any] = query.fetchRequest(sqlInfo), data.count == 1, let oldReporterInfo: [String: Any] = data[0] as? [String: Any], let isReady: Bool = oldReporterInfo[CONSTANTS.KEYS.JSON.FIELD.READY] as? Bool {
+            if !isReady {
+                let ref: DatabaseReference! = Database.database().reference()
+                ref.child(CONSTANTS.KEYS.JSON.COLLECTION.USERS).child(reporterID).child(CONSTANTS.KEYS.JSON.FIELD.INFO.SELF).removeAllObservers()
+                ref.child(CONSTANTS.KEYS.JSON.COLLECTION.USERS).child(reporterID).child(CONSTANTS.KEYS.JSON.FIELD.INFO.SELF).observe(.value, with: { snapshot in
+                    if let newReporterInfo: [String: Any] = snapshot.value as? [String: Any], let newReporterName: String = newReporterInfo[CONSTANTS.KEYS.JSON.FIELD.NAME] as? String {
+                        let oldReporterName: String! = oldReporterInfo[CONSTANTS.KEYS.JSON.FIELD.NAME] as? String
+                        if newReporterName != oldReporterName {
+                            if query.updateContext(CONSTANTS.KEYS.SQL.ENTITY.FOLLOWING, "\(CONSTANTS.KEYS.JSON.FIELD.ID.USER) = '\(reporterID)'", [CONSTANTS.KEYS.JSON.FIELD.NAME: newReporterName]) {
+                                NotificationCenter.default.post(name: NSNotification.Name(rawValue: CONSTANTS.KEYS.NOTIFICATION.DID.REPORTER.CHANGE.NAME), object: [CONSTANTS.KEYS.JSON.FIELD.ID.USER: reporterID], userInfo: nil)
+                            }
+                        }
+                        let newReporterThumb: String! = newReporterInfo[CONSTANTS.KEYS.JSON.FIELD.THUMB] as? String
+                        let oldReporterThumb: String! = oldReporterInfo[CONSTANTS.KEYS.JSON.FIELD.THUMB] as? String
+                        if newReporterThumb != oldReporterThumb {
+                            if query.updateContext(CONSTANTS.KEYS.SQL.ENTITY.FOLLOWING, "\(CONSTANTS.KEYS.JSON.FIELD.ID.USER) = '\(reporterID)'", [CONSTANTS.KEYS.JSON.FIELD.THUMB: newReporterThumb]) {
+                                NotificationCenter.default.post(name: NSNotification.Name(rawValue: CONSTANTS.KEYS.NOTIFICATION.DID.REPORTER.CHANGE.THUMB), object: [CONSTANTS.KEYS.JSON.FIELD.ID.USER: reporterID], userInfo: nil)
+                            }
                         }
                     }
-                    let newReporterThumb: String! = newReporterInfo[CONSTANTS.KEYS.JSON.FIELD.THUMB] as? String
-                    let oldReporterThumb: String! = oldReporterInfo[CONSTANTS.KEYS.JSON.FIELD.THUMB] as? String
-                    if newReporterThumb != oldReporterThumb {
-                        if query.updateContext(CONSTANTS.KEYS.SQL.ENTITY.FOLLOWING, "\(CONSTANTS.KEYS.JSON.FIELD.ID.USER) = '\(reporterID)'", [CONSTANTS.KEYS.JSON.FIELD.THUMB: newReporterThumb]) {
-                            NotificationCenter.default.post(name: NSNotification.Name(rawValue: CONSTANTS.KEYS.NOTIFICATION.DID.REPORTER.CHANGE.THUMB), object: [CONSTANTS.KEYS.JSON.FIELD.ID.USER: reporterID], userInfo: nil)
-                        }
-                    }
-                }
-            })
+                })
+            }
             var foldersWithDates: [[String: Any]] = [[String: Any]]()
-            if let lastUpdate: Double = oldReporterInfo[CONSTANTS.KEYS.JSON.FIELD.DATE.UPDATE] as? Double {
-                print("11111111")
+            if let lastUpdate: Double = oldReporterInfo[CONSTANTS.KEYS.JSON.FIELD.DATE.UPDATE] as? Double, lastUpdate != 0 {
                 foldersWithDates = self.getFoldersWithDates(lastUpdate)
             } else {
-                print("2222222")
                 foldersWithDates.append(["folder": self.getFolderMessage(byDate: Date())])
             }
             self.fetchMessages(forReporter: reportersID, index, foldersWithDates, nil)
@@ -178,7 +216,6 @@ final class DatatHandler {
     }
     
     public func initReporters() {
-        print(self.bringReportersID())
         self.initReporterInfoByID(self.bringReportersID(), 0)
     }
     
@@ -263,7 +300,7 @@ final class DatatHandler {
                     if query.saveContext(CONSTANTS.KEYS.SQL.ENTITY.USER, arg) {
                         if let reportersIDs: [String] = data[CONSTANTS.KEYS.JSON.FIELD.FOLLOWING] as? [String] {
                             for reporterID: String in reportersIDs {
-                                let _ = query.saveContext(CONSTANTS.KEYS.SQL.ENTITY.FOLLOWING, [CONSTANTS.KEYS.JSON.FIELD.ID.USER: reporterID, CONSTANTS.KEYS.JSON.FIELD.READY: false])
+                                let _ = query.saveContext(CONSTANTS.KEYS.SQL.ENTITY.FOLLOWING, [CONSTANTS.KEYS.JSON.FIELD.ID.USER: reporterID])
                             }
                         }
                         UserDefaults.standard.set(true, forKey: CONSTANTS.KEYS.USERDEFAULTS.USER.LOGIN)

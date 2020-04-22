@@ -150,10 +150,10 @@ extension LandingView: UITableViewDataSource {
         messageView.frame = CGRect(x: messageView.frame.origin.x, y: messageView.frame.origin.y, width: messageView.frame.width, height: cellView.frame.height - reporterName.frame.height - DEFAULT.TABLENVIEW.CELL.MARGIN)
         messageView.roundCorners(corners: [.topLeft, .topRight, .bottomRight], radius: 16.0)
         messageLabel.frame = CGRect(x: messageLabel.frame.origin.x, y: messageLabel.frame.origin.y, width: messageLabel.frame.width, height: messageView.frame.height - CONSTANTS.SCREEN.MARGIN() - DEFAULT.TABLENVIEW.CELL.DATE.SIZE.HEIGHT)
-        if let message: String = nextMessage[CONSTANTS.KEYS.JSON.FIELD.MESSAGE] as? String {
-            messageLabel.text = message
-            messageLabel.decideTextDirection()
-        }
+//        if let message: String = nextMessage[CONSTANTS.KEYS.JSON.FIELD.MESSAGE] as? String {
+//            messageLabel.text = message
+//            messageLabel.decideTextDirection()
+//        }
         dateLabel.frame = CGRect(x: dateLabel.frame.origin.x, y: messageLabel.frame.origin.y + messageLabel.frame.height, width: dateLabel.frame.width, height: dateLabel.frame.height)
         if messageLabel.textAlignment == .left {
             dateLabel.textAlignment = .right
@@ -233,36 +233,24 @@ class LandingView: SuperView {
     // MARK: - Public Methods
     
     public func prepareNewData() {
-        for _ in 1 ... self.newDataReceived.count {
-            if var nextMessage: [String: Any] = self.newDataReceived.dequeue() ,let message: String = nextMessage[CONSTANTS.KEYS.JSON.FIELD.MESSAGE] as? String {
-                if let label: UILabel = CONSTANTS.GLOBAL.createLabelElement(withFrame: CGRect(x: 0, y: 0, width: self.messagesList.frame.width - CONSTANTS.SCREEN.MARGIN(6) - DEFAULT.TABLENVIEW.CELL.MARGIN - DEFAULT.TABLENVIEW.CELL.THUMB.SIZE.BOTH, height: 0), {
-                    var argument: [String: Any] = [String: Any]()
-                    argument[CONSTANTS.KEYS.ELEMENTS.TEXT] = message
-                    argument[CONSTANTS.KEYS.ELEMENTS.NUMLINES] = 0
-                    argument[CONSTANTS.KEYS.ELEMENTS.FONT] = CONSTANTS.GLOBAL.createFont(ofSize: DEFAULT.TABLENVIEW.CELL.MESSAGE.FONT.SIZE, false)
-                    return argument
-                }())[CONSTANTS.KEYS.ELEMENTS.SELF] as? UILabel {
-                    nextMessage["height"] = label.heightOfString()
-                    messagesArray.append(nextMessage)
-                }
-            }
-        }
-        self.messagesList.reloadData()
+//        for _ in 1 ... self.newDataReceived.count {
+//            if var nextMessage: [String: Any] = self.newDataReceived.dequeue() ,let message: String = nextMessage[CONSTANTS.KEYS.JSON.FIELD.MESSAGE] as? String {
+//                if let label: UILabel = CONSTANTS.GLOBAL.createLabelElement(withFrame: CGRect(x: 0, y: 0, width: self.messagesList.frame.width - CONSTANTS.SCREEN.MARGIN(6) - DEFAULT.TABLENVIEW.CELL.MARGIN - DEFAULT.TABLENVIEW.CELL.THUMB.SIZE.BOTH, height: 0), {
+//                    var argument: [String: Any] = [String: Any]()
+//                    argument[CONSTANTS.KEYS.ELEMENTS.TEXT] = message
+//                    argument[CONSTANTS.KEYS.ELEMENTS.NUMLINES] = 0
+//                    argument[CONSTANTS.KEYS.ELEMENTS.FONT] = CONSTANTS.GLOBAL.createFont(ofSize: DEFAULT.TABLENVIEW.CELL.MESSAGE.FONT.SIZE, false)
+//                    return argument
+//                }())[CONSTANTS.KEYS.ELEMENTS.SELF] as? UILabel {
+//                    nextMessage["height"] = label.heightOfString()
+//                    messagesArray.append(nextMessage)
+//                }
+//            }
+//        }
+//        self.messagesList.reloadData()
     }
     
     // MARK: - Private Methods
-    
-    @objc private func reporterDidChangeName(_ notification: NSNotification) {
-        print("reporterDidChangeName \(notification)")
-    }
-    
-    @objc private func reporterDidChangeThumb(_ notification: NSNotification) {
-        print("reporterDidChangeThumb \(notification)")
-    }
-    
-    @objc private func reloadMessages() {
-        
-    }
     
     private func getPresentSection(_ scrollView: UIScrollView) -> UIView? {
         var heightPreviousSection: CGFloat = 0
@@ -277,6 +265,32 @@ class LandingView: SuperView {
             heightPreviousSection += self.messagesList.rect(forSection: i).height
         }
         return nil
+    }
+    
+    @objc private func reporterDidChangeName(_ notification: NSNotification) {
+        print("reporterDidChangeName \(notification)")
+    }
+    
+    @objc private func reporterDidChangeThumb(_ notification: NSNotification) {
+        print("reporterDidChangeThumb \(notification)")
+    }
+    
+    @objc private func reloadMessages() {
+        let query: CoreDataStack = CoreDataStack(withCoreData: "CoreData")
+        if let messages: [[String: Any]] = query.fetchRequest([CONSTANTS.KEYS.SQL.NAME_ENTITY: CONSTANTS.KEYS.SQL.ENTITY.MESSAGES]) as? [[String: Any]] {
+            var sortByDate: Date!
+            for message in messages {
+                let messageDate: Date = message[CONSTANTS.KEYS.JSON.FIELD.DATE.SELF] as! Date
+                print("--> \(messageDate) <--")
+                print("--> \(messageDate.stripTime()) <--")
+                print("--> \(messageDate.timeIntervalSince1970) <--")
+                if sortByDate == nil {
+                    
+                }
+                
+            }
+            print(messages)
+        }
     }
     
     // MARK: - Override Methods
@@ -304,14 +318,6 @@ class LandingView: SuperView {
         }
         self.tabBar = TabBarView(withFrame: CGRect(x: 0, y: self.frame.height - 56.0 - CONSTANTS.SCREEN.SAFE_AREA.BOTTOM(), width: self.frame.width, height: 56.0 + CONSTANTS.SCREEN.SAFE_AREA.BOTTOM()), delegate: self)
         self.addSubview(self.tabBar)
-        
-        
-
-        
-        
-        self.newDataReceived.enqueue(["message": "For professional athlete Irena Gillarova, from the Czech Republic, the easing of restrictions Thursday meant she could return to training at the Juliska stadium in Prague for the first time since her country locked down.", "fullName": "Laura Smith-Spark"])
-        
-
         self.messagesList = UITableView(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: self.frame.height - self.tabBar.frame.height))
         self.messagesList.backgroundColor = .clear
         self.messagesList.separatorStyle = .none
@@ -321,118 +327,7 @@ class LandingView: SuperView {
         self.messagesList.register(NoneDesignCell.self, forCellReuseIdentifier: NoneDesignCell.NONE_DESIGN_CELL_REUSE_ID)
         self.messagesList.tableFooterView = UIView(frame: CGRect(x: 0.0, y: 0.0, width: self.messagesList.frame.width, height: CONSTANTS.SCREEN.MARGIN(2)))
         self.addSubview(self.messagesList)
-        
-        
-        
-        self.prepareNewData()
-        
-        
-        
-          
-         // 1) Get the current TimeZone's seconds from GMT. Since I am in Chicago this will be: 60*60*5 (18000)
-//        let timezoneOffset =  TimeZone.current.secondsFromGMT()
-//
-//
-//        let epochDate = currentDate.timeIntervalSince1970
-//        let timezoneEpochOffset = (epochDate - Double(timezoneOffset))
-//
-////        print(timezoneOffset)
-////         // 2) Get the current date (GMT) in seconds since 1970. Epoch datetime.
-////         print(epochDate)
-////
-////        Int64(     (Date().timeIntervalSince1970 * 1000.0).rounded() )
-//         // 3) Perform a calculation with timezoneOffset + epochDate to get the total seconds for the
-//         //    local date since 1970.
-//         //    This may look a bit strange, but since timezoneOffset is given as -18000.0, adding epochDate and timezoneOffset
-//         //    calculates correctly.
-////         let timezoneEpochOffset = (epochDate - Double(timezoneOffset))
-//
-//        let date = Date(timeIntervalSince1970: timezoneEpochOffset)
-//        print(  "--> \(date.description)" )
-//        print(Date(timeIntervalSince1970: epochDate))
-//
-//        Timestamp().
-         // 4) Finally, create a date using the seconds offset since 1970 for the local date.
-//         let timeZoneOffsetDate = Date(timeIntervalSince1970: timezoneEpochOffset)
-//
-//        print(timeZoneOffsetDate)
-        
-//        print(Date(timeIntervalSince1970: TimeInterval()))
-//                print(CONSTANTS.GLOBAL.getUserInfo())
-
-//        let ref: DatabaseReference! = Database.database().reference()
-//        ref.child("Users/m7KmL4LYeQMcH6qXMNcCm0wfWy33/message").observe(.childChanged, with: { snapshot in
-//                    print("2 \(snapshot.value)")
-////                    db.collection("Messages").document("111").getDocument() { (document, error) in
-//
-//        })
-
-
-                
-        //        let interval = date.timeIntervalSince1970
-                
-
-                             
-//
-        /// 0000
-//        let db = Firestore.firestore()
-//        ref.child("messages/789").observe(.childAdded, with: { snapshot in
-//
-//            print("2 \(snapshot.value)")
-//        })
-//        db.collection("Messages").document("m7KmL4LYeQMcH6qXMNcCm0wfWy33").collection("13042020").whereField("s", isEqualTo: 111).getDocuments() { (querySnapshot, err) in
-//            if let _ = err {
-//                print("ssssssssss")
-//            }
-//
-//            for document in querySnapshot!.documents {
-//                if let arg: [String: Any] = document.data(), let date: Timestamp = arg["date"] as? Timestamp {
-//                    var theDate: Double!
-//                    theDate = date.dateValue().timeIntervalSince1970
-//                    print("0000000>> \(date.dateValue().timeIntervalSince1970)")
-//                            print("1--> \(Date(timeIntervalSince1970: 1586861446552305 / 1000000.0))")
-//
-//                    DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-//                            let timestamp: Timestamp = Timestamp(date: Date(timeIntervalSince1970: theDate))
-//                                    print(timestamp.dateValue())
-//                                            let db = Firestore.firestore()
-//                                    //
-//                            db.collection("Messages").document("m7KmL4LYeQMcH6qXMNcCm0wfWy33").collection("13042020").whereField("date", isGreaterThanOrEqualTo: timestamp).getDocuments() { (querySnapshot, err) in
-//                                if let _ = err {
-//                                    print("ssssssssss")
-//                                }
-//                                if querySnapshot!.documents.count > 0 {
-//
-//                                    print("--> \(querySnapshot!.documents)")
-//                                }
-//                                print("22222")
-//                            }
-//                    }
-//                }
-//            }
-//        }
-
-        
-        
-        
-//        print(dateString)
-        
-        
-        
-        ///.coll.getDocument() { (document, error) in
-//        ref.child("messages/789").observe(.childAdded, with: { snapshot in
-//
-//            print("2 \(snapshot.value)")
-//        })
-        
-        
-        
-        
-        
-        let query: CoreDataStack = CoreDataStack(withCoreData: "CoreData")
-        print( query.fetchRequest([CONSTANTS.KEYS.SQL.NAME_ENTITY: CONSTANTS.KEYS.SQL.ENTITY.MESSAGES]) )
-        
-        
+        self.reloadMessages()
         NotificationCenter.default.addObserver(self, selector: #selector(self.reporterDidChangeName(_ :)), name: NSNotification.Name(rawValue: CONSTANTS.KEYS.NOTIFICATION.DID.REPORTER.CHANGE.NAME), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.reporterDidChangeThumb(_ :)), name: NSNotification.Name(rawValue: CONSTANTS.KEYS.NOTIFICATION.DID.REPORTER.CHANGE.THUMB), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.reloadMessages), name: NSNotification.Name(rawValue: CONSTANTS.KEYS.NOTIFICATION.RELOAD.MESSAGES), object: nil)
