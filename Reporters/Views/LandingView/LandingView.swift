@@ -35,10 +35,10 @@ extension LandingView: UIScrollViewDelegate {
 extension LandingView: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        let nextMessage: [String: Any] = messagesArray[indexPath.row]
-        if let height: CGFloat = nextMessage["height"] as? CGFloat {
-            return CONSTANTS.SCREEN.MARGIN(4) + height + DEFAULT.TABLENVIEW.CELL.DATE.SIZE.HEIGHT + DEFAULT.TABLENVIEW.CELL.MARGIN + DEFAULT.TABLENVIEW.CELL.REPORTER.SIZE.HEIGHT
-        }
+//        let nextMessage: [String: Any] = messagesArray[indexPath.row]
+//        if let height: CGFloat = nextMessage["height"] as? CGFloat {
+//            return CONSTANTS.SCREEN.MARGIN(4) + height + DEFAULT.TABLENVIEW.CELL.DATE.SIZE.HEIGHT + DEFAULT.TABLENVIEW.CELL.MARGIN + DEFAULT.TABLENVIEW.CELL.REPORTER.SIZE.HEIGHT
+//        }
         return 0
     }
     
@@ -130,36 +130,36 @@ extension LandingView: UITableViewDataSource {
             dateLabel.font = CONSTANTS.GLOBAL.createFont(ofSize: 14.0, false)
             messageView.addSubview(dateLabel)
         }
-        let nextMessage: [String: Any] = self.messagesArray[indexPath.row]
-        let thumb: AsyncImageView = cellView.subviews[0] as! AsyncImageView
-        let reporterName: UILabel = cellView.subviews[1] as! UILabel
-        let favBtn: UIButton = cellView.subviews[2] as! UIButton
-        let shareBtn: UIButton = cellView.subviews[3] as! UIButton
-        let messageView: UIView = cellView.subviews[4]
-        let messageLabel: UILabel = messageView.subviews[0] as! UILabel
-        let dateLabel: UILabel = messageView.subviews[1] as! UILabel
-        cellView.frame = CGRect(x: CONSTANTS.SCREEN.MARGIN(2), y: CONSTANTS.SCREEN.MARGIN(3), width: cell.bounds.width - CONSTANTS.SCREEN.MARGIN(4), height: cell.frame.height - CONSTANTS.SCREEN.MARGIN(3))
-        thumb.frame = CGRect(x: thumb.frame.origin.x, y: cellView.frame.height - DEFAULT.TABLENVIEW.CELL.THUMB.SIZE.BOTH, width: thumb.frame.width, height: thumb.frame.height)
-        thumb.setImage(withUrl: NSURL(string: "https://miro.medium.com/fit/c/256/256/1*79d-KFdBY7bZVTgpNs7Vsg.jpeg")!)
-        if let reporter: String = nextMessage[CONSTANTS.KEYS.JSON.FIELD.NAME] as? String {
-            reporterName.text = reporter
-        }
-        reporterName.frame = CGRect(x: reporterName.frame.origin.x, y: cellView.frame.height - reporterName.frame.height, width: reporterName.widthOfString() + CONSTANTS.SCREEN.MARGIN(2), height: reporterName.frame.height)
-        favBtn.frame = CGRect(x: reporterName.frame.origin.x + reporterName.frame.width + CONSTANTS.SCREEN.MARGIN(), y: reporterName.frame.origin.y, width: favBtn.frame.width, height: favBtn.frame.height)
-        shareBtn.frame = CGRect(x: favBtn.frame.origin.x + favBtn.frame.width + CONSTANTS.SCREEN.MARGIN(), y: reporterName.frame.origin.y, width: shareBtn.frame.width, height: shareBtn.frame.height)
-        messageView.frame = CGRect(x: messageView.frame.origin.x, y: messageView.frame.origin.y, width: messageView.frame.width, height: cellView.frame.height - reporterName.frame.height - DEFAULT.TABLENVIEW.CELL.MARGIN)
-        messageView.roundCorners(corners: [.topLeft, .topRight, .bottomRight], radius: 16.0)
-        messageLabel.frame = CGRect(x: messageLabel.frame.origin.x, y: messageLabel.frame.origin.y, width: messageLabel.frame.width, height: messageView.frame.height - CONSTANTS.SCREEN.MARGIN() - DEFAULT.TABLENVIEW.CELL.DATE.SIZE.HEIGHT)
+//        let nextMessage: [String: Any] = self.messagesArray[indexPath.row]
+//        let thumb: AsyncImageView = cellView.subviews[0] as! AsyncImageView
+//        let reporterName: UILabel = cellView.subviews[1] as! UILabel
+//        let favBtn: UIButton = cellView.subviews[2] as! UIButton
+//        let shareBtn: UIButton = cellView.subviews[3] as! UIButton
+//        let messageView: UIView = cellView.subviews[4]
+//        let messageLabel: UILabel = messageView.subviews[0] as! UILabel
+//        let dateLabel: UILabel = messageView.subviews[1] as! UILabel
+//        cellView.frame = CGRect(x: CONSTANTS.SCREEN.MARGIN(2), y: CONSTANTS.SCREEN.MARGIN(3), width: cell.bounds.width - CONSTANTS.SCREEN.MARGIN(4), height: cell.frame.height - CONSTANTS.SCREEN.MARGIN(3))
+//        thumb.frame = CGRect(x: thumb.frame.origin.x, y: cellView.frame.height - DEFAULT.TABLENVIEW.CELL.THUMB.SIZE.BOTH, width: thumb.frame.width, height: thumb.frame.height)
+//        thumb.setImage(withUrl: NSURL(string: "https://miro.medium.com/fit/c/256/256/1*79d-KFdBY7bZVTgpNs7Vsg.jpeg")!)
+//        if let reporter: String = nextMessage[CONSTANTS.KEYS.JSON.FIELD.NAME] as? String {
+//            reporterName.text = reporter
+//        }
+//        reporterName.frame = CGRect(x: reporterName.frame.origin.x, y: cellView.frame.height - reporterName.frame.height, width: reporterName.widthOfString() + CONSTANTS.SCREEN.MARGIN(2), height: reporterName.frame.height)
+//        favBtn.frame = CGRect(x: reporterName.frame.origin.x + reporterName.frame.width + CONSTANTS.SCREEN.MARGIN(), y: reporterName.frame.origin.y, width: favBtn.frame.width, height: favBtn.frame.height)
+//        shareBtn.frame = CGRect(x: favBtn.frame.origin.x + favBtn.frame.width + CONSTANTS.SCREEN.MARGIN(), y: reporterName.frame.origin.y, width: shareBtn.frame.width, height: shareBtn.frame.height)
+//        messageView.frame = CGRect(x: messageView.frame.origin.x, y: messageView.frame.origin.y, width: messageView.frame.width, height: cellView.frame.height - reporterName.frame.height - DEFAULT.TABLENVIEW.CELL.MARGIN)
+//        messageView.roundCorners(corners: [.topLeft, .topRight, .bottomRight], radius: 16.0)
+//        messageLabel.frame = CGRect(x: messageLabel.frame.origin.x, y: messageLabel.frame.origin.y, width: messageLabel.frame.width, height: messageView.frame.height - CONSTANTS.SCREEN.MARGIN() - DEFAULT.TABLENVIEW.CELL.DATE.SIZE.HEIGHT)
 //        if let message: String = nextMessage[CONSTANTS.KEYS.JSON.FIELD.MESSAGE] as? String {
 //            messageLabel.text = message
 //            messageLabel.decideTextDirection()
 //        }
-        dateLabel.frame = CGRect(x: dateLabel.frame.origin.x, y: messageLabel.frame.origin.y + messageLabel.frame.height, width: dateLabel.frame.width, height: dateLabel.frame.height)
-        if messageLabel.textAlignment == .left {
-            dateLabel.textAlignment = .right
-        } else {
-            dateLabel.textAlignment = .left
-        }
+//        dateLabel.frame = CGRect(x: dateLabel.frame.origin.x, y: messageLabel.frame.origin.y + messageLabel.frame.height, width: dateLabel.frame.width, height: dateLabel.frame.height)
+//        if messageLabel.textAlignment == .left {
+//            dateLabel.textAlignment = .right
+//        } else {
+//            dateLabel.textAlignment = .left
+//        }
         return cell
     }
     
@@ -226,29 +226,10 @@ class LandingView: SuperView {
     private var tabBar: TabBarView!
     private var messagesList: UITableView!
     private var newDataReceived: Queue! = Queue<[String: Any]>()
-//    private var messagesArray: [[[String: Any]]] = [[[String: Any]]]()
     private var messagesArray: [[String: Any]] = [[String: Any]]()
     private var sectionViews: [UIView?] = [UIView?]()
     
     // MARK: - Public Methods
-    
-    public func prepareNewData() {
-//        for _ in 1 ... self.newDataReceived.count {
-//            if var nextMessage: [String: Any] = self.newDataReceived.dequeue() ,let message: String = nextMessage[CONSTANTS.KEYS.JSON.FIELD.MESSAGE] as? String {
-//                if let label: UILabel = CONSTANTS.GLOBAL.createLabelElement(withFrame: CGRect(x: 0, y: 0, width: self.messagesList.frame.width - CONSTANTS.SCREEN.MARGIN(6) - DEFAULT.TABLENVIEW.CELL.MARGIN - DEFAULT.TABLENVIEW.CELL.THUMB.SIZE.BOTH, height: 0), {
-//                    var argument: [String: Any] = [String: Any]()
-//                    argument[CONSTANTS.KEYS.ELEMENTS.TEXT] = message
-//                    argument[CONSTANTS.KEYS.ELEMENTS.NUMLINES] = 0
-//                    argument[CONSTANTS.KEYS.ELEMENTS.FONT] = CONSTANTS.GLOBAL.createFont(ofSize: DEFAULT.TABLENVIEW.CELL.MESSAGE.FONT.SIZE, false)
-//                    return argument
-//                }())[CONSTANTS.KEYS.ELEMENTS.SELF] as? UILabel {
-//                    nextMessage["height"] = label.heightOfString()
-//                    messagesArray.append(nextMessage)
-//                }
-//            }
-//        }
-//        self.messagesList.reloadData()
-    }
     
     // MARK: - Private Methods
     
@@ -278,18 +259,26 @@ class LandingView: SuperView {
     @objc private func reloadMessages() {
         let query: CoreDataStack = CoreDataStack(withCoreData: "CoreData")
         if let messages: [[String: Any]] = query.fetchRequest([CONSTANTS.KEYS.SQL.NAME_ENTITY: CONSTANTS.KEYS.SQL.ENTITY.MESSAGES]) as? [[String: Any]] {
-            var sortByDate: Date!
+            var sortByDate: Date?
+            var newMessagesArray: [[String: Any]] = [[String: Any]]()
+            var sectionArr: [String: Any]!
+            var messagesArr: [Any]!
             for message in messages {
                 let messageDate: Date = message[CONSTANTS.KEYS.JSON.FIELD.DATE.SELF] as! Date
-                print("--> \(messageDate) <--")
-                print("--> \(messageDate.stripTime()) <--")
-                print("--> \(messageDate.timeIntervalSince1970) <--")
-                if sortByDate == nil {
-                    
+                if sortByDate?.timeIntervalSince1970 ?? 0 < messageDate.stripTime().timeIntervalSince1970 {
+                    if sectionArr != nil {
+                        sectionArr[CONSTANTS.KEYS.JSON.FIELD.MESSAGE.SELF] = messagesArr
+                        newMessagesArray.append(sectionArr)
+                    }
+                    sortByDate = messageDate.stripTime()
+                    sectionArr = [String: Any]()
+                    sectionArr[CONSTANTS.KEYS.JSON.FIELD.DATE.SELF] = sortByDate
+                    messagesArr = [Any]()
                 }
-                
+                messagesArr.append(message)
             }
-            print(messages)
+            sectionArr[CONSTANTS.KEYS.JSON.FIELD.MESSAGE.SELF] = messagesArr
+            newMessagesArray.append(sectionArr)
         }
     }
     
