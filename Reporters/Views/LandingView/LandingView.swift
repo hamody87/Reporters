@@ -14,6 +14,8 @@ extension LandingView: UIScrollViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if self.isStopAutoScroll {
+            print("dsadasdasdsadsa")
+            self.isStopAutoScroll = false
             return
         }
         for i in 0 ..< self.sectionViews.count {
@@ -34,6 +36,7 @@ extension LandingView: UIScrollViewDelegate {
     }
     
     func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        print("2222")
         self.isStopAutoScroll = true
         UIView.animate(withDuration: 0.6, animations: {
             self.getPresentSection(scrollView)?.alpha = 0
@@ -82,11 +85,10 @@ extension LandingView: UITableViewDataSource {
         title.frame = CGRect(x: 0, y: title.frame.origin.y, width: title.widthOfString() + CONSTANTS.SCREEN.MARGIN(4), height: title.frame.height)
         let coreSectionView: UIView = UIView(frame: CGRect(x: (tableView.frame.width - title.frame.width) / 2.0, y: 0, width: title.frame.width, height: title.frame.height))
         sectionView.addSubview(coreSectionView)
-        print("sssssssssss111")
         if self.sectionViews.indices.contains(section) {
             if let oldSectionView: UIView = self.sectionViews[section] {
-                print("sssssssssss,\(oldSectionView.alpha)")
-                sectionView.alpha = oldSectionView.alpha
+                print("---> \(oldSectionView.alpha)")
+                coreSectionView.alpha = oldSectionView.alpha
             }
             self.sectionViews.remove(at: section)
         }
@@ -336,7 +338,7 @@ class LandingView: SuperView {
             }
             self.lastSection = max(self.sections.count - 1, 0)
             self.messagesList.reloadData(completion: {
-                self.messagesList.scrollToRow(at: IndexPath(item: self.lastItem, section: self.lastSection), at: .bottom, animated: true)
+                self.messagesList.scrollToRow(at: IndexPath(item: self.lastItem, section: self.lastSection), at: .bottom, animated: false)
             })
         }
     }
