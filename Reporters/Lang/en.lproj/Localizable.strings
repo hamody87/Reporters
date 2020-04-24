@@ -22,6 +22,8 @@
 "FINISH" = "Finish";
 "UPDATE" = "Update";
 "NONE" = "None";
+"TODAY" = "Today";
+"YESTERDAY" = "Yesterday";
 "DELETE_PHOTO" = "Delete photo";
 "TAKE_PHOTO" = "Take photo";
 "CHOOSE_PHOTO" = "Choose photo";

@@ -49,6 +49,7 @@
 		F3BB3A29244F097800C253BA /* ReachabilityObserverDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3BB3A28244F097800C253BA /* ReachabilityObserverDelegate.swift */; };
 		F3BB3A2D244F0E5900C253BA /* ReachabilityHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3BB3A2C244F0E5900C253BA /* ReachabilityHandler.swift */; };
 		F3BB3A2F244F416200C253BA /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3BB3A2E244F416200C253BA /* DateExtension.swift */; };
+		F3BB3A312453366600C253BA /* UITableViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3BB3A302453366600C253BA /* UITableViewExtension.swift */; };
 		F3E734B4243B65CE00C67DD9 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3E734B3243B65CE00C67DD9 /* CoreData.framework */; };
 		F3E734B9243C9AEA00C67DD9 /* TabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3E734B8243C9AEA00C67DD9 /* TabBarView.swift */; };
 		F3E734BD243D33B300C67DD9 /* CustomizeImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3E734BC243D33B300C67DD9 /* CustomizeImage.swift */; };
@@ -139,6 +140,7 @@
 		F3BB3A28244F097800C253BA /* ReachabilityObserverDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReachabilityObserverDelegate.swift; sourceTree = "<group>"; };
 		F3BB3A2C244F0E5900C253BA /* ReachabilityHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReachabilityHandler.swift; sourceTree = "<group>"; };
 		F3BB3A2E244F416200C253BA /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
+		F3BB3A302453366600C253BA /* UITableViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITableViewExtension.swift; sourceTree = "<group>"; };
 		F3E734B3243B65CE00C67DD9 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		F3E734B8243C9AEA00C67DD9 /* TabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarView.swift; sourceTree = "<group>"; };
 		F3E734BC243D33B300C67DD9 /* CustomizeImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomizeImage.swift; sourceTree = "<group>"; };
@@ -368,6 +370,7 @@
 				F30AC601242EBE2E00CEA545 /* UIViewExtension.swift */,
 				F381D9A62443DB00003CF6B6 /* ArrayExtension.swift */,
 				F3BB3A2E244F416200C253BA /* DateExtension.swift */,
+				F3BB3A302453366600C253BA /* UITableViewExtension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -689,6 +692,7 @@
 				F3E734DD24412C4000C67DD9 /* StyleCollectionViewCell.swift in Sources */,
 				F3A14C4C24242A1300A375D1 /* UIColorExtension.swift in Sources */,
 				F3A14C3424212D1800A375D1 /* UILabelExtension.swift in Sources */,
+				F3BB3A312453366600C253BA /* UITableViewExtension.swift in Sources */,
 				F3A14C232420DF3200A375D1 /* StringExtension.swift in Sources */,
 				F3A14C482423EB6500A375D1 /* TemplateLoginView.swift in Sources */,
 				F3E734B9243C9AEA00C67DD9 /* TabBarView.swift in Sources */,
