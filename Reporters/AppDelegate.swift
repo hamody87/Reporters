@@ -92,6 +92,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ContainerControllerDelega
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         FirebaseApp.configure()
         self.launchOptions = launchOptions
+//        let query: CoreDataStack = CoreDataStack(withCoreData: "CoreData")
+//        let _ = query.deleteContext([CONSTANTS.KEYS.SQL.NAME_ENTITY: CONSTANTS.KEYS.SQL.ENTITY.MESSAGES])
+//        let _ = query.updateContext(CONSTANTS.KEYS.SQL.ENTITY.FOLLOWING, "\(CONSTANTS.KEYS.JSON.FIELD.ID.USER) = 'm7KmL4LYeQMcH6qXMNcCm0wfWy33'", [CONSTANTS.KEYS.JSON.FIELD.DATE.UPDATE: 1587848788])
 //        UserDefaults.standard.set(false, forKey: CONSTANTS.KEYS.USERDEFAULTS.USER.LOGIN)
         
         

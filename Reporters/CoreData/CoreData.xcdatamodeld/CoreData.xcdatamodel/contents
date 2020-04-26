@@ -12,6 +12,7 @@
         <attribute name="message" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData"/>
         <attribute name="messageID" optional="YES" attributeType="String"/>
         <attribute name="read" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="star" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="userID" optional="YES" attributeType="String"/>
     </entity>
     <entity name="User" representedClassName="User" syncable="YES" codeGenerationType="class">
@@ -27,7 +28,7 @@
     </entity>
     <elements>
         <element name="Following" positionX="252" positionY="414" width="128" height="118"/>
-        <element name="Messages" positionX="243" positionY="405" width="128" height="118"/>
+        <element name="Messages" positionX="243" positionY="405" width="128" height="133"/>
         <element name="User" positionX="246.65625" positionY="336.66796875" width="128" height="178"/>
     </elements>
 </model>

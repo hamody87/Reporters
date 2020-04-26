@@ -75,7 +75,7 @@ final class Global {
     }
     
     public func getHeightLabel(byText text: String) -> CGFloat {
-        if let label: UILabel = CONSTANTS.GLOBAL.createLabelElement(withFrame: CGRect(x: 0, y: 0, width: CONSTANTS.SCREEN.MIN_SIZE - CONSTANTS.SCREEN.MARGIN(6) - LandingView.DEFAULT.TABLENVIEW.CELL.MARGIN - LandingView.DEFAULT.TABLENVIEW.CELL.THUMB.SIZE.BOTH, height: 0), {
+        if let label: UILabel = CONSTANTS.GLOBAL.createLabelElement(withFrame: CGRect(x: 0, y: 0, width: CONSTANTS.SCREEN.MIN_SIZE - LandingView.DEFAULT.TABLENVIEW.CELL.THUMB.SIZE.BOTH - LandingView.DEFAULT.TABLENVIEW.CELL.MARGIN - LandingView.DEFAULT.TABLENVIEW.CELL.SHARE.SIZE.BOTH - CONSTANTS.SCREEN.MARGIN(5) , height: 0), {
             var argument: [String: Any] = [String: Any]()
             argument[CONSTANTS.KEYS.ELEMENTS.TEXT] = text
             argument[CONSTANTS.KEYS.ELEMENTS.NUMLINES] = 0

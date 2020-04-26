@@ -84,6 +84,7 @@ final class DatatHandler {
                 values[CONSTANTS.KEYS.JSON.FIELD.DATE.SELF] = timestamp.dateValue()
             }
             values[CONSTANTS.KEYS.JSON.FIELD.READ] = false
+            values[CONSTANTS.KEYS.JSON.FIELD.STAR] = false
             let _ = query.saveContext(CONSTANTS.KEYS.SQL.ENTITY.MESSAGES, values)
         }
         var sqlInfo: [String: Any] = [String: Any]()

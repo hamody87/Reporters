@@ -804,6 +804,7 @@ public class CONSTANTS {
                         static let URL: String = "url"
                         static let CAPTION: String = "caption"
                     }
+                    static let FOLLOW: String = "isFollow"
                     static let HEIGHT: String = "height"
                 }
                 
@@ -820,6 +821,7 @@ public class CONSTANTS {
                 static let THUMB: String = "thumb"
                 static let READY: String = "ready"
                 static let READ: String = "read"
+                static let STAR: String = "star"
                 static let FOLLOWING: String = "following"
                 static let FOLLOWERS: String = "followers"
                 
