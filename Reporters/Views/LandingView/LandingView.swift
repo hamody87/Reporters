@@ -10,6 +10,29 @@ import UIKit
 import Firebase
 import FirebaseDatabase
 
+class MoreOptionsGesture: UILongPressGestureRecognizer {
+    
+    private var _indexPath: IndexPath? = nil
+    open var indexPath: IndexPath? {
+        set(value) {
+            self._indexPath = value
+        }
+        get {
+            return self._indexPath
+        }
+    }
+    private var _followMessage: Bool = false
+    open var followMessage: Bool {
+        set(value) {
+            self._followMessage = value
+        }
+        get {
+            return self._followMessage
+        }
+    }
+    
+}
+
 extension LandingView: UIScrollViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -104,6 +127,7 @@ extension LandingView: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: NoneDesignCell.NONE_DESIGN_CELL_REUSE_ID, for: indexPath)
+
         let cellView: UIView!
         let cellFollowView: UIView!
         if let view: UIView = cell.viewWithTag(111) {
@@ -154,6 +178,10 @@ extension LandingView: UITableViewDataSource {
             unreadBadge.layer.cornerRadius = unreadBadge.frame.width / 2.0
             unreadBadge.backgroundColor = .red
             messageView.addSubview(unreadBadge)
+            let lpgr = MoreOptionsGesture(target: self, action: #selector(self.presentMoreOptions(gesture:)))
+            lpgr.minimumPressDuration = 0.5
+            lpgr.delaysTouchesBegan = true
+            messageView.addGestureRecognizer(lpgr)
             let shareBtnView: UIView = UIView(frame: CGRect(x: 0, y: 0, width: DEFAULT.TABLENVIEW.CELL.SHARE.SIZE.BOTH, height: DEFAULT.TABLENVIEW.CELL.SHARE.SIZE.BOTH))
             cellView.addSubview(shareBtnView)
             let shareBackground: UIImageView = UIImageView(frame: shareBtnView.bounds)
@@ -197,6 +225,10 @@ extension LandingView: UITableViewDataSource {
             unreadBadge.layer.cornerRadius = unreadBadge.frame.width / 2.0
             unreadBadge.backgroundColor = .red
             messageView.addSubview(unreadBadge)
+            let lpgr = MoreOptionsGesture(target: self, action: #selector(self.presentMoreOptions(gesture:)))
+            lpgr.minimumPressDuration = 0.5
+            lpgr.delaysTouchesBegan = true
+            messageView.addGestureRecognizer(lpgr)
             let shareBtnView: UIView = UIView(frame: CGRect(x: 0, y: 0, width: DEFAULT.TABLENVIEW.CELL.SHARE.SIZE.BOTH, height: DEFAULT.TABLENVIEW.CELL.SHARE.SIZE.BOTH))
             cellFollowView.addSubview(shareBtnView)
             let shareBackground: UIImageView = UIImageView(frame: shareBtnView.bounds)
@@ -249,6 +281,10 @@ extension LandingView: UITableViewDataSource {
                 }
                 reporterName.frame = CGRect(x: reporterName.frame.origin.x, y: 0, width: reporterName.widthOfString(), height: reporterName.frame.height)
                 reporterNameView.frame = CGRect(x: reporterNameView.frame.origin.x, y: cellView.frame.height - reporterNameView.frame.height, width: reporterName.frame.origin.x + reporterName.frame.width + CONSTANTS.SCREEN.MARGIN(), height: reporterNameView.frame.height)
+            }
+            if let lpgr = messageView.gestureRecognizers?.getElement(safe: 0) as? MoreOptionsGesture {
+                lpgr.indexPath = indexPath
+                lpgr.followMessage = isFollowMessage
             }
             if let content: [String: Any] = currentMessage[CONSTANTS.KEYS.JSON.FIELD.MESSAGE.SELF] as? [String: Any], let element: String = content[CONSTANTS.KEYS.JSON.FIELD.MESSAGE.ELEMENT.SELF] as? String, let value: String = content[element] as? String  {
                 switch element {
@@ -357,11 +393,109 @@ class LandingView: SuperView {
     private var sectionViews: [UIView?] = [UIView?]()
     private var lastSection: Int = 0
     private var lastItem: Int = 0
-    private var isStopAutoScroll = false
+    private var messageMoreOptions: UIView!
+    private var backgroundMoreOptions: UIView!
+    private var listOptions: UIView!
+    private var isStopAutoScroll: Bool = false
+    
     
     // MARK: - Public Methods
     
     // MARK: - Private Methods
+    
+    @objc private func dismissMoreOptions(gesture: UIGestureRecognizer) {
+        UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: [], animations: {
+            self.backgroundMoreOptions.alpha = 0
+            self.listOptions.alpha = 0
+            self.listOptions.transform = CGAffineTransform(scaleX: 0.3, y: 0.3)
+        }, completion: { _ in
+            self.messageMoreOptions.removeFromSuperview()
+            self.backgroundMoreOptions.removeFromSuperview()
+            self.listOptions.removeFromSuperview()
+            self.messageMoreOptions = nil
+            self.backgroundMoreOptions = nil
+            self.listOptions = nil
+        })
+    }
+    
+    @objc private func presentMoreOptions(gesture: UIGestureRecognizer) {
+        if let longPress = gesture as? MoreOptionsGesture {
+            if longPress.state == UIGestureRecognizer.State.began {
+                if let indexPath: IndexPath = longPress.indexPath, let messageView: UIView = longPress.view?.clone() {
+                    print(gesture.location(in: self))
+                    let isFollowMessage: Bool = longPress.followMessage
+                    let origin: CGPoint = self.messagesList.cellForRow(at: indexPath)?.frame.origin ?? CGPoint(x: 0, y: 0)
+                    self.messageMoreOptions = messageView
+                    self.backgroundMoreOptions = UIView(frame: self.bounds)
+                    self.backgroundMoreOptions.backgroundColor = .black
+                    self.backgroundMoreOptions.alpha = 0
+                    self.addSubview(self.backgroundMoreOptions)
+                    let gestureBackground = UITapGestureRecognizer(target: self, action: #selector(self.dismissMoreOptions(gesture:)))
+                    gestureBackground.numberOfTapsRequired = 1
+                    self.backgroundMoreOptions.addGestureRecognizer(gestureBackground)
+                    self.messageMoreOptions.frame = CGRect(x: CONSTANTS.SCREEN.MARGIN() + messageView.frame.origin.x, y: origin.y + CONSTANTS.SCREEN.SAFE_AREA.TOP(), width: messageView.frame.width, height: messageView.frame.height)
+                    self.messageMoreOptions.roundCorners(corners: isFollowMessage ? [.allCorners] : [.topLeft, .topRight, .bottomRight], radius: 16.0)
+                    let unreadBadge = self.messageMoreOptions.subviews[3]
+                    unreadBadge.layer.cornerRadius = unreadBadge.frame.width / 2.0
+                    self.addSubview(self.messageMoreOptions)
+                    let gestureMessage = UITapGestureRecognizer(target: self, action: #selector(self.dismissMoreOptions(gesture:)))
+                    gestureMessage.numberOfTapsRequired = 1
+                    self.messageMoreOptions.addGestureRecognizer(gestureMessage)
+                    
+                    let sizePupup: CGSize = CGSize(width: 100.0, height: 50.0)
+                    let img_arrow: UIImage! = UIImage(named: "\(self.classDir())ArrowOptions")
+                    
+                    self.listOptions = UIView(frame: CGRect(x: gesture.location(in: self).x - (sizePupup.width / 2.0), y: gesture.location(in: self).y - sizePupup.height - 50.0, width: sizePupup.width, height: sizePupup.height + img_arrow.size.height))
+                    self.listOptions.alpha = 0
+                    self.addSubview(self.listOptions)
+                    
+                    let coreListOptions: UIView = UIView(frame: CGRect(origin: .zero, size: sizePupup))
+                    coreListOptions.layer.shadowPath = UIBezierPath(rect: coreListOptions.bounds).cgPath
+                    coreListOptions.layer.cornerRadius = 10.0
+                    coreListOptions.layer.shadowRadius = 10.0
+                    coreListOptions.layer.shadowOffset = .zero
+                    coreListOptions.layer.shadowOpacity = 0.4
+                    coreListOptions.backgroundColor = UIColor(named: "Background/Options")
+                    self.listOptions.addSubview(coreListOptions)
+                    
+                    
+                    let img_saveIcon: UIImage! = UIImage(named: "\(self.classDir())SaveIcon")
+                    let saveIcon: UIImageView = UIImageView(frame: CGRect(x: CONSTANTS.SCREEN.MARGIN(), y: (coreListOptions.frame.height - img_saveIcon.size.height) / 2.0, width: img_saveIcon.size.width, height: img_saveIcon.size.height))
+                    saveIcon.image = img_saveIcon
+                    coreListOptions.addSubview(saveIcon)
+                    
+                    let label: UILabel = UILabel(frame: CGRect(x: CONSTANTS.SCREEN.MARGIN(2) + saveIcon.frame.width, y: 0, width: coreListOptions.frame.width - CONSTANTS.SCREEN.MARGIN(2) - saveIcon.frame.width, height: coreListOptions.frame.height))
+                    label.backgroundColor = .clear
+                    label.text = "SAVE".localized
+                    label.textColor = UIColor(named: "Font/Second")
+                    label.font = CONSTANTS.GLOBAL.createFont(ofSize: 18.0, false)
+                    coreListOptions.addSubview(label)
+                    
+                    let arrow: UIImageView = UIImageView(frame: CGRect(x: (sizePupup.width - img_arrow.size.width) / 2.0, y: coreListOptions.frame.height, width: img_arrow.size.width, height: img_arrow.size.height))
+                    arrow.image = img_arrow
+                    self.listOptions.addSubview(arrow)
+                    
+                    
+                    
+                    
+                    self.listOptions.transform = CGAffineTransform(scaleX: 0.7, y: 0.7)
+                    UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0, options: [],  animations: {
+                        self.listOptions.alpha = 1.0
+                        self.listOptions.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+                        let generator = UIImpactFeedbackGenerator(style: .medium)
+                        generator.prepare()
+                        generator.impactOccurred()
+                    })
+                    UIView.animate(withDuration: 0.2, animations: {
+                        self.backgroundMoreOptions.alpha = 0.6
+                    })
+                    
+                    
+                }
+                
+            }
+        }
+    }
     
     private func getPresentSection(_ scrollView: UIScrollView) -> UIView? {
         var heightPreviousSection: CGFloat = 0
@@ -377,8 +511,6 @@ class LandingView: SuperView {
         }
         return nil
     }
-    
-//    private func isFollowMessages
     
     @objc private func reloadMessages() {
         let query: CoreDataStack = CoreDataStack(withCoreData: "CoreData")
@@ -463,18 +595,6 @@ class LandingView: SuperView {
         self.setStatusBarDarkStyle(statusBarStyle: .lightContent)
     }
     
-    @objc private func eeeee(gesture: UIGestureRecognizer) {
-    if let longPress = gesture as? UILongPressGestureRecognizer {
-        if longPress.state == UIGestureRecognizer.State.began {
-
-            let generator = UIImpactFeedbackGenerator(style: .heavy)
-            generator.impactOccurred()
-        } else {
-
-        }
-        }
-    }
-    
     // MARK: - Interstitial SuperView
     
     required init?(coder aDecoder: NSCoder) {
@@ -502,20 +622,6 @@ class LandingView: SuperView {
         self.messagesList.tableHeaderView = UIView(frame: CGRect(x: 0.0, y: 0.0, width: self.messagesList.frame.width, height: CONSTANTS.SCREEN.MARGIN(2)))
         self.addSubview(self.messagesList)
         self.reloadMessages()
-        
-        let btn: UIView = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
-        btn.backgroundColor = .red
-//        btn.addTarget(self, action: #selector(self.eeeee), for: UIControl.Event.touchDragInside)
-        self.addSubview(btn)
-        
-        let lpgr = UILongPressGestureRecognizer(target: self, action: #selector(self.eeeee(gesture:)))
-        lpgr.minimumPressDuration = 0.5
-        lpgr.delaysTouchesBegan = true
-        btn.addGestureRecognizer(lpgr)
-        
-        
-        
-        
         NotificationCenter.default.addObserver(self, selector: #selector(self.reporterDidChangeName(_ :)), name: NSNotification.Name(rawValue: CONSTANTS.KEYS.NOTIFICATION.DID.REPORTER.CHANGE.NAME), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.reporterDidChangeThumb(_ :)), name: NSNotification.Name(rawValue: CONSTANTS.KEYS.NOTIFICATION.DID.REPORTER.CHANGE.THUMB), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.reloadMessages), name: NSNotification.Name(rawValue: CONSTANTS.KEYS.NOTIFICATION.RELOAD.MESSAGES), object: nil)
