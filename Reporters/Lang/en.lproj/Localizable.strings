@@ -24,6 +24,7 @@
 "NONE" = "None";
 "TODAY" = "Today";
 "SAVE" = "Save";
+"UNSAVE" = "Unsave";
 "YESTERDAY" = "Yesterday";
 "DELETE_PHOTO" = "Delete photo";
 "TAKE_PHOTO" = "Take photo";

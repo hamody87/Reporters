@@ -30,6 +30,47 @@ class MoreOptionsGesture: UILongPressGestureRecognizer {
             return self._followMessage
         }
     }
+    private var _messageID: String? = nil
+    open var messageID: String? {
+        set(value) {
+            self._messageID = value
+        }
+        get {
+            return self._messageID
+        }
+    }
+    private var _isStar: Bool = false
+    open var isStar: Bool {
+        set(value) {
+            self._isStar = value
+        }
+        get {
+            return self._isStar
+        }
+    }
+    
+}
+
+class StarButton: UIButton {
+    
+    private var _messageID: String? = nil
+    open var messageID: String? {
+        set(value) {
+            self._messageID = value
+        }
+        get {
+            return self._messageID
+        }
+    }
+    private var _isStar: Bool = false
+    open var isStar: Bool {
+        set(value) {
+            self._isStar = value
+        }
+        get {
+            return self._isStar
+        }
+    }
     
 }
 
@@ -37,7 +78,6 @@ extension LandingView: UIScrollViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if self.isStopAutoScroll {
-            print("dsadasdasdsadsa")
             self.isStopAutoScroll = false
             return
         }
@@ -59,7 +99,6 @@ extension LandingView: UIScrollViewDelegate {
     }
     
     func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
-        print("2222")
         self.isStopAutoScroll = true
         UIView.animate(withDuration: 0.6, animations: {
             self.getPresentSection(scrollView)?.alpha = 0
@@ -127,7 +166,6 @@ extension LandingView: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: NoneDesignCell.NONE_DESIGN_CELL_REUSE_ID, for: indexPath)
-
         let cellView: UIView!
         let cellFollowView: UIView!
         if let view: UIView = cell.viewWithTag(111) {
@@ -241,7 +279,7 @@ extension LandingView: UITableViewDataSource {
             shareImg.image = img_shareBtn
             shareBtnView.addSubview(shareImg)
         }
-        if let sectionMessages: [Any] = self.messages[indexPath.section] as? [Any], let currentMessage: [String: Any] = sectionMessages[indexPath.row] as? [String: Any], let reporterID: String = currentMessage[CONSTANTS.KEYS.JSON.FIELD.ID.USER] as? String, let isFollowMessage: Bool = currentMessage[CONSTANTS.KEYS.JSON.FIELD.MESSAGE.FOLLOW] as? Bool {
+        if let sectionMessages: [Any] = self.messages[indexPath.section] as? [Any], let currentMessage: [String: Any] = sectionMessages[indexPath.row] as? [String: Any], let reporterID: String = currentMessage[CONSTANTS.KEYS.JSON.FIELD.ID.USER] as? String, let isFollowMessage: Bool = currentMessage[CONSTANTS.KEYS.JSON.FIELD.MESSAGE.FOLLOW] as? Bool, let messageID: String = currentMessage[CONSTANTS.KEYS.JSON.FIELD.ID.MESSAGE] as? String {
             let messageView: UIView!
             let messageLabel: UILabel!
             let dateLabel: UILabel!
@@ -282,10 +320,6 @@ extension LandingView: UITableViewDataSource {
                 reporterName.frame = CGRect(x: reporterName.frame.origin.x, y: 0, width: reporterName.widthOfString(), height: reporterName.frame.height)
                 reporterNameView.frame = CGRect(x: reporterNameView.frame.origin.x, y: cellView.frame.height - reporterNameView.frame.height, width: reporterName.frame.origin.x + reporterName.frame.width + CONSTANTS.SCREEN.MARGIN(), height: reporterNameView.frame.height)
             }
-            if let lpgr = messageView.gestureRecognizers?.getElement(safe: 0) as? MoreOptionsGesture {
-                lpgr.indexPath = indexPath
-                lpgr.followMessage = isFollowMessage
-            }
             if let content: [String: Any] = currentMessage[CONSTANTS.KEYS.JSON.FIELD.MESSAGE.SELF] as? [String: Any], let element: String = content[CONSTANTS.KEYS.JSON.FIELD.MESSAGE.ELEMENT.SELF] as? String, let value: String = content[element] as? String  {
                 switch element {
             //                case CONSTANTS.KEYS.JSON.FIELD.MESSAGE.ELEMENT.IMAGE:
@@ -309,9 +343,25 @@ extension LandingView: UITableViewDataSource {
                 dateLabel.text = inputFormatter.string(from: date)
             }
             dateLabel.frame = CGRect(x: messageView.frame.width - dateLabel.widthOfString() - CONSTANTS.SCREEN.MARGIN(), y: messageLabel.frame.origin.y + messageLabel.frame.height, width: dateLabel.widthOfString(), height: DEFAULT.TABLENVIEW.CELL.DATE.SIZE.HEIGHT)
-            favIcon.frame = CGRect(x: dateLabel.frame.origin.x - favIcon.frame.width - 4.0, y: messageView.frame.height - favIcon.frame.height - 9.0, width: favIcon.frame.width, height: favIcon.frame.height)
-            unreadBadge.frame = CGRect(x: CONSTANTS.SCREEN.MARGIN(), y: messageView.frame.height - CONSTANTS.SCREEN.MARGIN() - unreadBadge.frame.height, width: unreadBadge.frame.width, height: unreadBadge.frame.height)
+            favIcon.isHidden = true
+            if let isStar: Bool = currentMessage[CONSTANTS.KEYS.JSON.FIELD.STAR] as? Bool, isStar {
+                favIcon.isHidden = false
+                favIcon.frame = CGRect(x: dateLabel.frame.origin.x - favIcon.frame.width - 4.0, y: messageView.frame.height - favIcon.frame.height - 9.0, width: favIcon.frame.width, height: favIcon.frame.height)
+            }
+            unreadBadge.isHidden = true
+            if let isReaded: Bool = currentMessage[CONSTANTS.KEYS.JSON.FIELD.READ] as? Bool, !isReaded {
+                unreadBadge.isHidden = false
+                unreadBadge.frame = CGRect(x: CONSTANTS.SCREEN.MARGIN(), y: messageView.frame.height - CONSTANTS.SCREEN.MARGIN() - unreadBadge.frame.height, width: unreadBadge.frame.width, height: unreadBadge.frame.height)
+                let query: CoreDataStack = CoreDataStack(withCoreData: "CoreData")
+                let _ = query.updateContext(CONSTANTS.KEYS.SQL.ENTITY.MESSAGES, "\(CONSTANTS.KEYS.JSON.FIELD.ID.MESSAGE) = '\(messageID)'", [CONSTANTS.KEYS.JSON.FIELD.READ: true])
+            }
             shareBtnView.frame = CGRect(x: messageView.frame.origin.x + messageView.frame.width + CONSTANTS.SCREEN.MARGIN(), y: (messageView.frame.height - shareBtnView.frame.height) / 2.0, width: shareBtnView.frame.width, height: shareBtnView.frame.height)
+            if let lpgr = messageView.gestureRecognizers?.getElement(safe: 0) as? MoreOptionsGesture {
+                lpgr.indexPath = indexPath
+                lpgr.followMessage = isFollowMessage
+                lpgr.messageID = messageID
+                lpgr.isStar = !favIcon.isHidden
+            }
         }
         return cell
     }
@@ -398,12 +448,9 @@ class LandingView: SuperView {
     private var listOptions: UIView!
     private var isStopAutoScroll: Bool = false
     
-    
-    // MARK: - Public Methods
-    
     // MARK: - Private Methods
     
-    @objc private func dismissMoreOptions(gesture: UIGestureRecognizer) {
+    @objc private func dismissMoreOptions() {
         UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: [], animations: {
             self.backgroundMoreOptions.alpha = 0
             self.listOptions.alpha = 0
@@ -418,11 +465,20 @@ class LandingView: SuperView {
         })
     }
     
+    @objc private func addStarForMessage(_ sender: StarButton) {
+        if let messageID: String = sender.messageID {
+            let query: CoreDataStack = CoreDataStack(withCoreData: "CoreData")
+            if query.updateContext(CONSTANTS.KEYS.SQL.ENTITY.MESSAGES, "\(CONSTANTS.KEYS.JSON.FIELD.ID.MESSAGE) = '\(messageID)'", [CONSTANTS.KEYS.JSON.FIELD.STAR: sender.isStar]) {
+                self.reloadMessages()
+                self.dismissMoreOptions()
+            }
+        }
+    }
+    
     @objc private func presentMoreOptions(gesture: UIGestureRecognizer) {
         if let longPress = gesture as? MoreOptionsGesture {
             if longPress.state == UIGestureRecognizer.State.began {
                 if let indexPath: IndexPath = longPress.indexPath, let messageView: UIView = longPress.view?.clone() {
-                    print(gesture.location(in: self))
                     let isFollowMessage: Bool = longPress.followMessage
                     let origin: CGPoint = self.messagesList.cellForRow(at: indexPath)?.frame.origin ?? CGPoint(x: 0, y: 0)
                     self.messageMoreOptions = messageView
@@ -430,54 +486,54 @@ class LandingView: SuperView {
                     self.backgroundMoreOptions.backgroundColor = .black
                     self.backgroundMoreOptions.alpha = 0
                     self.addSubview(self.backgroundMoreOptions)
-                    let gestureBackground = UITapGestureRecognizer(target: self, action: #selector(self.dismissMoreOptions(gesture:)))
+                    let gestureBackground = UITapGestureRecognizer(target: self, action: #selector(self.dismissMoreOptions))
                     gestureBackground.numberOfTapsRequired = 1
                     self.backgroundMoreOptions.addGestureRecognizer(gestureBackground)
-                    self.messageMoreOptions.frame = CGRect(x: CONSTANTS.SCREEN.MARGIN() + messageView.frame.origin.x, y: origin.y + CONSTANTS.SCREEN.SAFE_AREA.TOP(), width: messageView.frame.width, height: messageView.frame.height)
+                    
+                    //- max(self.messagesList.contentOffset.y, 0)
+                    self.messageMoreOptions.frame = CGRect(x: CONSTANTS.SCREEN.MARGIN() + messageView.frame.origin.x, y: origin.y - self.messagesList.contentOffset.y, width: messageView.frame.width, height: messageView.frame.height)
                     self.messageMoreOptions.roundCorners(corners: isFollowMessage ? [.allCorners] : [.topLeft, .topRight, .bottomRight], radius: 16.0)
                     let unreadBadge = self.messageMoreOptions.subviews[3]
                     unreadBadge.layer.cornerRadius = unreadBadge.frame.width / 2.0
                     self.addSubview(self.messageMoreOptions)
-                    let gestureMessage = UITapGestureRecognizer(target: self, action: #selector(self.dismissMoreOptions(gesture:)))
+                    let gestureMessage = UITapGestureRecognizer(target: self, action: #selector(self.dismissMoreOptions))
                     gestureMessage.numberOfTapsRequired = 1
                     self.messageMoreOptions.addGestureRecognizer(gestureMessage)
-                    
-                    let sizePupup: CGSize = CGSize(width: 100.0, height: 50.0)
+                    let sizePupup: CGSize = CGSize(width: 110.0, height: 45.0)
                     let img_arrow: UIImage! = UIImage(named: "\(self.classDir())ArrowOptions")
-                    
-                    self.listOptions = UIView(frame: CGRect(x: gesture.location(in: self).x - (sizePupup.width / 2.0), y: gesture.location(in: self).y - sizePupup.height - 50.0, width: sizePupup.width, height: sizePupup.height + img_arrow.size.height))
+                    self.listOptions = UIView(frame: CGRect(x: gesture.location(in: self).x - (sizePupup.width / 2.0), y: gesture.location(in: self).y - sizePupup.height - 40.0, width: sizePupup.width, height: sizePupup.height + img_arrow.size.height))
                     self.listOptions.alpha = 0
                     self.addSubview(self.listOptions)
-                    
                     let coreListOptions: UIView = UIView(frame: CGRect(origin: .zero, size: sizePupup))
                     coreListOptions.layer.shadowPath = UIBezierPath(rect: coreListOptions.bounds).cgPath
                     coreListOptions.layer.cornerRadius = 10.0
                     coreListOptions.layer.shadowRadius = 10.0
                     coreListOptions.layer.shadowOffset = .zero
-                    coreListOptions.layer.shadowOpacity = 0.4
-                    coreListOptions.backgroundColor = UIColor(named: "Background/Options")
+                    coreListOptions.layer.shadowOpacity = 0.3
+                    coreListOptions.backgroundColor = UIColor(named: "Background/Basic")
                     self.listOptions.addSubview(coreListOptions)
-                    
-                    
                     let img_saveIcon: UIImage! = UIImage(named: "\(self.classDir())SaveIcon")
-                    let saveIcon: UIImageView = UIImageView(frame: CGRect(x: CONSTANTS.SCREEN.MARGIN(), y: (coreListOptions.frame.height - img_saveIcon.size.height) / 2.0, width: img_saveIcon.size.width, height: img_saveIcon.size.height))
+                    var originX: CGFloat = coreListOptions.frame.width
+                    let label: UILabel = UILabel(frame: CGRect(x: 0, y: 0, width: 0, height: coreListOptions.frame.height))
+                    label.backgroundColor = .clear
+                    label.text = longPress.isStar ? "UNSAVE".localized : "SAVE".localized
+                    label.textColor = .white
+                    label.font = CONSTANTS.GLOBAL.createFont(ofSize: 17.0, false)
+                    coreListOptions.addSubview(label)
+                    originX -= (label.widthOfString() + img_saveIcon.size.width + CONSTANTS.SCREEN.MARGIN())
+                    originX /= 2.0
+                    label.frame = CGRect(x: originX + img_saveIcon.size.width + CONSTANTS.SCREEN.MARGIN(), y: label.frame.origin.y, width: label.widthOfString(), height: label.frame.height)
+                    let saveIcon: UIImageView = UIImageView(frame: CGRect(x: originX, y: (coreListOptions.frame.height - img_saveIcon.size.height) / 2.0, width: img_saveIcon.size.width, height: img_saveIcon.size.height))
                     saveIcon.image = img_saveIcon
                     coreListOptions.addSubview(saveIcon)
-                    
-                    let label: UILabel = UILabel(frame: CGRect(x: CONSTANTS.SCREEN.MARGIN(2) + saveIcon.frame.width, y: 0, width: coreListOptions.frame.width - CONSTANTS.SCREEN.MARGIN(2) - saveIcon.frame.width, height: coreListOptions.frame.height))
-                    label.backgroundColor = .clear
-                    label.text = "SAVE".localized
-                    label.textColor = UIColor(named: "Font/Second")
-                    label.font = CONSTANTS.GLOBAL.createFont(ofSize: 18.0, false)
-                    coreListOptions.addSubview(label)
-                    
+                    let addStar: StarButton = StarButton(frame: coreListOptions.bounds)
+                    addStar.addTarget(self, action: #selector(self.addStarForMessage), for: .touchUpInside)
+                    addStar.messageID = longPress.messageID
+                    addStar.isStar = !longPress.isStar
+                    coreListOptions.addSubview(addStar)
                     let arrow: UIImageView = UIImageView(frame: CGRect(x: (sizePupup.width - img_arrow.size.width) / 2.0, y: coreListOptions.frame.height, width: img_arrow.size.width, height: img_arrow.size.height))
                     arrow.image = img_arrow
                     self.listOptions.addSubview(arrow)
-                    
-                    
-                    
-                    
                     self.listOptions.transform = CGAffineTransform(scaleX: 0.7, y: 0.7)
                     UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0, options: [],  animations: {
                         self.listOptions.alpha = 1.0
@@ -486,13 +542,10 @@ class LandingView: SuperView {
                         generator.prepare()
                         generator.impactOccurred()
                     })
-                    UIView.animate(withDuration: 0.2, animations: {
+                    UIView.animate(withDuration: 0.1, animations: {
                         self.backgroundMoreOptions.alpha = 0.6
                     })
-                    
-                    
                 }
-                
             }
         }
     }
@@ -534,7 +587,6 @@ class LandingView: SuperView {
                 }
                 repeat {
                     if var message: [String: Any] = messages.getElement(safe: countMessages), let userID: String = message[CONSTANTS.KEYS.JSON.FIELD.ID.USER] as? String, let date: Date = message[CONSTANTS.KEYS.JSON.FIELD.DATE.SELF] as? Date {
-                        print(message)
                         if startDate.stripTime().timeIntervalSince1970 == date.stripTime().timeIntervalSince1970 {
                             message[CONSTANTS.KEYS.JSON.FIELD.MESSAGE.FOLLOW] = false
                             if let nextMessage: [String: Any] = messages.getElement(safe: countMessages + 1), let nextUserID: String = nextMessage[CONSTANTS.KEYS.JSON.FIELD.ID.USER] as? String, let dateNextMessage: Date = nextMessage[CONSTANTS.KEYS.JSON.FIELD.DATE.SELF] as? Date, userID == nextUserID && startDate.stripTime().timeIntervalSince1970 == dateNextMessage.stripTime().timeIntervalSince1970 {
@@ -571,8 +623,6 @@ class LandingView: SuperView {
                 countSection += 1
             }
             self.lastSection = max(self.sections.count - 1, 0)
-            
-            print("\(self.lastItem), section: \(self.lastSection)")
             self.messagesList?.reloadData(completion: {
 //                self.messagesList.scrollToRow(at: IndexPath(item: self.lastItem, section: self.lastSection), at: .bottom, animated: false)
             })
@@ -609,7 +659,6 @@ class LandingView: SuperView {
             backgroundImage.backgroundColor = UIColor(patternImage: img_background)
             self.addSubview(backgroundImage)
         }
-        
         self.tabBar = TabBarView(withFrame: CGRect(x: 0, y: self.frame.height - 56.0 - CONSTANTS.SCREEN.SAFE_AREA.BOTTOM(), width: self.frame.width, height: 56.0 + CONSTANTS.SCREEN.SAFE_AREA.BOTTOM()), delegate: self)
         self.addSubview(self.tabBar)
         self.messagesList = UITableView(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: self.frame.height - self.tabBar.frame.height))
