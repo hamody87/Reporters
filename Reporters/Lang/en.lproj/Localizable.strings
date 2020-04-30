@@ -36,6 +36,7 @@
 "I_WANT_TO_BE_NOTIFIED" = "I want to be notified";
 "TITLE_ENBALE_NOTIFICATION" = "Keep me posted";
 "SUBJECT_ENBALE_NOTIFICATION" = "Find out when you get a message";
+"UNREAD_MESSAGES" = "UNREAD MESSAGES";
 
 "SUCCESSFULLY_UPLOADED_NOTICE" = "Your photo has successfully uploaded";
 "FAILURE_UPLOADED_NOTICE" = "Failed to upload";

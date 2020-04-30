@@ -17,6 +17,14 @@ extension UIView {
         layer.mask = mask
         layer.masksToBounds = true
     }
+     
+//    func borders(edges: UIRectEdge, radius: CGFloat) {
+//         let path = UIBezierPath()
+//         let mask = CAShapeLayer()
+//         mask.path = path.cgPath
+//         layer.mask = mask
+//         layer.masksToBounds = true
+//     }
     
     func clone() -> UIView {
         return NSKeyedUnarchiver.unarchiveObject(with: NSKeyedArchiver.archivedData(withRootObject: self))! as! UIView

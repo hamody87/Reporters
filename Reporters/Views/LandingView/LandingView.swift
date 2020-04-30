@@ -48,6 +48,15 @@ class MoreOptionsGesture: UILongPressGestureRecognizer {
             return self._isStar
         }
     }
+    private var _isRead: Bool = false
+    open var isRead: Bool {
+        set(value) {
+            self._isRead = value
+        }
+        get {
+            return self._isRead
+        }
+    }
     
 }
 
@@ -110,8 +119,14 @@ extension LandingView: UIScrollViewDelegate {
 extension LandingView: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        print("1111111 \(indexPath)")
+        
+        var newMessage: Bool = false
+        if indexPath.row == 2 {
+            newMessage = true
+        }
         if let sectionMessages: [Any] = self.messages[indexPath.section] as? [Any], let currentMessage: [String: Any] = sectionMessages[indexPath.row] as? [String: Any], let content: [String: Any] = currentMessage[CONSTANTS.KEYS.JSON.FIELD.MESSAGE.SELF] as? [String: Any], let height: CGFloat = content[CONSTANTS.KEYS.JSON.FIELD.MESSAGE.HEIGHT] as? CGFloat, let isFollowMessage: Bool = currentMessage[CONSTANTS.KEYS.JSON.FIELD.MESSAGE.FOLLOW] as? Bool  {
-            return CONSTANTS.SCREEN.MARGIN() + height + DEFAULT.TABLENVIEW.CELL.DATE.SIZE.HEIGHT + DEFAULT.TABLENVIEW.CELL.MARGIN + (isFollowMessage ? 0 : DEFAULT.TABLENVIEW.CELL.REPORTER.SIZE.HEIGHT + CONSTANTS.SCREEN.MARGIN(3))
+            return CONSTANTS.SCREEN.MARGIN() + height + DEFAULT.TABLENVIEW.CELL.DATE.SIZE.HEIGHT + DEFAULT.TABLENVIEW.CELL.MARGIN + (isFollowMessage ? 0 : DEFAULT.TABLENVIEW.CELL.REPORTER.SIZE.HEIGHT + CONSTANTS.SCREEN.MARGIN(3)) + (newMessage ? DEFAULT.TABLENVIEW.CELL.UNREAD.SIZE.HEIGHT + (self.previousMessageIsFollow ? DEFAULT.TABLENVIEW.CELL.MARGIN : CONSTANTS.SCREEN.MARGIN(3)) : 0)
         }
         return 0
     }
@@ -165,9 +180,11 @@ extension LandingView: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        print("222222 \(indexPath)")
         let cell = tableView.dequeueReusableCell(withIdentifier: NoneDesignCell.NONE_DESIGN_CELL_REUSE_ID, for: indexPath)
         let cellView: UIView!
         let cellFollowView: UIView!
+        let cellUnreadView: UIView!
         if let view: UIView = cell.viewWithTag(111) {
             cellView = view
         } else {
@@ -212,10 +229,6 @@ extension LandingView: UITableViewDataSource {
             let favIcon: UIImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: img_favIcon.size.width, height: img_favIcon.size.height))
             favIcon.image = img_favIcon
             messageView.addSubview(favIcon)
-            let unreadBadge: UIView = UIView(frame: CGRect(x: 0, y: 0, width: 6.0, height: 6.0))
-            unreadBadge.layer.cornerRadius = unreadBadge.frame.width / 2.0
-            unreadBadge.backgroundColor = .red
-            messageView.addSubview(unreadBadge)
             let lpgr = MoreOptionsGesture(target: self, action: #selector(self.presentMoreOptions(gesture:)))
             lpgr.minimumPressDuration = 0.5
             lpgr.delaysTouchesBegan = true
@@ -259,10 +272,6 @@ extension LandingView: UITableViewDataSource {
             let favIcon: UIImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: img_favIcon.size.width, height: img_favIcon.size.height))
             favIcon.image = img_favIcon
             messageView.addSubview(favIcon)
-            let unreadBadge: UIView = UIView(frame: CGRect(x: 0, y: 0, width: 6.0, height: 6.0))
-            unreadBadge.layer.cornerRadius = unreadBadge.frame.width / 2.0
-            unreadBadge.backgroundColor = .red
-            messageView.addSubview(unreadBadge)
             let lpgr = MoreOptionsGesture(target: self, action: #selector(self.presentMoreOptions(gesture:)))
             lpgr.minimumPressDuration = 0.5
             lpgr.delaysTouchesBegan = true
@@ -279,12 +288,42 @@ extension LandingView: UITableViewDataSource {
             shareImg.image = img_shareBtn
             shareBtnView.addSubview(shareImg)
         }
+        if let view: UIView = cell.viewWithTag(333) {
+            cellUnreadView = view
+        } else {
+            cellUnreadView = UIView(frame: CGRect(x: 0, y: 0, width: cell.bounds.width, height: DEFAULT.TABLENVIEW.CELL.UNREAD.SIZE.HEIGHT))
+            cellUnreadView.tag = 333
+            cellUnreadView.backgroundColor = UIColor(named: DEFAULT.TABLENVIEW.CELL.UNREAD.COLOR.BACKGROUND)
+            let topBorder: CALayer = CALayer()
+            topBorder.frame = CGRect(x: 0, y: 0, width: cellUnreadView.frame.width, height: 1.0)
+            topBorder.backgroundColor = UIColor(named: DEFAULT.TABLENVIEW.CELL.UNREAD.COLOR.BORDER)?.cgColor
+            cellUnreadView.layer.addSublayer(topBorder)
+            let bottomBorder: CALayer = CALayer()
+            bottomBorder.frame = CGRect(x: 0, y: cellUnreadView.frame.height - 1.0, width: cellUnreadView.frame.width, height: 1.0)
+            bottomBorder.backgroundColor = UIColor(named: DEFAULT.TABLENVIEW.CELL.UNREAD.COLOR.BORDER)?.cgColor
+            cellUnreadView.layer.addSublayer(bottomBorder)
+            cell.addSubview(cellUnreadView)
+            let unreadLabel: UILabel = UILabel(frame: cellUnreadView.bounds)
+            unreadLabel.backgroundColor = .clear
+            unreadLabel.textAlignment = .center
+            unreadLabel.textColor = .white
+            unreadLabel.numberOfLines = 0
+            unreadLabel.font = CONSTANTS.GLOBAL.createFont(ofSize: DEFAULT.TABLENVIEW.CELL.MESSAGE.FONT.SIZE, false)
+            unreadLabel.text = "\(2) \("UNREAD_MESSAGES".localized)"
+            cellUnreadView.addSubview(unreadLabel)
+        }
         if let sectionMessages: [Any] = self.messages[indexPath.section] as? [Any], let currentMessage: [String: Any] = sectionMessages[indexPath.row] as? [String: Any], let reporterID: String = currentMessage[CONSTANTS.KEYS.JSON.FIELD.ID.USER] as? String, let isFollowMessage: Bool = currentMessage[CONSTANTS.KEYS.JSON.FIELD.MESSAGE.FOLLOW] as? Bool, let messageID: String = currentMessage[CONSTANTS.KEYS.JSON.FIELD.ID.MESSAGE] as? String {
+            var newMessage: Bool = false
+            if indexPath.row == 2 {
+                newMessage = true
+            }
+            self.previousMessageIsFollow = true
+            cellUnreadView.isHidden = !newMessage
+            
             let messageView: UIView!
             let messageLabel: UILabel!
             let dateLabel: UILabel!
             let favIcon: UIImageView!
-            let unreadBadge: UIView!
             let shareBtnView: UIView!
             if isFollowMessage {
                 cellFollowView.isHidden = false
@@ -293,9 +332,8 @@ extension LandingView: UITableViewDataSource {
                 messageLabel = messageView.subviews[0] as? UILabel
                 dateLabel = messageView.subviews[1] as? UILabel
                 favIcon = messageView.subviews[2] as? UIImageView
-                unreadBadge = messageView.subviews[3]
                 shareBtnView = cellFollowView.subviews[1]
-                cellFollowView.frame = CGRect(x: CONSTANTS.SCREEN.MARGIN(), y: 0, width: cell.bounds.width - CONSTANTS.SCREEN.MARGIN(2), height: cell.frame.height - DEFAULT.TABLENVIEW.CELL.MARGIN)
+                cellFollowView.frame = CGRect(x: CONSTANTS.SCREEN.MARGIN(), y: newMessage ? DEFAULT.TABLENVIEW.CELL.UNREAD.SIZE.HEIGHT + (self.previousMessageIsFollow ? DEFAULT.TABLENVIEW.CELL.MARGIN : CONSTANTS.SCREEN.MARGIN(3)) : 0, width: cell.bounds.width - CONSTANTS.SCREEN.MARGIN(2), height: cell.frame.height - DEFAULT.TABLENVIEW.CELL.MARGIN - (newMessage ? DEFAULT.TABLENVIEW.CELL.UNREAD.SIZE.HEIGHT + (self.previousMessageIsFollow ? DEFAULT.TABLENVIEW.CELL.MARGIN : CONSTANTS.SCREEN.MARGIN(3)) : 0))
                 messageView.frame = CGRect(x: DEFAULT.TABLENVIEW.CELL.THUMB.SIZE.BOTH + DEFAULT.TABLENVIEW.CELL.MARGIN, y: 0, width: 0, height: cellFollowView.frame.height)
             } else {
                 cellFollowView.isHidden = true
@@ -304,7 +342,6 @@ extension LandingView: UITableViewDataSource {
                 messageLabel = messageView.subviews[0] as? UILabel
                 dateLabel = messageView.subviews[1] as? UILabel
                 favIcon = messageView.subviews[2] as? UIImageView
-                unreadBadge = messageView.subviews[3]
                 shareBtnView = cellView.subviews[3]
                 let thumb: AsyncImageView = cellView.subviews[0] as! AsyncImageView
                 let reporterNameView: UIView = cellView.subviews[1]
@@ -348,12 +385,9 @@ extension LandingView: UITableViewDataSource {
                 favIcon.isHidden = false
                 favIcon.frame = CGRect(x: dateLabel.frame.origin.x - favIcon.frame.width - 4.0, y: messageView.frame.height - favIcon.frame.height - 9.0, width: favIcon.frame.width, height: favIcon.frame.height)
             }
-            unreadBadge.isHidden = true
-            if let isReaded: Bool = currentMessage[CONSTANTS.KEYS.JSON.FIELD.READ] as? Bool, !isReaded {
-                unreadBadge.isHidden = false
-                unreadBadge.frame = CGRect(x: CONSTANTS.SCREEN.MARGIN(), y: messageView.frame.height - CONSTANTS.SCREEN.MARGIN() - unreadBadge.frame.height, width: unreadBadge.frame.width, height: unreadBadge.frame.height)
-                let query: CoreDataStack = CoreDataStack(withCoreData: "CoreData")
-                let _ = query.updateContext(CONSTANTS.KEYS.SQL.ENTITY.MESSAGES, "\(CONSTANTS.KEYS.JSON.FIELD.ID.MESSAGE) = '\(messageID)'", [CONSTANTS.KEYS.JSON.FIELD.READ: true])
+            let isRead: Bool = currentMessage[CONSTANTS.KEYS.JSON.FIELD.READ] as! Bool
+            if cell.frame.origin.y - tableView.contentOffset.y <= tableView.frame.height {
+                UnreadBadge.shared().showUnreadBadge(messageView, messageID, isRead)
             }
             shareBtnView.frame = CGRect(x: messageView.frame.origin.x + messageView.frame.width + CONSTANTS.SCREEN.MARGIN(), y: (messageView.frame.height - shareBtnView.frame.height) / 2.0, width: shareBtnView.frame.width, height: shareBtnView.frame.height)
             if let lpgr = messageView.gestureRecognizers?.getElement(safe: 0) as? MoreOptionsGesture {
@@ -361,6 +395,7 @@ extension LandingView: UITableViewDataSource {
                 lpgr.followMessage = isFollowMessage
                 lpgr.messageID = messageID
                 lpgr.isStar = !favIcon.isHidden
+                lpgr.isRead = isRead
             }
         }
         return cell
@@ -426,6 +461,19 @@ class LandingView: SuperView {
                     }
                     
                 }
+                
+                struct UNREAD {
+                    
+                    struct SIZE {
+                        fileprivate static let HEIGHT: CGFloat = 32.0
+                    }
+                    
+                    struct COLOR {
+                        fileprivate static let BACKGROUND: String = "Background/Basic"
+                        fileprivate static let BORDER: String = "Background/Border"
+                    }
+                    
+                }
             }
             
         }
@@ -441,12 +489,13 @@ class LandingView: SuperView {
     private var messages: [Any]!
     private var reporters: [String: [String: Any]]!
     private var sectionViews: [UIView?] = [UIView?]()
-    private var lastSection: Int = 0
-    private var lastItem: Int = 0
     private var messageMoreOptions: UIView!
     private var backgroundMoreOptions: UIView!
     private var listOptions: UIView!
     private var isStopAutoScroll: Bool = false
+    private var lastMessageID: String!
+    private var previousMessageIsFollow: Bool = false
+    
     
     // MARK: - Private Methods
     
@@ -470,6 +519,7 @@ class LandingView: SuperView {
             let query: CoreDataStack = CoreDataStack(withCoreData: "CoreData")
             if query.updateContext(CONSTANTS.KEYS.SQL.ENTITY.MESSAGES, "\(CONSTANTS.KEYS.JSON.FIELD.ID.MESSAGE) = '\(messageID)'", [CONSTANTS.KEYS.JSON.FIELD.STAR: sender.isStar]) {
                 self.reloadMessages()
+                self.messagesList?.reloadData()
                 self.dismissMoreOptions()
             }
         }
@@ -489,12 +539,14 @@ class LandingView: SuperView {
                     let gestureBackground = UITapGestureRecognizer(target: self, action: #selector(self.dismissMoreOptions))
                     gestureBackground.numberOfTapsRequired = 1
                     self.backgroundMoreOptions.addGestureRecognizer(gestureBackground)
-                    
-                    //- max(self.messagesList.contentOffset.y, 0)
                     self.messageMoreOptions.frame = CGRect(x: CONSTANTS.SCREEN.MARGIN() + messageView.frame.origin.x, y: origin.y - self.messagesList.contentOffset.y, width: messageView.frame.width, height: messageView.frame.height)
                     self.messageMoreOptions.roundCorners(corners: isFollowMessage ? [.allCorners] : [.topLeft, .topRight, .bottomRight], radius: 16.0)
-                    let unreadBadge = self.messageMoreOptions.subviews[3]
-                    unreadBadge.layer.cornerRadius = unreadBadge.frame.width / 2.0
+                    if let unreadBadge: UIView = self.messageMoreOptions.subviews.getElement(safe: 3) {
+                        unreadBadge.removeFromSuperview()
+                    }
+                    if let messageID: String = longPress.messageID {
+                        UnreadBadge.shared().showUnreadBadge(self.messageMoreOptions, messageID, longPress.isRead)
+                    }
                     self.addSubview(self.messageMoreOptions)
                     let gestureMessage = UITapGestureRecognizer(target: self, action: #selector(self.dismissMoreOptions))
                     gestureMessage.numberOfTapsRequired = 1
@@ -565,7 +617,7 @@ class LandingView: SuperView {
         return nil
     }
     
-    @objc private func reloadMessages() {
+    private func reloadMessages() {
         let query: CoreDataStack = CoreDataStack(withCoreData: "CoreData")
         if let reporters: [[String: Any]] = query.fetchRequest([CONSTANTS.KEYS.SQL.NAME_ENTITY: CONSTANTS.KEYS.SQL.ENTITY.FOLLOWING, CONSTANTS.KEYS.SQL.FIELDS: [CONSTANTS.KEYS.JSON.FIELD.ID.USER, CONSTANTS.KEYS.JSON.FIELD.NAME, CONSTANTS.KEYS.JSON.FIELD.THUMB]]) as? [[String: Any]] {
             self.reporters = [String: [String: Any]]()
@@ -576,8 +628,6 @@ class LandingView: SuperView {
         if let messages: [[String: Any]] = query.fetchRequest([CONSTANTS.KEYS.SQL.NAME_ENTITY: CONSTANTS.KEYS.SQL.ENTITY.MESSAGES]) as? [[String: Any]] {
             self.sections = [String]()
             self.messages = [Any]()
-            self.lastSection = 0
-            self.lastItem = 0
             var countSection: Int = 0
             var countMessages: Int = 0
             while countSection < CONSTANTS.INFO.APP.BASIC.NUM_DAYS_TO_SHOW {
@@ -592,6 +642,7 @@ class LandingView: SuperView {
                             if let nextMessage: [String: Any] = messages.getElement(safe: countMessages + 1), let nextUserID: String = nextMessage[CONSTANTS.KEYS.JSON.FIELD.ID.USER] as? String, let dateNextMessage: Date = nextMessage[CONSTANTS.KEYS.JSON.FIELD.DATE.SELF] as? Date, userID == nextUserID && startDate.stripTime().timeIntervalSince1970 == dateNextMessage.stripTime().timeIntervalSince1970 {
                                 message[CONSTANTS.KEYS.JSON.FIELD.MESSAGE.FOLLOW] = true
                             }
+                            self.lastMessageID = message[CONSTANTS.KEYS.JSON.FIELD.ID.MESSAGE] as? String
                             sectionMessages.append(message)
                             countMessages += 1
                             continue
@@ -604,7 +655,6 @@ class LandingView: SuperView {
                     break
                 } while true
                 if sectionMessages.count > 0 {
-                    self.lastItem = sectionMessages.count - 1
                     self.messages.append(sectionMessages)
                     switch CONSTANTS.INFO.APP.BASIC.NUM_DAYS_TO_SHOW - countSection - 1 {
                     case 0:
@@ -622,19 +672,59 @@ class LandingView: SuperView {
                 }
                 countSection += 1
             }
-            self.lastSection = max(self.sections.count - 1, 0)
-            self.messagesList?.reloadData(completion: {
-//                self.messagesList.scrollToRow(at: IndexPath(item: self.lastItem, section: self.lastSection), at: .bottom, animated: false)
-            })
         }
+    }
+    
+    private func countNewMessages(_ messageID: String) -> Int {
+        var countNewMessages: Int = 0
+        let countSection: Int = self.sections.count
+        for i in 0..<countSection {
+            if let messagesSection: [Any] = self.messages.getElement(safe: countSection - (i + 1)) as? [Any] {
+                for i in 0..<messagesSection.count {
+                    if let messages: [String: Any] = messagesSection.getElement(safe: messagesSection.count - (i + 1)) as? [String: Any], let nextMessageID: String = messages[CONSTANTS.KEYS.JSON.FIELD.ID.MESSAGE] as? String, messageID != nextMessageID {
+                        countNewMessages += 1
+                    } else {
+                        return countNewMessages
+                    }
+                }
+            }
+        }
+        return countNewMessages
+    }
+    
+    @objc private func receiveNewMessages() {
+        let messageID: String = self.lastMessageID
+        self.reloadMessages()
+        self.tabBar.badgesBtn.newBadges(withNum: self.countNewMessages(messageID))
+    }
+    
+    private func initMessages() {
+        self.reloadMessages()
+        self.messagesList?.reloadData {
+            let lastSection = self.sections.count - 1
+            let lastRow = (self.messages.getElement(safe: lastSection) as? [Any])?.count ?? 0
+            if lastRow > 0 {
+                self.messagesList.scrollToRow(at: IndexPath(item: lastRow - 1, section: lastSection), at: .bottom, animated: false)
+                self.getPresentSection(self.messagesList)?.alpha = 0
+            }
+        }
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+//        self.receiveNewMessages()
+//        }
     }
     
     @objc private func reporterDidChangeName(_ notification: NSNotification) {
         self.reloadMessages()
+        self.messagesList?.reloadData {
+            self.getPresentSection(self.messagesList)?.alpha = 0
+        }
     }
     
     @objc private func reporterDidChangeThumb(_ notification: NSNotification) {
         self.reloadMessages()
+        self.messagesList?.reloadData {
+            self.getPresentSection(self.messagesList)?.alpha = 0
+        }
     }
     
     // MARK: - Override Methods
@@ -670,10 +760,10 @@ class LandingView: SuperView {
         self.messagesList.register(NoneDesignCell.self, forCellReuseIdentifier: NoneDesignCell.NONE_DESIGN_CELL_REUSE_ID)
         self.messagesList.tableHeaderView = UIView(frame: CGRect(x: 0.0, y: 0.0, width: self.messagesList.frame.width, height: CONSTANTS.SCREEN.MARGIN(2)))
         self.addSubview(self.messagesList)
-        self.reloadMessages()
+        self.initMessages()
         NotificationCenter.default.addObserver(self, selector: #selector(self.reporterDidChangeName(_ :)), name: NSNotification.Name(rawValue: CONSTANTS.KEYS.NOTIFICATION.DID.REPORTER.CHANGE.NAME), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.reporterDidChangeThumb(_ :)), name: NSNotification.Name(rawValue: CONSTANTS.KEYS.NOTIFICATION.DID.REPORTER.CHANGE.THUMB), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.reloadMessages), name: NSNotification.Name(rawValue: CONSTANTS.KEYS.NOTIFICATION.RELOAD.MESSAGES), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.receiveNewMessages), name: NSNotification.Name(rawValue: CONSTANTS.KEYS.NOTIFICATION.RELOAD.MESSAGES), object: nil)
         DatatHandler.init().initReporters()
         if !UIApplication.shared.isRegisteredForRemoteNotifications {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
