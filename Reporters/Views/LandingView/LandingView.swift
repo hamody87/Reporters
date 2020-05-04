@@ -119,19 +119,24 @@ extension LandingView: UIScrollViewDelegate {
 extension LandingView: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        var newMessage: Bool = false
-        if indexPath.row == 1 {
-            newMessage = true
-        }
-        if let sectionMessages: [Any] = self.messages[indexPath.section] as? [Any], let currentMessage: [String: Any] = sectionMessages[indexPath.row] as? [String: Any], let content: [String: Any] = currentMessage[CONSTANTS.KEYS.JSON.FIELD.MESSAGE.SELF] as? [String: Any], let height: CGFloat = content[CONSTANTS.KEYS.JSON.FIELD.MESSAGE.HEIGHT] as? CGFloat, let isFollowMessage: Bool = currentMessage[CONSTANTS.KEYS.JSON.FIELD.MESSAGE.FOLLOW] as? Bool  {
-            let cellHeight: CGFloat = CONSTANTS.SCREEN.MARGIN() + height + DEFAULT.TABLENVIEW.CELL.DATE.SIZE.HEIGHT + DEFAULT.TABLENVIEW.CELL.MARGIN + (isFollowMessage ? 0 : DEFAULT.TABLENVIEW.CELL.REPORTER.SIZE.HEIGHT + CONSTANTS.SCREEN.MARGIN(3)) + (newMessage ? DEFAULT.TABLENVIEW.CELL.UNREAD.SIZE.HEIGHT + (self.previousMessageInfo.isFollow ? DEFAULT.TABLENVIEW.CELL.MARGIN : CONSTANTS.SCREEN.MARGIN(3)) : 0)
-            print(self.previousMessageInfo.indexPath)
-            if self.previousMessageInfo.indexPath != indexPath {
-                self.previousMessageInfo.indexPath = indexPath
-                self.previousMessageInfo.isFollow = isFollowMessage
+        if let sectionMessages: [Any] = self.messages[indexPath.section] as? [Any], let currentMessage: [String: Any] = sectionMessages[indexPath.row] as? [String: Any], let content: [String: Any] = currentMessage[CONSTANTS.KEYS.JSON.FIELD.MESSAGE.SELF] as? [String: Any], let height: CGFloat = content[CONSTANTS.KEYS.JSON.FIELD.MESSAGE.HEIGHT] as? CGFloat, let isFollowMessage: Bool = currentMessage[CONSTANTS.KEYS.JSON.FIELD.MESSAGE.FOLLOW] as? Bool, let messageID: String = currentMessage[CONSTANTS.KEYS.JSON.FIELD.ID.MESSAGE] as? String  {
+            var newMessage: Bool = false
+            if self.newMessageInfo.numNewMessages > 0 && self.newMessageInfo.firstMessageID == messageID {
+                newMessage = true
             }
-            return cellHeight
-            
+            if indexPath.section > self.previousMessageInfo.indexPath.section {
+                self.previousMessageInfo.indexPath = IndexPath(row: 0, section: indexPath.section)
+                self.previousMessageInfo.isFollow = false
+            }
+            if indexPath.section == self.previousMessageInfo.indexPath.section && indexPath.row > self.previousMessageInfo.indexPath.row {
+                self.previousMessageInfo.indexPath = indexPath
+                if indexPath.row - 1 >= 0 {
+                    if let perCurrentMessage: [String: Any] = sectionMessages[indexPath.row - 1] as? [String: Any], let isFollow: Bool = perCurrentMessage[CONSTANTS.KEYS.JSON.FIELD.MESSAGE.FOLLOW] as? Bool  {
+                        self.previousMessageInfo.isFollow = isFollow
+                    }
+                }
+            }
+            return CONSTANTS.SCREEN.MARGIN() + height + DEFAULT.TABLENVIEW.CELL.DATE.SIZE.HEIGHT + DEFAULT.TABLENVIEW.CELL.MARGIN + (isFollowMessage ? 0 : DEFAULT.TABLENVIEW.CELL.REPORTER.SIZE.HEIGHT + CONSTANTS.SCREEN.MARGIN(3)) + (newMessage ? DEFAULT.TABLENVIEW.CELL.UNREAD.SIZE.HEIGHT + (self.previousMessageInfo.isFollow ? DEFAULT.TABLENVIEW.CELL.MARGIN : CONSTANTS.SCREEN.MARGIN(3)) : 0)
         }
         return 0
     }
@@ -186,9 +191,7 @@ extension LandingView: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: NoneDesignCell.NONE_DESIGN_CELL_REUSE_ID, for: indexPath)
-        print("1--- \(indexPath) ---")
         let cellView: UIView!
-//        let cellFollowView: UIView!
         let cellUnreadView: UIView!
         if let view: UIView = cell.viewWithTag(111) {
             cellView = view
@@ -273,10 +276,12 @@ extension LandingView: UITableViewDataSource {
             cellUnreadView.addSubview(unreadLabel)
         }
         if let sectionMessages: [Any] = self.messages[indexPath.section] as? [Any], let currentMessage: [String: Any] = sectionMessages[indexPath.row] as? [String: Any], let reporterID: String = currentMessage[CONSTANTS.KEYS.JSON.FIELD.ID.USER] as? String, let isFollowMessage: Bool = currentMessage[CONSTANTS.KEYS.JSON.FIELD.MESSAGE.FOLLOW] as? Bool, let messageID: String = currentMessage[CONSTANTS.KEYS.JSON.FIELD.ID.MESSAGE] as? String {
+            
             var newMessage: Bool = false
-            if indexPath.row == 1 {
+            if self.newMessageInfo.numNewMessages > 0 && self.newMessageInfo.firstMessageID == messageID {
                 newMessage = true
             }
+            
             cellUnreadView.isHidden = !newMessage
             let messageView: UIView = cellView.subviews[2]
             let messageLabel: UILabel = messageView.subviews[0] as! UILabel
@@ -432,6 +437,17 @@ class LandingView: SuperView {
         var isFollow: Bool = false
     }
     
+    struct NewMessages {
+        
+        var firstMessageID: String!
+        var numNewMessages: Int = 0
+        
+        mutating func reset() {
+               self = NewMessages()
+        }
+        
+    }
+    
     // MARK: - Declare Basic Variables
 
     private var tabBar: TabBarView!
@@ -447,6 +463,7 @@ class LandingView: SuperView {
     private var isStopAutoScroll: Bool = false
     private var lastMessageID: String!
     private var previousMessageInfo: MessageInfo = MessageInfo()
+    private var newMessageInfo: NewMessages = NewMessages()
     
     
     // MARK: - Private Methods
@@ -560,8 +577,6 @@ class LandingView: SuperView {
         var heightPreviousSection: CGFloat = 0
         for i in 0 ..< self.messagesList.numberOfSections {
             let currentOffset: CGFloat = 0.4 * (CONSTANTS.SCREEN.MARGIN(3) + DEFAULT.TABLENVIEW.SECTION.HEIGHT) * CGFloat(i + 1) + scrollView.contentOffset.y
-//            print("\(self.messagesList.rect(forSection: i).height) -------1")
-//            print("\(self.messagesList.contentSize.height) -------2")
             if currentOffset <= self.messagesList.rect(forSection: i).height + heightPreviousSection {
                 if currentOffset - heightPreviousSection > CONSTANTS.SCREEN.MARGIN(3) {
                     return self.sectionViews.getElement(safe: i) ?? nil
@@ -633,29 +648,36 @@ class LandingView: SuperView {
     }
     
     private func countNewMessages(_ messageID: String!) -> Int {
+        var countNewMessages: Int = 0
+        let countSection: Int = self.sections.count
         guard let _ = messageID else {
             return 0
         }
-        var countNewMessages: Int = 0
-        let countSection: Int = self.sections.count
         for i in 0..<countSection {
             if let messagesSection: [Any] = self.messages.getElement(safe: countSection - (i + 1)) as? [Any] {
-                for i in 0..<messagesSection.count {
-                    if let messages: [String: Any] = messagesSection.getElement(safe: messagesSection.count - (i + 1)) as? [String: Any], let nextMessageID: String = messages[CONSTANTS.KEYS.JSON.FIELD.ID.MESSAGE] as? String, messageID != nextMessageID {
+                for j in 0..<messagesSection.count {
+                    if let messages: [String: Any] = messagesSection.getElement(safe: messagesSection.count - (j + 1)) as? [String: Any], let nextMessageID: String = messages[CONSTANTS.KEYS.JSON.FIELD.ID.MESSAGE] as? String, messageID != nextMessageID {
                         countNewMessages += 1
+                        if i == 0 && j == 0 {
+                            self.newMessageInfo.firstMessageID = nextMessageID
+                        }
                     } else {
+                        self.newMessageInfo.numNewMessages = countNewMessages
                         return countNewMessages
                     }
                 }
             }
         }
+        self.newMessageInfo.numNewMessages = countNewMessages
         return countNewMessages
     }
     
     @objc private func receiveNewMessages() {
-        let messageID: String! = self.lastMessageID
+        let messageID = self.lastMessageID
         self.reloadMessages()
         self.tabBar.badgesBtn.newBadges(withNum: self.countNewMessages(messageID))
+        self.messagesList.reloadData {}
+    
     }
     
     private func initMessages() {
