@@ -173,6 +173,7 @@ final class DatatHandler {
                             return
                         }
                         if newUpdate > oldUpdate {
+                            print(oldUpdate)
                             self.initReporterInfoByID([reporterID], 0)
                         }
                     })
@@ -217,12 +218,6 @@ final class DatatHandler {
     }
     
     public func initReporters() {
-        
-        let ddd: Timestamp = Timestamp(date: Date())
-        print("1111")
-        print(ddd.dateValue().timeIntervalSince1970.rounded())
-        print(ddd.dateValue())
-        print("1111")
         self.initReporterInfoByID(self.bringReportersID(), 0)
     }
     

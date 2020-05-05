@@ -85,30 +85,38 @@ class StarButton: UIButton {
 
 extension LandingView: UIScrollViewDelegate {
     
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if self.isStopAutoScroll {
-            self.isStopAutoScroll = false
-            return
+    func scrollViewShouldScrollToTop(_ scrollView: UIScrollView) -> Bool {
+        for i in 0 ..< self.sectionViews.count {
+            self.sectionViews[i]?.alpha = 1.0
         }
+        return true
+    }
+
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         for i in 0 ..< self.sectionViews.count {
             self.sectionViews[i]?.alpha = 1.0
         }
     }
-    
+
+    func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
+        for i in 0 ..< self.sectionViews.count {
+            self.sectionViews[i]?.alpha = 1.0
+        }
+    }
+
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         UIView.animate(withDuration: 0.6, animations: {
             self.getPresentSection(scrollView)?.alpha = 0
         })
     }
-    
+
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         UIView.animate(withDuration: 0.6, animations: {
             self.getPresentSection(scrollView)?.alpha = 0
         })
     }
-    
+
     func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
-        self.isStopAutoScroll = true
         UIView.animate(withDuration: 0.6, animations: {
             self.getPresentSection(scrollView)?.alpha = 0
         })
@@ -172,6 +180,7 @@ extension LandingView: UITableViewDataSource {
         title.font = CONSTANTS.GLOBAL.createFont(ofSize: 16.0, false)
         title.frame = CGRect(x: 0, y: title.frame.origin.y, width: title.widthOfString() + CONSTANTS.SCREEN.MARGIN(4), height: title.frame.height)
         let coreSectionView: UIView = UIView(frame: CGRect(x: (tableView.frame.width - title.frame.width) / 2.0, y: 0, width: title.frame.width, height: title.frame.height))
+        coreSectionView.alpha = 0
         sectionView.addSubview(coreSectionView)
         if self.sectionViews.indices.contains(section) {
             if let oldSectionView: UIView = self.sectionViews[section] {
@@ -259,20 +268,19 @@ extension LandingView: UITableViewDataSource {
             cellUnreadView = UIView(frame: CGRect(x: 0, y: 0, width: cell.bounds.width, height: DEFAULT.TABLENVIEW.CELL.UNREAD.SIZE.HEIGHT))
             cellUnreadView.tag = 222
             cellUnreadView.backgroundColor = UIColor(named: DEFAULT.TABLENVIEW.CELL.UNREAD.COLOR.BACKGROUND)
+            cell.addSubview(cellUnreadView)
             let topBorder: UIView = UIView(frame: CGRect(x: 0, y: 0, width: cellUnreadView.frame.width, height: 1.0))
             topBorder.backgroundColor = UIColor(named: DEFAULT.TABLENVIEW.CELL.UNREAD.COLOR.BORDER)
             cellUnreadView.addSubview(topBorder)
             let bottomBorder: UIView = UIView(frame: CGRect(x: 0, y: cellUnreadView.frame.height - 1.0, width: cellUnreadView.frame.width, height: 1.0))
             bottomBorder.backgroundColor = UIColor(named: DEFAULT.TABLENVIEW.CELL.UNREAD.COLOR.BORDER)
             cellUnreadView.addSubview(bottomBorder)
-            cell.addSubview(cellUnreadView)
             let unreadLabel: UILabel = UILabel(frame: cellUnreadView.bounds)
             unreadLabel.backgroundColor = .clear
             unreadLabel.textAlignment = .center
             unreadLabel.textColor = .white
             unreadLabel.numberOfLines = 0
             unreadLabel.font = CONSTANTS.GLOBAL.createFont(ofSize: DEFAULT.TABLENVIEW.CELL.MESSAGE.FONT.SIZE, false)
-            unreadLabel.text = "\(2) \("UNREAD_MESSAGES".localized)"
             cellUnreadView.addSubview(unreadLabel)
         }
         if let sectionMessages: [Any] = self.messages[indexPath.section] as? [Any], let currentMessage: [String: Any] = sectionMessages[indexPath.row] as? [String: Any], let reporterID: String = currentMessage[CONSTANTS.KEYS.JSON.FIELD.ID.USER] as? String, let isFollowMessage: Bool = currentMessage[CONSTANTS.KEYS.JSON.FIELD.MESSAGE.FOLLOW] as? Bool, let messageID: String = currentMessage[CONSTANTS.KEYS.JSON.FIELD.ID.MESSAGE] as? String {
@@ -280,6 +288,10 @@ extension LandingView: UITableViewDataSource {
             var newMessage: Bool = false
             if self.newMessageInfo.numNewMessages > 0 && self.newMessageInfo.firstMessageID == messageID {
                 newMessage = true
+                let unreadLabel: UILabel = cellUnreadView.subviews[2] as! UILabel
+                unreadLabel.text = "\(self.newMessageInfo.numNewMessages) \("UNREAD_MESSAGES".localized)"
+//                self.newMessageInfo.reset()
+//                self.tabBar.badgesBtn.newBadges(withNum: self.newMessageInfo.numNewMessages)
             }
             
             cellUnreadView.isHidden = !newMessage
@@ -433,13 +445,19 @@ class LandingView: SuperView {
     // MARK: - Structure Definition
     
     struct MessageInfo {
+        
         var indexPath: IndexPath = IndexPath(row: 0, section: 0)
         var isFollow: Bool = false
+        
+        mutating func reset() {
+               self = MessageInfo()
+        }
+        
     }
     
     struct NewMessages {
         
-        var firstMessageID: String!
+        var firstMessageID: String! = nil
         var numNewMessages: Int = 0
         
         mutating func reset() {
@@ -456,11 +474,10 @@ class LandingView: SuperView {
     private var sections: [String]!
     private var messages: [Any]!
     private var reporters: [String: [String: Any]]!
-    private var sectionViews: [UIView?] = [UIView?]()
+    private var sectionViews: [UIView?] = Array(repeating: nil, count: 7)
     private var messageMoreOptions: UIView!
     private var backgroundMoreOptions: UIView!
     private var listOptions: UIView!
-    private var isStopAutoScroll: Bool = false
     private var lastMessageID: String!
     private var previousMessageInfo: MessageInfo = MessageInfo()
     private var newMessageInfo: NewMessages = NewMessages()
@@ -576,7 +593,7 @@ class LandingView: SuperView {
     private func getPresentSection(_ scrollView: UIScrollView) -> UIView? {
         var heightPreviousSection: CGFloat = 0
         for i in 0 ..< self.messagesList.numberOfSections {
-            let currentOffset: CGFloat = 0.4 * (CONSTANTS.SCREEN.MARGIN(3) + DEFAULT.TABLENVIEW.SECTION.HEIGHT) * CGFloat(i + 1) + scrollView.contentOffset.y
+            let currentOffset: CGFloat = 0.4 * (CONSTANTS.SCREEN.MARGIN(3) + DEFAULT.TABLENVIEW.SECTION.HEIGHT) + scrollView.contentOffset.y
             if currentOffset <= self.messagesList.rect(forSection: i).height + heightPreviousSection {
                 if currentOffset - heightPreviousSection > CONSTANTS.SCREEN.MARGIN(3) {
                     return self.sectionViews.getElement(safe: i) ?? nil
@@ -647,37 +664,35 @@ class LandingView: SuperView {
         }
     }
     
-    private func countNewMessages(_ messageID: String!) -> Int {
-        var countNewMessages: Int = 0
+    private func countNewMessages(_ messageID: String!) {
         let countSection: Int = self.sections.count
         guard let _ = messageID else {
-            return 0
+            return
         }
         for i in 0..<countSection {
             if let messagesSection: [Any] = self.messages.getElement(safe: countSection - (i + 1)) as? [Any] {
                 for j in 0..<messagesSection.count {
                     if let messages: [String: Any] = messagesSection.getElement(safe: messagesSection.count - (j + 1)) as? [String: Any], let nextMessageID: String = messages[CONSTANTS.KEYS.JSON.FIELD.ID.MESSAGE] as? String, messageID != nextMessageID {
-                        countNewMessages += 1
-                        if i == 0 && j == 0 {
+                        self.newMessageInfo.numNewMessages += 1
+                        if self.newMessageInfo.firstMessageID == nil && i == 0 && j == 0 {
                             self.newMessageInfo.firstMessageID = nextMessageID
                         }
                     } else {
-                        self.newMessageInfo.numNewMessages = countNewMessages
-                        return countNewMessages
+                        return
                     }
                 }
             }
         }
-        self.newMessageInfo.numNewMessages = countNewMessages
-        return countNewMessages
     }
     
     @objc private func receiveNewMessages() {
         let messageID = self.lastMessageID
         self.reloadMessages()
-        self.tabBar.badgesBtn.newBadges(withNum: self.countNewMessages(messageID))
-        self.messagesList.reloadData {}
-    
+        self.countNewMessages(messageID)
+        self.tabBar.badgesBtn.newBadges(withNum: self.newMessageInfo.numNewMessages)
+        if self.newMessageInfo.numNewMessages > 0 {
+            self.messagesList?.reloadData()
+        }
     }
     
     private func initMessages() {
@@ -687,23 +702,18 @@ class LandingView: SuperView {
             let lastRow = (self.messages.getElement(safe: lastSection) as? [Any])?.count ?? 0
             if lastRow > 0 {
                 self.messagesList.scrollToRow(at: IndexPath(item: lastRow - 1, section: lastSection), at: .bottom, animated: false)
-                self.getPresentSection(self.messagesList)?.alpha = 0
             }
         }
     }
     
     @objc private func reporterDidChangeName(_ notification: NSNotification) {
         self.reloadMessages()
-        self.messagesList?.reloadData {
-            self.getPresentSection(self.messagesList)?.alpha = 0
-        }
+        self.messagesList?.reloadData()
     }
     
     @objc private func reporterDidChangeThumb(_ notification: NSNotification) {
         self.reloadMessages()
-        self.messagesList?.reloadData {
-            self.getPresentSection(self.messagesList)?.alpha = 0
-        }
+        self.messagesList?.reloadData()
     }
     
     // MARK: - Override Methods
@@ -728,6 +738,14 @@ class LandingView: SuperView {
             backgroundImage.backgroundColor = UIColor(patternImage: img_background)
             self.addSubview(backgroundImage)
         }
+        
+        let ddd: Timestamp = Timestamp(date: Date())
+        print("--------")
+        print(ddd.dateValue().timeIntervalSince1970.rounded())
+        print(ddd.dateValue())
+        print("--------")
+        
+        
         self.tabBar = TabBarView(withFrame: CGRect(x: 0, y: self.frame.height - 56.0 - CONSTANTS.SCREEN.SAFE_AREA.BOTTOM(), width: self.frame.width, height: 56.0 + CONSTANTS.SCREEN.SAFE_AREA.BOTTOM()), delegate: self)
         self.addSubview(self.tabBar)
         self.messagesList = UITableView(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: self.frame.height - self.tabBar.frame.height))
