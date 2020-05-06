@@ -85,23 +85,18 @@ class StarButton: UIButton {
 
 extension LandingView: UIScrollViewDelegate {
     
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        for i in 0 ..< self.sectionViews.count {
+            self.sectionViews[i]?.alpha = 1.0
+        }
+        
+    }
+    
     func scrollViewShouldScrollToTop(_ scrollView: UIScrollView) -> Bool {
         for i in 0 ..< self.sectionViews.count {
             self.sectionViews[i]?.alpha = 1.0
         }
         return true
-    }
-
-    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        for i in 0 ..< self.sectionViews.count {
-            self.sectionViews[i]?.alpha = 1.0
-        }
-    }
-
-    func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
-        for i in 0 ..< self.sectionViews.count {
-            self.sectionViews[i]?.alpha = 1.0
-        }
     }
 
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
@@ -128,10 +123,6 @@ extension LandingView: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if let sectionMessages: [Any] = self.messages[indexPath.section] as? [Any], let currentMessage: [String: Any] = sectionMessages[indexPath.row] as? [String: Any], let content: [String: Any] = currentMessage[CONSTANTS.KEYS.JSON.FIELD.MESSAGE.SELF] as? [String: Any], let height: CGFloat = content[CONSTANTS.KEYS.JSON.FIELD.MESSAGE.HEIGHT] as? CGFloat, let isFollowMessage: Bool = currentMessage[CONSTANTS.KEYS.JSON.FIELD.MESSAGE.FOLLOW] as? Bool, let messageID: String = currentMessage[CONSTANTS.KEYS.JSON.FIELD.ID.MESSAGE] as? String  {
-            var newMessage: Bool = false
-            if self.newMessageInfo.numNewMessages > 0 && self.newMessageInfo.firstMessageID == messageID {
-                newMessage = true
-            }
             if indexPath.section > self.previousMessageInfo.indexPath.section {
                 self.previousMessageInfo.indexPath = IndexPath(row: 0, section: indexPath.section)
                 self.previousMessageInfo.isFollow = false
@@ -144,7 +135,15 @@ extension LandingView: UITableViewDelegate {
                     }
                 }
             }
-            return CONSTANTS.SCREEN.MARGIN() + height + DEFAULT.TABLENVIEW.CELL.DATE.SIZE.HEIGHT + DEFAULT.TABLENVIEW.CELL.MARGIN + (isFollowMessage ? 0 : DEFAULT.TABLENVIEW.CELL.REPORTER.SIZE.HEIGHT + CONSTANTS.SCREEN.MARGIN(3)) + (newMessage ? DEFAULT.TABLENVIEW.CELL.UNREAD.SIZE.HEIGHT + (self.previousMessageInfo.isFollow ? DEFAULT.TABLENVIEW.CELL.MARGIN : CONSTANTS.SCREEN.MARGIN(3)) : 0)
+            var heightCell: CGFloat = CONSTANTS.SCREEN.MARGIN() + height + DEFAULT.TABLENVIEW.CELL.DATE.SIZE.HEIGHT + DEFAULT.TABLENVIEW.CELL.MARGIN + (isFollowMessage ? 0 : DEFAULT.TABLENVIEW.CELL.REPORTER.SIZE.HEIGHT + CONSTANTS.SCREEN.MARGIN(3))
+            if self.newMessageInfo.numNewMessages > 0 && self.newMessageInfo.firstMessageID == messageID {
+                heightCell += DEFAULT.TABLENVIEW.CELL.UNREAD.SIZE.HEIGHT + (self.previousMessageInfo.isFollow ? DEFAULT.TABLENVIEW.CELL.MARGIN : CONSTANTS.SCREEN.MARGIN(3))
+                if self.resetNewMessageInfo {
+                    self.newMessageInfo.reset()
+                    self.tabBar.badgesBtn.newBadges(withNum: self.newMessageInfo.numNewMessages)
+                }
+            }
+            return heightCell
         }
         return 0
     }
@@ -180,7 +179,6 @@ extension LandingView: UITableViewDataSource {
         title.font = CONSTANTS.GLOBAL.createFont(ofSize: 16.0, false)
         title.frame = CGRect(x: 0, y: title.frame.origin.y, width: title.widthOfString() + CONSTANTS.SCREEN.MARGIN(4), height: title.frame.height)
         let coreSectionView: UIView = UIView(frame: CGRect(x: (tableView.frame.width - title.frame.width) / 2.0, y: 0, width: title.frame.width, height: title.frame.height))
-        coreSectionView.alpha = 0
         sectionView.addSubview(coreSectionView)
         if self.sectionViews.indices.contains(section) {
             if let oldSectionView: UIView = self.sectionViews[section] {
@@ -288,10 +286,12 @@ extension LandingView: UITableViewDataSource {
             var newMessage: Bool = false
             if self.newMessageInfo.numNewMessages > 0 && self.newMessageInfo.firstMessageID == messageID {
                 newMessage = true
+                self.resetNewMessageInfo = false
                 let unreadLabel: UILabel = cellUnreadView.subviews[2] as! UILabel
                 unreadLabel.text = "\(self.newMessageInfo.numNewMessages) \("UNREAD_MESSAGES".localized)"
-//                self.newMessageInfo.reset()
-//                self.tabBar.badgesBtn.newBadges(withNum: self.newMessageInfo.numNewMessages)
+                if cell.frame.origin.y - tableView.contentOffset.y <= tableView.frame.height {
+                    self.resetNewMessageInfo = true
+                }
             }
             
             cellUnreadView.isHidden = !newMessage
@@ -481,7 +481,7 @@ class LandingView: SuperView {
     private var lastMessageID: String!
     private var previousMessageInfo: MessageInfo = MessageInfo()
     private var newMessageInfo: NewMessages = NewMessages()
-    
+    private var resetNewMessageInfo: Bool = false
     
     // MARK: - Private Methods
     
@@ -691,7 +691,9 @@ class LandingView: SuperView {
         self.countNewMessages(messageID)
         self.tabBar.badgesBtn.newBadges(withNum: self.newMessageInfo.numNewMessages)
         if self.newMessageInfo.numNewMessages > 0 {
-            self.messagesList?.reloadData()
+            self.messagesList?.reloadData {
+                self.getPresentSection(self.messagesList)?.alpha = 0
+            }
         }
     }
     
@@ -701,19 +703,26 @@ class LandingView: SuperView {
             let lastSection = self.sections.count - 1
             let lastRow = (self.messages.getElement(safe: lastSection) as? [Any])?.count ?? 0
             if lastRow > 0 {
-                self.messagesList.scrollToRow(at: IndexPath(item: lastRow - 1, section: lastSection), at: .bottom, animated: false)
+                self.messagesList.scrollToRow(at: IndexPath(item: lastRow - 1, section: lastSection), at: .bottom, animated: false) {
+                    self.getPresentSection(self.messagesList)?.alpha = 0
+                }
             }
+            
         }
     }
     
     @objc private func reporterDidChangeName(_ notification: NSNotification) {
         self.reloadMessages()
-        self.messagesList?.reloadData()
+        self.messagesList?.reloadData {
+            self.getPresentSection(self.messagesList)?.alpha = 0
+        }
     }
     
     @objc private func reporterDidChangeThumb(_ notification: NSNotification) {
         self.reloadMessages()
-        self.messagesList?.reloadData()
+        self.messagesList?.reloadData {
+            self.getPresentSection(self.messagesList)?.alpha = 0
+        }
     }
     
     // MARK: - Override Methods
@@ -722,6 +731,8 @@ class LandingView: SuperView {
         super.superViewDidAppear()
         self.setStatusBarAnyStyle(statusBarStyle: .default)
         self.setStatusBarDarkStyle(statusBarStyle: .lightContent)
+        
+
     }
     
     // MARK: - Interstitial SuperView
