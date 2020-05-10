@@ -13,7 +13,7 @@ class BadgesBtn: SuperView {
     // MARK: - Declare Basic Variables
     
     private var numMessagesLabel: UILabel!
-//    private var numBadges: Int = 0
+    private var numMessagesBtn: UIButton!
     private var isHide: Bool = false
     
     // MARK: - Drawing Methods
@@ -28,6 +28,14 @@ class BadgesBtn: SuperView {
         }
     }
     
+    // MARK: - Private Methods
+    
+    @objc private func scrollToNewMessages() {
+        if !isHide {
+            self.delegate?.transferArgumentToPreviousSuperView(anArgument: nil)
+        }
+    }
+    
     // MARK: - Public Methods
     
     public func hideBadges() {
@@ -37,7 +45,6 @@ class BadgesBtn: SuperView {
     }
     
     public func newBadges(withNum num: Int) {
-//        self.numBadges = num
         if num <= 0 {
             self.hideBadges()
             return
@@ -61,7 +68,7 @@ class BadgesBtn: SuperView {
     required init?(withFrame frame: CGRect!, delegate: SuperViewDelegate?) {
         super.init(withFrame: frame, delegate: delegate)!
         self.backgroundColor = .clear
-        if let label: UILabel = CONSTANTS.GLOBAL.createLabelElement(withFrame: CGRect(x: 0, y: 0, width: self.frame.width, height: self.frame.height), {
+        if let label: UILabel = CONSTANTS.GLOBAL.createLabelElement(withFrame: self.bounds, {
             var argument: [String: Any] = [String: Any]()
             argument[CONSTANTS.KEYS.ELEMENTS.FONT] = CONSTANTS.GLOBAL.createFont(ofSize: 15.0, true)
             argument[CONSTANTS.KEYS.ELEMENTS.ALIGNMENT] = NSTextAlignment.center
@@ -70,6 +77,14 @@ class BadgesBtn: SuperView {
         }())[CONSTANTS.KEYS.ELEMENTS.SELF] as? UILabel {
             self.numMessagesLabel = label
             self.addSubview(self.numMessagesLabel)
+        }
+        if let btn: UIButton = CONSTANTS.GLOBAL.createButtonElement(withFrame: self.bounds, {
+            var argument: [String: Any] = [String: Any]()
+            argument[CONSTANTS.KEYS.ELEMENTS.BUTTON.SELF] = [CONSTANTS.KEYS.ELEMENTS.BUTTON.TARGET: self, CONSTANTS.KEYS.ELEMENTS.BUTTON.SELECTOR: #selector(self.scrollToNewMessages)]
+            return argument
+        }())[CONSTANTS.KEYS.ELEMENTS.SELF] as? UIButton {
+            self.numMessagesBtn = btn
+            self.addSubview(self.numMessagesBtn)
         }
         self.hideBadges()
     }

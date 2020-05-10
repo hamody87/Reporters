@@ -89,14 +89,6 @@ extension LandingView: UIScrollViewDelegate {
         for i in 0 ..< self.sectionViews.count {
             self.sectionViews[i]?.alpha = 1.0
         }
-        
-    }
-    
-    func scrollViewShouldScrollToTop(_ scrollView: UIScrollView) -> Bool {
-        for i in 0 ..< self.sectionViews.count {
-            self.sectionViews[i]?.alpha = 1.0
-        }
-        return true
     }
 
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
@@ -141,6 +133,7 @@ extension LandingView: UITableViewDelegate {
                 if self.resetNewMessageInfo {
                     self.newMessageInfo.reset()
                     self.tabBar.badgesBtn.newBadges(withNum: self.newMessageInfo.numNewMessages)
+                    self.resetNewMessageInfo = false
                 }
             }
             return heightCell
@@ -282,18 +275,15 @@ extension LandingView: UITableViewDataSource {
             cellUnreadView.addSubview(unreadLabel)
         }
         if let sectionMessages: [Any] = self.messages[indexPath.section] as? [Any], let currentMessage: [String: Any] = sectionMessages[indexPath.row] as? [String: Any], let reporterID: String = currentMessage[CONSTANTS.KEYS.JSON.FIELD.ID.USER] as? String, let isFollowMessage: Bool = currentMessage[CONSTANTS.KEYS.JSON.FIELD.MESSAGE.FOLLOW] as? Bool, let messageID: String = currentMessage[CONSTANTS.KEYS.JSON.FIELD.ID.MESSAGE] as? String {
-            
             var newMessage: Bool = false
             if self.newMessageInfo.numNewMessages > 0 && self.newMessageInfo.firstMessageID == messageID {
                 newMessage = true
-                self.resetNewMessageInfo = false
                 let unreadLabel: UILabel = cellUnreadView.subviews[2] as! UILabel
                 unreadLabel.text = "\(self.newMessageInfo.numNewMessages) \("UNREAD_MESSAGES".localized)"
                 if cell.frame.origin.y - tableView.contentOffset.y <= tableView.frame.height {
                     self.resetNewMessageInfo = true
                 }
             }
-            
             cellUnreadView.isHidden = !newMessage
             let messageView: UIView = cellView.subviews[2]
             let messageLabel: UILabel = messageView.subviews[0] as! UILabel
@@ -308,19 +298,23 @@ extension LandingView: UITableViewDataSource {
             messageView.frame = CGRect(x: DEFAULT.TABLENVIEW.CELL.THUMB.SIZE.BOTH + DEFAULT.TABLENVIEW.CELL.MARGIN, y: 0, width: 0, height: cellView.frame.height - (isFollowMessage ? 0 : (DEFAULT.TABLENVIEW.CELL.MARGIN + DEFAULT.TABLENVIEW.CELL.REPORTER.SIZE.HEIGHT)))
             if let content: [String: Any] = currentMessage[CONSTANTS.KEYS.JSON.FIELD.MESSAGE.SELF] as? [String: Any], let element: String = content[CONSTANTS.KEYS.JSON.FIELD.MESSAGE.ELEMENT.SELF] as? String, let value: String = content[element] as? String  {
                 switch element {
-            //                case CONSTANTS.KEYS.JSON.FIELD.MESSAGE.ELEMENT.IMAGE:
-            //                    break
-            //                case CONSTANTS.KEYS.JSON.FIELD.MESSAGE.ELEMENT.IMAGE:
-            //                    break
-                default:
-                    messageLabel.frame = CGRect(x: CONSTANTS.SCREEN.MARGIN(), y: CONSTANTS.SCREEN.MARGIN(), width: 0, height: 0)
-                    messageLabel.text = value
-                    messageLabel.decideTextDirection()
-                    let fullWidth: CGFloat = cellView.frame.width - DEFAULT.TABLENVIEW.CELL.THUMB.SIZE.BOTH - DEFAULT.TABLENVIEW.CELL.MARGIN - CONSTANTS.SCREEN.MARGIN(1) - DEFAULT.TABLENVIEW.CELL.SHARE.SIZE.BOTH
-                    messageView.frame = CGRect(x: messageView.frame.origin.x, y: messageView.frame.origin.y, width: messageLabel.widthOfString() < fullWidth ? messageLabel.widthOfString() + CONSTANTS.SCREEN.MARGIN(2) : fullWidth, height: messageView.frame.height)
-                    messageView.roundCorners(corners: isFollowMessage ? [.allCorners] : [.topLeft, .topRight, .bottomRight], radius: 16.0)
-                    messageLabel.frame = CGRect(x: messageLabel.frame.origin.x, y: messageLabel.frame.origin.y, width: messageView.frame.width - CONSTANTS.SCREEN.MARGIN(2), height: messageView.frame.height - CONSTANTS.SCREEN.MARGIN() - DEFAULT.TABLENVIEW.CELL.DATE.SIZE.HEIGHT)
+                    
+                    case CONSTANTS.KEYS.JSON.FIELD.MESSAGE.ELEMENT.IMAGE:
                     break
+                    
+                    case CONSTANTS.KEYS.JSON.FIELD.MESSAGE.ELEMENT.IMAGE:
+                    break
+                    
+                    default:
+                        messageLabel.frame = CGRect(x: CONSTANTS.SCREEN.MARGIN(), y: CONSTANTS.SCREEN.MARGIN(), width: 0, height: 0)
+                        messageLabel.text = value
+                        messageLabel.decideTextDirection()
+                        let fullWidth: CGFloat = cellView.frame.width - DEFAULT.TABLENVIEW.CELL.THUMB.SIZE.BOTH - DEFAULT.TABLENVIEW.CELL.MARGIN - CONSTANTS.SCREEN.MARGIN(1) - DEFAULT.TABLENVIEW.CELL.SHARE.SIZE.BOTH
+                        messageView.frame = CGRect(x: messageView.frame.origin.x, y: messageView.frame.origin.y, width: messageLabel.widthOfString() < fullWidth ? messageLabel.widthOfString() + CONSTANTS.SCREEN.MARGIN(2) : fullWidth, height: messageView.frame.height)
+                        messageView.roundCorners(corners: isFollowMessage ? [.allCorners] : [.topLeft, .topRight, .bottomRight], radius: 16.0)
+                        messageLabel.frame = CGRect(x: messageLabel.frame.origin.x, y: messageLabel.frame.origin.y, width: messageView.frame.width - CONSTANTS.SCREEN.MARGIN(2), height: messageView.frame.height - CONSTANTS.SCREEN.MARGIN() - DEFAULT.TABLENVIEW.CELL.DATE.SIZE.HEIGHT)
+                    break
+                    
                 }
             }
             if let date: Date = currentMessage[CONSTANTS.KEYS.JSON.FIELD.DATE.SELF] as? Date {
@@ -459,6 +453,7 @@ class LandingView: SuperView {
         
         var firstMessageID: String! = nil
         var numNewMessages: Int = 0
+        var indexPath: IndexPath! = nil
         
         mutating func reset() {
                self = NewMessages()
@@ -516,14 +511,19 @@ class LandingView: SuperView {
             if longPress.state == UIGestureRecognizer.State.began {
                 if let indexPath: IndexPath = longPress.indexPath, let messageView: UIView = longPress.view?.clone() {
                     let isFollowMessage: Bool = longPress.followMessage
-                    let origin: CGPoint = self.messagesList.cellForRow(at: indexPath)?.frame.origin ?? CGPoint(x: 0, y: 0)
                     self.backgroundMoreOptions = UIView(frame: self.bounds)
                     self.backgroundMoreOptions.backgroundColor = .black
                     self.backgroundMoreOptions.alpha = 0
                     self.addSubview(self.backgroundMoreOptions)
                     self.messageMoreOptions = UIView(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: self.frame.height - tabBar.frame.height))
                     self.messageMoreOptions.clipsToBounds = true
-                    messageView.frame = CGRect(x: CONSTANTS.SCREEN.MARGIN() + messageView.frame.origin.x, y: origin.y - self.messagesList.contentOffset.y, width: messageView.frame.width, height: messageView.frame.height)
+                    let cell: UITableViewCell! = self.messagesList.cellForRow(at: indexPath)
+                    var originY: CGFloat = cell?.frame.origin.y ?? 0
+                    originY -= self.messagesList.contentOffset.y
+                    if let view: UIView = cell.viewWithTag(111) {
+                        originY += view.frame.origin.y
+                    }
+                    messageView.frame = CGRect(x: CONSTANTS.SCREEN.MARGIN() + messageView.frame.origin.x, y: originY, width: messageView.frame.width, height: messageView.frame.height)
                     messageView.roundCorners(corners: isFollowMessage ? [.allCorners] : [.topLeft, .topRight, .bottomRight], radius: 16.0)
                     if let unreadBadge: UIView = messageView.subviews.getElement(safe: 3) {
                         unreadBadge.removeFromSuperview()
@@ -670,14 +670,19 @@ class LandingView: SuperView {
             return
         }
         for i in 0..<countSection {
-            if let messagesSection: [Any] = self.messages.getElement(safe: countSection - (i + 1)) as? [Any] {
+            let numSection: Int = countSection - (i + 1)
+            if let messagesSection: [Any] = self.messages.getElement(safe: numSection) as? [Any] {
                 for j in 0..<messagesSection.count {
-                    if let messages: [String: Any] = messagesSection.getElement(safe: messagesSection.count - (j + 1)) as? [String: Any], let nextMessageID: String = messages[CONSTANTS.KEYS.JSON.FIELD.ID.MESSAGE] as? String, messageID != nextMessageID {
+                    let numMessage: Int = messagesSection.count - (j + 1)
+                    if let messages: [String: Any] = messagesSection.getElement(safe: numMessage) as? [String: Any], let nextMessageID: String = messages[CONSTANTS.KEYS.JSON.FIELD.ID.MESSAGE] as? String, messageID != nextMessageID {
                         self.newMessageInfo.numNewMessages += 1
                         if self.newMessageInfo.firstMessageID == nil && i == 0 && j == 0 {
                             self.newMessageInfo.firstMessageID = nextMessageID
                         }
                     } else {
+                        if self.newMessageInfo.indexPath == nil {
+                            self.newMessageInfo.indexPath = IndexPath(row: numMessage + 1, section: numSection)
+                        }
                         return
                     }
                 }
@@ -704,10 +709,12 @@ class LandingView: SuperView {
             let lastRow = (self.messages.getElement(safe: lastSection) as? [Any])?.count ?? 0
             if lastRow > 0 {
                 self.messagesList.scrollToRow(at: IndexPath(item: lastRow - 1, section: lastSection), at: .bottom, animated: false) {
-                    self.getPresentSection(self.messagesList)?.alpha = 0
+                    self.messagesList.scrollToRow(at: IndexPath(item: lastRow - 1, section: lastSection), at: .bottom, animated: false)
+                    UIView.animate(withDuration: 0.6, animations: {
+                        self.getPresentSection(self.messagesList)?.alpha = 0
+                    })
                 }
             }
-            
         }
     }
     
@@ -725,14 +732,41 @@ class LandingView: SuperView {
         }
     }
     
+    func generateBarcode(from string: String) -> UIImage? {
+        let data = string.data(using: String.Encoding.ascii)
+
+        if let filter = CIFilter(name: "CIQRCodeGenerator") {
+            filter.setValue(data, forKey: "inputMessage")
+            let transform = CGAffineTransform(scaleX: 5, y: 5)
+
+            if let output = filter.outputImage?.transformed(by: transform) {
+                return UIImage(ciImage: output)
+            }
+        }
+
+        return nil
+    }
+    
     // MARK: - Override Methods
 
     override func superViewDidAppear() {
         super.superViewDidAppear()
         self.setStatusBarAnyStyle(statusBarStyle: .default)
         self.setStatusBarDarkStyle(statusBarStyle: .lightContent)
+        self.setStatusBarIsHidden(hide: true)
+        UIView.animate(withDuration: 0.6, animations: {
+            self.getPresentSection(self.messagesList)?.alpha = 0
+        })
         
-
+        
+//        let query: CoreDataStack = CoreDataStack(withCoreData: "CoreData")
+//        let _ = query.deleteContext([CONSTANTS.KEYS.SQL.NAME_ENTITY: CONSTANTS.KEYS.SQL.ENTITY.MESSAGES, CONSTANTS.KEYS.SQL.WHERE: "\(CONSTANTS.KEYS.JSON.FIELD.ID.MESSAGE) = 'XuROtv0i13ndWMSn8Ohe'"])
+    }
+    
+    override func transferArgumentToPreviousSuperView(anArgument argument: Any!) {
+        self.messagesList.scrollToRow(at: self.newMessageInfo.indexPath, at: .bottom, animated: true) {
+            self.getPresentSection(self.messagesList)?.alpha = 0
+        }
     }
     
     // MARK: - Interstitial SuperView
@@ -756,12 +790,12 @@ class LandingView: SuperView {
         print(ddd.dateValue())
         print("--------")
         
-        
         self.tabBar = TabBarView(withFrame: CGRect(x: 0, y: self.frame.height - 56.0 - CONSTANTS.SCREEN.SAFE_AREA.BOTTOM(), width: self.frame.width, height: 56.0 + CONSTANTS.SCREEN.SAFE_AREA.BOTTOM()), delegate: self)
         self.addSubview(self.tabBar)
         self.messagesList = UITableView(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: self.frame.height - self.tabBar.frame.height))
         self.messagesList.backgroundColor = .clear
         self.messagesList.separatorStyle = .none
+        self.messagesList.scrollsToTop = false
         self.messagesList.dataSource = self as UITableViewDataSource
         self.messagesList.delegate = self as UITableViewDelegate
         self.messagesList.semanticContentAttribute = CONSTANTS.SCREEN.LEFT_DIRECTION ? UISemanticContentAttribute.forceLeftToRight : UISemanticContentAttribute.forceRightToLeft
@@ -795,6 +829,12 @@ class LandingView: SuperView {
                 }
             })
         }
+        EnterView.shared().startEnterView(self)
+        
+//        if let img: UIImage = self.generateBarcode(from: "4354ffx43xd32zd3z23") {
+//            let imgView: UIImageView = UIImageView(image: img)
+//            self.addSubview(imgView)
+//        }
     }
     
 }

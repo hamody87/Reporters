@@ -183,10 +183,15 @@ class CustomizeImage: SuperView {
                 return arg
             }())[CONSTANTS.KEYS.ELEMENTS.SELF] as! UIButton)
         }
-        
+        if let btnElements: [String: Any] = argument[CONSTANTS.KEYS.ELEMENTS.BUTTON.SELF] as? [String: Any] {
+            self.addSubview(CONSTANTS.GLOBAL.createButtonElement(withFrame: self.bounds, {
+                var arg: [String: Any] = [String: Any]()
+                arg[CONSTANTS.KEYS.ELEMENTS.BUTTON.SELF] = btnElements
+                return arg
+            }())[CONSTANTS.KEYS.ELEMENTS.SELF] as! UIButton)
+        }
         self.asyncImageView = AsyncImageView(withFrame: self.bounds)
         self.addSubview(self.asyncImageView)
-        
         self.uploadIndicator = UIActivityIndicatorView(style: .gray)
         self.uploadIndicator.center = CGPoint(x: self.frame.width / 2.0, y: self.frame.height / 2.0)
         self.addSubview(self.uploadIndicator)

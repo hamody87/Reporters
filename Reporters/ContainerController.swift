@@ -231,12 +231,10 @@ extension ContainerController: OverlapContainerDelegate {
                 
                 case .leftDissolve, .rightDissolve:
                     presentOverlapContainer.view.frame = CGRect(x: ((modalTransitionStyle == .leftDissolve) ? -1 : 1) * DEFAULT.OVERLAPCONTAINER.TRANSITION.MOVING, y: 0, width: presentOverlapContainer.view.frame.width, height: presentOverlapContainer.view.frame.height)
-                    presentOverlapContainer.view.alpha = 0
-                    UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 1.0, initialSpringVelocity: 1.0, options: [.curveLinear], animations: {
+                    UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 1.0, initialSpringVelocity: 1.0, options: [.curveEaseInOut], animations: {
                         self.currentOverlapContainer.view.alpha = 0
                     }, completion: nil)
-                    UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0, options: [.curveLinear], animations: {
-                        presentOverlapContainer.view.alpha = 1.0
+                    UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.7, options: [.curveEaseInOut], animations: {
                         presentOverlapContainer.view.frame = CGRect(x: 0, y: 0, width: presentOverlapContainer.view.frame.width, height: presentOverlapContainer.view.frame.height)
                     }, completion: { _ in
                         completion?()

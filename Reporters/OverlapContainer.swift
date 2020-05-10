@@ -44,6 +44,10 @@ extension OverlapContainer: SuperViewDelegate {
         self.statusBarDark = statusBarStyle
     }
     
+    func setStatusBarIsHidden(hide: Bool) {
+        self.statusBarHidden = hide
+    }
+    
     func superViewController() -> UIViewController! {
         return self
     }
@@ -91,7 +95,7 @@ class OverlapContainer: UIViewController {
     }
     public var statusBarHidden: Bool! = CONSTANTS.STATUSBAR.DEFAULT.HIDDEN {
         didSet {
-            UIView.animate(withDuration: 0.3) { () -> Void in
+            UIView.animate(withDuration: 0.6) { () -> Void in
                 self.setNeedsStatusBarAppearanceUpdate()
             }
         }

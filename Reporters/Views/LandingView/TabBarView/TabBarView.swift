@@ -25,6 +25,11 @@ class TabBarView: SuperView {
         }
     }
     
+    @objc private func presentProfileView(_ sender: UIButton) {
+        print("sssss")
+        self.transitionToChildOverlapContainer(viewName: "ProfileView", nil, .leftDissolve, true, nil)
+    }
+    
     // MARK: - Override Methods
 
     override func superViewDidAppear() {
@@ -55,6 +60,7 @@ class TabBarView: SuperView {
             argument[CONSTANTS.KEYS.ELEMENTS.DELEGATE] = self
             argument[CONSTANTS.KEYS.ELEMENTS.COLOR.TEXT] = UIColor(named: "Background/LoginView/Basic")
             argument[CONSTANTS.KEYS.ELEMENTS.CORNER.SELF] = [CONSTANTS.KEYS.ELEMENTS.CORNER.DIRECTION: [UIRectCorner.allCorners], CONSTANTS.KEYS.ELEMENTS.CORNER.RADIUS: sizeAllow / 2.0]
+            argument[CONSTANTS.KEYS.ELEMENTS.BUTTON.SELF] = [CONSTANTS.KEYS.ELEMENTS.BUTTON.TARGET: self, CONSTANTS.KEYS.ELEMENTS.BUTTON.SELECTOR: #selector(self.presentProfileView(_ :))]
             return argument
         }())[CONSTANTS.KEYS.ELEMENTS.SELF] as? CustomizeImage {
             self.thumbView = thumbView
@@ -90,7 +96,6 @@ class TabBarView: SuperView {
         }
         self.badgesBtn = BadgesBtn(withFrame: CGRect(x: self.frame.width - CONSTANTS.SCREEN.MARGIN(2) - sizeAllow, y: CONSTANTS.SCREEN.MARGIN(1) + 1.0, width: sizeAllow, height: sizeAllow), delegate: self)
         self.addSubview(self.badgesBtn)
-//        self.scrollDownBtn.isHidden = true
         self.addBtnView.isHidden = true
         NotificationCenter.default.addObserver(self, selector: #selector(self.startUploadingThumb), name: NSNotification.Name(rawValue: CONSTANTS.KEYS.NOTIFICATION.WILL.USER.CHANGE.THUMB), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.showThumb), name: NSNotification.Name(rawValue: CONSTANTS.KEYS.NOTIFICATION.DID.USER.CHANGE.THUMB), object: nil)

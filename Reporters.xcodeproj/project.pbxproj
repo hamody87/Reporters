@@ -26,6 +26,9 @@
 		F36B68AB241C3D3600D91162 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F36B68AA241C3D3600D91162 /* Assets.xcassets */; };
 		F36B68B1241C3D3600D91162 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F36B68AF241C3D3600D91162 /* LaunchScreen.storyboard */; };
 		F381D9A72443DB00003CF6B6 /* ArrayExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F381D9A62443DB00003CF6B6 /* ArrayExtension.swift */; };
+		F38947F02464811E007C9361 /* BarcodeGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38947EF2464811E007C9361 /* BarcodeGenerator.swift */; };
+		F38947F224680D1C007C9361 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38947F124680D1C007C9361 /* ProfileView.swift */; };
+		F38947F524682835007C9361 /* EnterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38947F424682835007C9361 /* EnterView.swift */; };
 		F3A14C132420264300A375D1 /* ContainerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A14C122420264300A375D1 /* ContainerController.swift */; };
 		F3A14C152420265300A375D1 /* OverlapContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A14C142420265300A375D1 /* OverlapContainer.swift */; };
 		F3A14C182420D22A00A375D1 /* CONSTANTS.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A14C172420D22A00A375D1 /* CONSTANTS.swift */; };
@@ -115,6 +118,9 @@
 		F36B68B0241C3D3600D91162 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F36B68B2241C3D3600D91162 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F381D9A62443DB00003CF6B6 /* ArrayExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayExtension.swift; sourceTree = "<group>"; };
+		F38947EF2464811E007C9361 /* BarcodeGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarcodeGenerator.swift; sourceTree = "<group>"; };
+		F38947F124680D1C007C9361 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		F38947F424682835007C9361 /* EnterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterView.swift; sourceTree = "<group>"; };
 		F3A14C122420264300A375D1 /* ContainerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerController.swift; sourceTree = "<group>"; };
 		F3A14C142420265300A375D1 /* OverlapContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlapContainer.swift; sourceTree = "<group>"; };
 		F3A14C172420D22A00A375D1 /* CONSTANTS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CONSTANTS.swift; sourceTree = "<group>"; };
@@ -331,6 +337,30 @@
 			path = Fonts;
 			sourceTree = "<group>";
 		};
+		F38947ED2464563D007C9361 /* ProfileView */ = {
+			isa = PBXGroup;
+			children = (
+				F38947F124680D1C007C9361 /* ProfileView.swift */,
+			);
+			path = ProfileView;
+			sourceTree = "<group>";
+		};
+		F38947EE24648116007C9361 /* BarcodeGenerator */ = {
+			isa = PBXGroup;
+			children = (
+				F38947EF2464811E007C9361 /* BarcodeGenerator.swift */,
+			);
+			path = BarcodeGenerator;
+			sourceTree = "<group>";
+		};
+		F38947F32468257A007C9361 /* EnterView */ = {
+			isa = PBXGroup;
+			children = (
+				F38947F424682835007C9361 /* EnterView.swift */,
+			);
+			path = EnterView;
+			sourceTree = "<group>";
+		};
 		F3A14C162420D21D00A375D1 /* Constants */ = {
 			isa = PBXGroup;
 			children = (
@@ -361,6 +391,7 @@
 		F3A14C212420DDC000A375D1 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				F38947EE24648116007C9361 /* BarcodeGenerator */,
 				F3BB3A2A244F099200C253BA /* Reachability */,
 				F3E734BE243D385D00C67DD9 /* AsyncImage */,
 				F30AC626243A8BDA00CEA545 /* NotificationAlert */,
@@ -382,6 +413,7 @@
 		F3A14C242420E21D00A375D1 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				F38947ED2464563D007C9361 /* ProfileView */,
 				F3A14C54242927D100A375D1 /* LandingView */,
 				F3A14C2E2420E9FE00A375D1 /* LoginView */,
 				F3A14C252420E22F00A375D1 /* SuperView.swift */,
@@ -463,6 +495,7 @@
 		F3E734B5243C965700C67DD9 /* TabBarView */ = {
 			isa = PBXGroup;
 			children = (
+				F38947F32468257A007C9361 /* EnterView */,
 				F3F725EF2459D364004FF4CD /* BadgesBtn */,
 				F3E734C5243DF23C00C67DD9 /* ScrollDownBtn */,
 				F3E734B8243C9AEA00C67DD9 /* TabBarView.swift */,
@@ -705,6 +738,7 @@
 			files = (
 				F36B68A5241C3D3400D91162 /* AppDelegate.swift in Sources */,
 				F3BB3A2D244F0E5900C253BA /* ReachabilityHandler.swift in Sources */,
+				F38947F524682835007C9361 /* EnterView.swift in Sources */,
 				F3E734C2243D387400C67DD9 /* AsyncImageConnection.swift in Sources */,
 				F30AC60A2430F1AD00CEA545 /* NoneDesignCell.swift in Sources */,
 				F381D9A72443DB00003CF6B6 /* ArrayExtension.swift in Sources */,
@@ -723,10 +757,12 @@
 				F3E734C3243D387400C67DD9 /* AsyncImageView.swift in Sources */,
 				F30AC613243355DE00CEA545 /* SignUpUserDetailsView.swift in Sources */,
 				F3A14C302420EA0F00A375D1 /* LoginView.swift in Sources */,
+				F38947F224680D1C007C9361 /* ProfileView.swift in Sources */,
 				F3A14C262420E22F00A375D1 /* SuperView.swift in Sources */,
 				F30AC602242EBE2E00CEA545 /* UIViewExtension.swift in Sources */,
 				F30AC628243A8BE800CEA545 /* NotificationAlert.swift in Sources */,
 				F30AC61D243903BC00CEA545 /* LandingView.swift in Sources */,
+				F38947F02464811E007C9361 /* BarcodeGenerator.swift in Sources */,
 				F3A14C292420E28F00A375D1 /* Stack.swift in Sources */,
 				F3A14C3624212D3F00A375D1 /* UITextViewExtension.swift in Sources */,
 				F30AC62A243A8DEE00CEA545 /* Queue.swift in Sources */,

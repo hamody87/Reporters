@@ -72,7 +72,7 @@ final class DatatHandler {
                 case CONSTANTS.KEYS.JSON.FIELD.MESSAGE.ELEMENT.VIDEO:
                     break
                 default:
-                    let text: String = message[CONSTANTS.KEYS.JSON.FIELD.MESSAGE.ELEMENT.TEXT] as! String
+                    let text: String = (message[CONSTANTS.KEYS.JSON.FIELD.MESSAGE.ELEMENT.TEXT] as! String).trimmingCharacters(in: .whitespacesAndNewlines)
                     messageArr[element] = text
                     messageArr[CONSTANTS.KEYS.JSON.FIELD.MESSAGE.HEIGHT] = CONSTANTS.GLOBAL.getHeightLabel(byText: text)
                     break
@@ -173,7 +173,6 @@ final class DatatHandler {
                             return
                         }
                         if newUpdate > oldUpdate {
-                            print(oldUpdate)
                             self.initReporterInfoByID([reporterID], 0)
                         }
                     })

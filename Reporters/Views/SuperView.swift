@@ -15,6 +15,7 @@ import UIKit
     @objc func dismissChildOverlapContainer()
     @objc func setStatusBarAnyStyle(statusBarStyle: UIStatusBarStyle)
     @objc func setStatusBarDarkStyle(statusBarStyle: UIStatusBarStyle)
+    @objc func setStatusBarIsHidden(hide: Bool)
     @objc func superViewController() -> UIViewController!
     @objc func presentSafariViewController(url: URL!)
     @objc func transferArgumentToPreviousSuperView(anArgument argument: Any!)
@@ -46,6 +47,10 @@ class SuperView: UIView, SuperViewDelegate {
         self.delegate?.setStatusBarDarkStyle(statusBarStyle: statusBarStyle)
     }
     
+    func setStatusBarIsHidden(hide: Bool) {
+        self.delegate?.setStatusBarIsHidden(hide: hide)
+    }
+    
     func superViewController() -> UIViewController! {
         return self.delegate?.superViewController()
     }
@@ -56,7 +61,6 @@ class SuperView: UIView, SuperViewDelegate {
     
     func transferArgumentToPreviousSuperView(anArgument argument: Any!) {
         self.delegate?.transferArgumentToPreviousSuperView(anArgument: argument)
-        
     }
     
     public func classDir() -> String {
