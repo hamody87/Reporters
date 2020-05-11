@@ -74,7 +74,7 @@ final class DatatHandler {
                 default:
                     let text: String = (message[CONSTANTS.KEYS.JSON.FIELD.MESSAGE.ELEMENT.TEXT] as! String).trimmingCharacters(in: .whitespacesAndNewlines)
                     messageArr[element] = text
-                    messageArr[CONSTANTS.KEYS.JSON.FIELD.MESSAGE.HEIGHT] = CONSTANTS.GLOBAL.getHeightLabel(byText: text)
+                    messageArr[CONSTANTS.KEYS.JSON.FIELD.MESSAGE.HEIGHT] = CONSTANTS.GLOBAL.getHeightLabel(byText: text, CONSTANTS.GLOBAL.createFont(ofSize: LandingView.DEFAULT.TABLENVIEW.CELL.MESSAGE.FONT.SIZE, false), CONSTANTS.SCREEN.MIN_SIZE - LandingView.DEFAULT.TABLENVIEW.CELL.THUMB.SIZE.BOTH - LandingView.DEFAULT.TABLENVIEW.CELL.MARGIN - LandingView.DEFAULT.TABLENVIEW.CELL.SHARE.SIZE.BOTH - CONSTANTS.SCREEN.MARGIN(5))
                     break
                 }
                 values[CONSTANTS.KEYS.JSON.FIELD.MESSAGE.SELF] = messageArr

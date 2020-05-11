@@ -477,6 +477,7 @@
 				F3F725EC2459A00A004FF4CD /* UnreadBadge */,
 				F3E734DE2442095B00C67DD9 /* StyleCollectionViewCell */,
 				F3E734C8243E240800C67DD9 /* EnableRemoteNotifications */,
+				F38947F32468257A007C9361 /* EnterView */,
 				F3E734B5243C965700C67DD9 /* TabBarView */,
 				F30AC61C243903BC00CEA545 /* LandingView.swift */,
 			);
@@ -495,7 +496,6 @@
 		F3E734B5243C965700C67DD9 /* TabBarView */ = {
 			isa = PBXGroup;
 			children = (
-				F38947F32468257A007C9361 /* EnterView */,
 				F3F725EF2459D364004FF4CD /* BadgesBtn */,
 				F3E734C5243DF23C00C67DD9 /* ScrollDownBtn */,
 				F3E734B8243C9AEA00C67DD9 /* TabBarView.swift */,
