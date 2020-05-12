@@ -12,12 +12,14 @@ extension AsyncImageView: AsyncImageConnectionDelegate {
     
     func connectionDidFinish(data: [String: Any]) {
         if let image: UIImage = data[AsyncImageConnection.DEFAULT.KEY_IMAGE_ASYNCIMAGECONNECTION] as? UIImage, let url: NSURL = data[AsyncImageConnection.DEFAULT.KEY_URL_ASYNCIMAGECONNECTION] as? NSURL {
-            AsyncImageView.dictImgs[url] = image
+            AsyncImageView.imageCache.setObject(image, forKey: url)
             if url == self.imageURL || url.isEqual(self.imageURL) {
+                self.activityIndicator.stopAnimating()
                 self.imageView.image = image
                 self.imageView.isHidden = false
             }
         } else {
+            self.activityIndicator.startAnimating()
             self.imageView.isHidden = true
         }
     }
@@ -28,10 +30,11 @@ class AsyncImageView: UIView {
     
     // MARK: - Declare Basic Variables
     
-    private static var dictImgs: [NSURL : UIImage] = [NSURL: UIImage]()
+    private static var imageCache: NSCache<NSURL, UIImage> = NSCache<NSURL, UIImage>()
     private static var connections: [Int : AsyncImageConnection] = [Int : AsyncImageConnection]()
     private var imageView: UIImageView!
     private var imageURL: NSURL!
+    private var activityIndicator: UIActivityIndicatorView!
     
     // MARK: - Private Methods
     
@@ -51,11 +54,13 @@ class AsyncImageView: UIView {
     
     public func setImage(withUrl imageURL: NSURL!) {
         self.imageView.isHidden = true
+        self.activityIndicator.startAnimating()
         if imageURL == nil {
             return
         }
         self.imageURL = imageURL
-        if let image = AsyncImageView.dictImgs[self.imageURL] {
+        if let image = AsyncImageView.imageCache.object(forKey: self.imageURL) {
+            self.activityIndicator.stopAnimating()
             self.imageView.image = image
             self.imageView.isHidden = false
             return
@@ -84,6 +89,9 @@ class AsyncImageView: UIView {
     required init?(withFrame frame: CGRect!) {
         super.init(frame: frame)
         self.layer.masksToBounds = true
+        self.activityIndicator = UIActivityIndicatorView(style: .white)
+        self.activityIndicator.center = CGPoint(x: self.frame.width / 2.0, y: self.frame.height / 2.0)
+        self.addSubview(self.activityIndicator)
         self.imageView = UIImageView(frame: self.bounds)
         self.imageView.contentMode = .scaleToFill
         self.imageView.clipsToBounds = true

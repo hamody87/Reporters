@@ -66,7 +66,6 @@ final class AsyncImageConnection {
         let task = URLSession.shared.dataTask(with: request as URLRequest) { data, response, error in
             guard let _: Data = data, let _: URLResponse = response, error == nil else {
                 self.isLoading = false
-                print ("error: \(String(describing: error))")
                 DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
                     self.start()
                 }

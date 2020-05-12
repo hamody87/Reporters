@@ -159,11 +159,12 @@ extension ContainerController: OverlapContainerDelegate {
             switch presentOverlapContainer.modalTransitionStyle {
                 
             case .leftDissolve, .rightDissolve:
-                presentOverlapContainer.overlapContainer.view.alpha = 0
-                presentOverlapContainer.overlapContainer.view.transform = CGAffineTransform(scaleX: DEFAULT.OVERLAPCONTAINER.TRANSITION.ZOOM, y: DEFAULT.OVERLAPCONTAINER.TRANSITION.ZOOM)
                 UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 1.0, initialSpringVelocity: 1.0, options: [.curveLinear], animations: {
                     self.currentOverlapContainer.view.alpha = 0
-                    presentOverlapContainer.overlapContainer.view.alpha = 1.0
+                }, completion: nil)
+                presentOverlapContainer.overlapContainer.view.transform = CGAffineTransform(scaleX: DEFAULT.OVERLAPCONTAINER.TRANSITION.ZOOM, y: DEFAULT.OVERLAPCONTAINER.TRANSITION.ZOOM)
+                presentOverlapContainer.overlapContainer.view.alpha = 1.0
+                UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.2, options: [.curveEaseInOut], animations: {
                     presentOverlapContainer.overlapContainer.view.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
                 }, completion: { _ in
                     completionTransition?()
@@ -231,10 +232,10 @@ extension ContainerController: OverlapContainerDelegate {
                 
                 case .leftDissolve, .rightDissolve:
                     presentOverlapContainer.view.frame = CGRect(x: ((modalTransitionStyle == .leftDissolve) ? -1 : 1) * DEFAULT.OVERLAPCONTAINER.TRANSITION.MOVING, y: 0, width: presentOverlapContainer.view.frame.width, height: presentOverlapContainer.view.frame.height)
-                    UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 1.0, initialSpringVelocity: 1.0, options: [.curveEaseInOut], animations: {
+                    UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.2, options: [.curveEaseInOut], animations: {
                         self.currentOverlapContainer.view.alpha = 0
                     }, completion: nil)
-                    UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.6, options: [.curveEaseInOut], animations: {
+                    UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.4, options: [.curveEaseOut], animations: {
                         presentOverlapContainer.view.frame = CGRect(x: 0, y: 0, width: presentOverlapContainer.view.frame.width, height: presentOverlapContainer.view.frame.height)
                     }, completion: { _ in
                         completion?()

@@ -67,6 +67,17 @@ final class Global {
         return nil
     }
     
+    public func getFollowingUser(_ fields: [String]! = nil) -> [[String: Any]]! {
+        let query: CoreDataStack = CoreDataStack(withCoreData: "CoreData")
+        var sqlInfo: [String: Any] = [String: Any]()
+        sqlInfo[CONSTANTS.KEYS.SQL.NAME_ENTITY] = CONSTANTS.KEYS.SQL.ENTITY.FOLLOWING
+        sqlInfo[CONSTANTS.KEYS.SQL.FIELDS] = fields
+        if let data: [Any] = query.fetchRequest(sqlInfo), data.count > 0, let info: [[String: Any]] = data as? [[String: Any]] {
+            return info
+        }
+        return nil
+    }
+    
     public func createFont(ofSize size: CGFloat, _ bold: Bool) -> UIFont {
         guard let font: UIFont = UIFont(name: (bold ? "FONT_FAMILT_BOLD".localized : "FONT_FAMILT_LIGHT".localized), size: 16.0) else {
             return bold ? UIFont.boldSystemFont(ofSize: size) : UIFont.systemFont(ofSize: size)

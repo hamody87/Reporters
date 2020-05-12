@@ -38,6 +38,11 @@
 "SUBJECT_ENBALE_NOTIFICATION" = "Find out when you get a message";
 "UNREAD_MESSAGES" = "UNREAD MESSAGES";
 "EDIT_PROFILE" = "Edit Profile";
+"FOLLOWING" = "Following";
+"FOLLOW_REPORTERS" = "Follow Reporters";
+"I_AM_REPORTER" = "I am reporter";
+"SWITCH_ACCOUNT" = "Switch your account to";
+"REPORTER_ACCOUNT" = "Reporter Account";
 
 "SUCCESSFULLY_UPLOADED_NOTICE" = "Your photo has successfully uploaded";
 "FAILURE_UPLOADED_NOTICE" = "Failed to upload";

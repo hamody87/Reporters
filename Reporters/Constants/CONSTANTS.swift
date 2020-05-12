@@ -46,6 +46,7 @@ public class CONSTANTS {
             
             struct BASIC {
                 static let NUM_DAYS_TO_SHOW: Int = 7
+                static let MAX_FOLLOR_REPORTERS: Int = 20
             }
             
         }

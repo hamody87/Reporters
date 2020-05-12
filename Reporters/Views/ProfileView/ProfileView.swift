@@ -130,6 +130,115 @@ class ProfileView: SuperView {
                 argument[CONSTANTS.KEYS.ELEMENTS.FONT] = CONSTANTS.GLOBAL.createFont(ofSize: 18.0, false)
                 return argument
             }())[CONSTANTS.KEYS.ELEMENTS.SELF] as! CustomizeButton)
+            originY += 40.0 + CONSTANTS.SCREEN.MARGIN(3)
+            var countFollow: Int = 0
+            if let followingUser: [Any] = CONSTANTS.GLOBAL.getFollowingUser() {
+                countFollow = followingUser.count
+            }
+            if let followingView: SuperView = CONSTANTS.GLOBAL.createSuperViewElement(withFrame: CGRect(x: 0, y: originY, width: self.safeAreaView.frame.width, height: 0), {
+                var argument: [String: Any] = [String: Any]()
+                argument[CONSTANTS.KEYS.ELEMENTS.COLOR.BACKGROUND] = UIColor(named: "Background/LoginView/Secondary")
+                return argument
+            }())[CONSTANTS.KEYS.ELEMENTS.SELF] as? SuperView {
+                self.safeAreaView.addSubview(followingView)
+                var heightFollowingView: CGFloat = CONSTANTS.SCREEN.MARGIN(2)
+                if let countFollowingView: SuperView = CONSTANTS.GLOBAL.createSuperViewElement(withFrame: .zero, nil)[CONSTANTS.KEYS.ELEMENTS.SELF] as? SuperView {
+                    followingView.addSubview(countFollowingView)
+                    var sizeCountFollowingLabel: CGSize = .zero
+                    if let countFollowingLabel: UILabel = CONSTANTS.GLOBAL.createLabelElement(withFrame: .zero, {
+                        var argument: [String: Any] = [String: Any]()
+                        argument[CONSTANTS.KEYS.ELEMENTS.TEXT] = String(format: "%02d", countFollow)
+                        argument[CONSTANTS.KEYS.ELEMENTS.FONT] = CONSTANTS.GLOBAL.createFont(ofSize: 40.0, true)
+                        argument[CONSTANTS.KEYS.ELEMENTS.ALIGNMENT] = NSTextAlignment.center
+                        argument[CONSTANTS.KEYS.ELEMENTS.NUMLINES] = 0
+                        argument[CONSTANTS.KEYS.ELEMENTS.COLOR.TEXT] = UIColor.white
+                        return argument
+                    }())[CONSTANTS.KEYS.ELEMENTS.SELF] as? UILabel {
+                        countFollowingView.addSubview(countFollowingLabel)
+                        countFollowingLabel.frame = CGRect(x: 0, y: 0, width: countFollowingLabel.widthOfString() + 3.0, height: countFollowingLabel.heightOfString())
+                        sizeCountFollowingLabel.width = countFollowingLabel.frame.width
+                        sizeCountFollowingLabel.height = countFollowingLabel.frame.height
+                        if let maxFollowingLabel: UILabel = CONSTANTS.GLOBAL.createLabelElement(withFrame: .zero, {
+                            var argument: [String: Any] = [String: Any]()
+                            argument[CONSTANTS.KEYS.ELEMENTS.TEXT] = "/ \(CONSTANTS.INFO.APP.BASIC.MAX_FOLLOR_REPORTERS)"
+                            argument[CONSTANTS.KEYS.ELEMENTS.FONT] = CONSTANTS.GLOBAL.createFont(ofSize: 18.0, false)
+                            argument[CONSTANTS.KEYS.ELEMENTS.ALIGNMENT] = NSTextAlignment.center
+                            argument[CONSTANTS.KEYS.ELEMENTS.NUMLINES] = 0
+                            argument[CONSTANTS.KEYS.ELEMENTS.COLOR.TEXT] = UIColor.white
+                            return argument
+                        }())[CONSTANTS.KEYS.ELEMENTS.SELF] as? UILabel {
+                            countFollowingView.addSubview(maxFollowingLabel)
+                            maxFollowingLabel.frame = CGRect(x: sizeCountFollowingLabel.width, y: sizeCountFollowingLabel.height - maxFollowingLabel.heightOfString() - 6.0, width: maxFollowingLabel.widthOfString(), height: maxFollowingLabel.heightOfString())
+                            sizeCountFollowingLabel.width += maxFollowingLabel.frame.width
+                        }
+                        countFollowingView.frame = CGRect(x: (followingView.frame.width - sizeCountFollowingLabel.width) / 2.0, y: heightFollowingView, width: sizeCountFollowingLabel.width, height: sizeCountFollowingLabel.height)
+                        heightFollowingView += countFollowingView.frame.height
+                    }
+                }
+                if let followingLabel: UILabel = CONSTANTS.GLOBAL.createLabelElement(withFrame: CGRect(x: 0, y: heightFollowingView, width: followingView.frame.width, height: 13.0), {
+                    var argument: [String: Any] = [String: Any]()
+                    argument[CONSTANTS.KEYS.ELEMENTS.TEXT] = "FOLLOWING".localized
+                    argument[CONSTANTS.KEYS.ELEMENTS.FONT] = CONSTANTS.GLOBAL.createFont(ofSize: 12.0, false)
+                    argument[CONSTANTS.KEYS.ELEMENTS.ALIGNMENT] = NSTextAlignment.center
+                    argument[CONSTANTS.KEYS.ELEMENTS.NUMLINES] = 0
+                    argument[CONSTANTS.KEYS.ELEMENTS.COLOR.TEXT] = UIColor.white
+                    return argument
+                }())[CONSTANTS.KEYS.ELEMENTS.SELF] as? UILabel {
+                    followingView.addSubview(followingLabel)
+                    heightFollowingView += followingLabel.frame.height
+                }
+                heightFollowingView += CONSTANTS.SCREEN.MARGIN(2)
+                let widthFollowReportersBtn: CGFloat = CONSTANTS.GLOBAL.getWidthLabel(byText: "FOLLOW_REPORTERS".localized, CONSTANTS.GLOBAL.createFont(ofSize: 18.0, false)) + CONSTANTS.SCREEN.MARGIN(4)
+                followingView.addSubview(CONSTANTS.GLOBAL.createCustomButtonElement(withFrame: CGRect(x: (followingView.frame.width - widthFollowReportersBtn) / 2.0, y: heightFollowingView, width: widthFollowReportersBtn, height: 40.0), {
+                    var argument: [String: Any] = [String: Any]()
+                    argument[CONSTANTS.KEYS.ELEMENTS.CORNER.SELF] = [CONSTANTS.KEYS.ELEMENTS.CORNER.DIRECTION: [UIRectCorner.allCorners], CONSTANTS.KEYS.ELEMENTS.CORNER.RADIUS: 20.0]
+                    argument[CONSTANTS.KEYS.ELEMENTS.DELEGATE] = self
+                    argument[CONSTANTS.KEYS.ELEMENTS.COLOR.BACKGROUND] = UIColor.white
+                    argument[CONSTANTS.KEYS.ELEMENTS.TEXT] = "FOLLOW_REPORTERS".localized
+                //                argument[CONSTANTS.KEYS.ELEMENTS.BUTTON.SELF] = [CONSTANTS.KEYS.ELEMENTS.BUTTON.TARGET: self, CONSTANTS.KEYS.ELEMENTS.BUTTON.SELECTOR: #selector(self.loginWithPhoneNumber)]
+                    argument[CONSTANTS.KEYS.ELEMENTS.COLOR.TEXT] = UIColor.black
+                    argument[CONSTANTS.KEYS.ELEMENTS.FONT] = CONSTANTS.GLOBAL.createFont(ofSize: 18.0, false)
+                    return argument
+                }())[CONSTANTS.KEYS.ELEMENTS.SELF] as! CustomizeButton)
+                heightFollowingView += 40.0 + CONSTANTS.SCREEN.MARGIN(2)
+                followingView.frame = CGRect(x: followingView.frame.origin.x, y: followingView.frame.origin.y, width: followingView.frame.width, height: heightFollowingView)
+            }
+            let widthSwitchReporterAccountBtn: CGFloat = CONSTANTS.GLOBAL.getWidthLabel(byText: "I_AM_REPORTER".localized, CONSTANTS.GLOBAL.createFont(ofSize: 18.0, false)) + CONSTANTS.SCREEN.MARGIN(4)
+            self.safeAreaView.addSubview(CONSTANTS.GLOBAL.createCustomButtonElement(withFrame: CGRect(x: (self.safeAreaView.frame.width - widthSwitchReporterAccountBtn) / 2.0, y: self.safeAreaView.frame.height - CONSTANTS.SCREEN.MARGIN(2) - 40.0, width: widthSwitchReporterAccountBtn, height: 40.0), {
+                var argument: [String: Any] = [String: Any]()
+                argument[CONSTANTS.KEYS.ELEMENTS.CORNER.SELF] = [CONSTANTS.KEYS.ELEMENTS.CORNER.DIRECTION: [UIRectCorner.allCorners], CONSTANTS.KEYS.ELEMENTS.CORNER.RADIUS: 20.0]
+                argument[CONSTANTS.KEYS.ELEMENTS.DELEGATE] = self
+                argument[CONSTANTS.KEYS.ELEMENTS.COLOR.BACKGROUND] = UIColor.white
+                argument[CONSTANTS.KEYS.ELEMENTS.TEXT] = "I_AM_REPORTER".localized
+            //                argument[CONSTANTS.KEYS.ELEMENTS.BUTTON.SELF] = [CONSTANTS.KEYS.ELEMENTS.BUTTON.TARGET: self, CONSTANTS.KEYS.ELEMENTS.BUTTON.SELECTOR: #selector(self.loginWithPhoneNumber)]
+                argument[CONSTANTS.KEYS.ELEMENTS.COLOR.TEXT] = UIColor.black
+                argument[CONSTANTS.KEYS.ELEMENTS.FONT] = CONSTANTS.GLOBAL.createFont(ofSize: 18.0, false)
+                return argument
+            }())[CONSTANTS.KEYS.ELEMENTS.SELF] as! CustomizeButton)
+            if let textView: UITextView = CONSTANTS.GLOBAL.createTextViewElement(withFrame: CGRect(x: CONSTANTS.SCREEN.MARGIN(3), y: 0, width: self.safeAreaView.frame.width - CONSTANTS.SCREEN.MARGIN(6), height: 0), {
+                var argument: [String: Any] = [String: Any]()
+                argument[CONSTANTS.KEYS.ELEMENTS.DELEGATE] = self
+                argument[CONSTANTS.KEYS.ELEMENTS.COLOR.BACKGROUND] = UIColor.clear
+                argument[CONSTANTS.KEYS.ELEMENTS.FONT] = CONSTANTS.GLOBAL.createFont(ofSize: 18.0, false)
+                argument[CONSTANTS.KEYS.ELEMENTS.TEXT] = "\("SWITCH_ACCOUNT".localized) \("REPORTER_ACCOUNT".localized)"
+                argument[CONSTANTS.KEYS.ELEMENTS.ALLOW.ENABLE] = false
+                argument[CONSTANTS.KEYS.ELEMENTS.COLOR.LINK] = UIColor.white
+                return argument
+            }())[CONSTANTS.KEYS.ELEMENTS.SELF] as? UITextView {
+                textView.textContainerInset = .zero
+                self.safeAreaView.addSubview(textView)
+                textView.frame = CGRect(x: textView.frame.origin.x, y: self.safeAreaView.frame.height - CONSTANTS.SCREEN.MARGIN(2) - 40.0 - CONSTANTS.SCREEN.MARGIN(2) - textView.heightOfString(), width: textView.frame.width, height: textView.heightOfString())
+                let paragraph = NSMutableParagraphStyle()
+                paragraph.alignment = .center
+                let underlineAttriString = NSMutableAttributedString(string: textView.text)
+                underlineAttriString.addAttributes([.paragraphStyle: paragraph,
+                                                    .foregroundColor: UIColor.white,
+                                                    .font: CONSTANTS.GLOBAL.createFont(ofSize: 18.0, false)], range: (textView.text as NSString).range(of: textView.text))
+                underlineAttriString.addAttributes([.font: CONSTANTS.GLOBAL.createFont(ofSize: 18.0, true),
+                                                    .link: "https://www.google.com"], range: (textView.text as NSString).range(of: "REPORTER_ACCOUNT".localized))
+                textView.attributedText = underlineAttriString
+            }
+            
         }
     }
     
