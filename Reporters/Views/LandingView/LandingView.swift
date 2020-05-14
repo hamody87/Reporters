@@ -200,7 +200,7 @@ extension LandingView: UITableViewDataSource {
             cellView.tag = 111
             cellView.backgroundColor = .clear
             cell.addSubview(cellView)
-            let thumb: AsyncImageView! = AsyncImageView(withFrame: CGRect(x: 0, y: 0, width: DEFAULT.TABLENVIEW.CELL.THUMB.SIZE.BOTH, height: DEFAULT.TABLENVIEW.CELL.THUMB.SIZE.BOTH))
+            let thumb: AsyncFile! = AsyncFile(withFrame: CGRect(x: 0, y: 0, width: DEFAULT.TABLENVIEW.CELL.THUMB.SIZE.BOTH, height: DEFAULT.TABLENVIEW.CELL.THUMB.SIZE.BOTH))
             thumb.backgroundColor = UIColor(named: DEFAULT.TABLENVIEW.CELL.THUMB.COLOR)
             cellView.addSubview(thumb)
             let reporterNameView: UILabel = UILabel(frame: CGRect(x: thumb.frame.width + DEFAULT.TABLENVIEW.CELL.MARGIN, y: 0, width: 0, height: DEFAULT.TABLENVIEW.CELL.REPORTER.SIZE.HEIGHT))
@@ -290,7 +290,7 @@ extension LandingView: UITableViewDataSource {
             let dateLabel: UILabel = messageView.subviews[1] as! UILabel
             let favIcon: UIImageView = messageView.subviews[2] as! UIImageView
             let shareBtnView: UIView = cellView.subviews[3]
-            let thumb: AsyncImageView = cellView.subviews[0] as! AsyncImageView
+            let thumb: AsyncFile = cellView.subviews[0] as! AsyncFile
             let reporterNameView: UIView = cellView.subviews[1]
             let _: UIButton = reporterNameView.subviews[0] as! UIButton //starBtn
             let reporterName: UILabel = reporterNameView.subviews[1] as! UILabel
@@ -339,7 +339,7 @@ extension LandingView: UITableViewDataSource {
                 reporterNameView.isHidden = false
                 thumb.frame = CGRect(x: thumb.frame.origin.x, y: cellView.frame.height - DEFAULT.TABLENVIEW.CELL.THUMB.SIZE.BOTH, width: DEFAULT.TABLENVIEW.CELL.THUMB.SIZE.BOTH, height: thumb.frame.height)
                 if let reporter: [String: Any] = self.reporters[reporterID], let name: String = reporter[CONSTANTS.KEYS.JSON.FIELD.NAME] as? String, let reporterThumb: String = reporter[CONSTANTS.KEYS.JSON.FIELD.THUMB] as? String {
-                    thumb.setImage(withUrl: NSURL(string: reporterThumb)!)
+                    thumb.sync(imageWithUrl: URL(string: reporterThumb), "thumb_\(reporterID)")
                     reporterName.text = name
                 }
                 reporterName.frame = CGRect(x: reporterName.frame.origin.x, y: 0, width: reporterName.widthOfString(), height: reporterName.frame.height)
@@ -830,6 +830,17 @@ class LandingView: SuperView {
             })
         }
         EnterView.shared().startEnterView(self)
+        
+        
+        
+        
+        let documentDirectory = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
+        print("-->\(documentDirectory[0])")
+        
+        
+        
+        
+        
         
 //        if let img: UIImage = self.generateBarcode(from: "4354ffx43xd32zd3z23") {
 //            let imgView: UIImageView = UIImageView(image: img)

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="16119" systemVersion="19D76" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="16119" systemVersion="19E287" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Following" representedClassName="Following" syncable="YES" codeGenerationType="class">
         <attribute name="fullName" optional="YES" attributeType="String"/>
         <attribute name="ready" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
@@ -28,7 +28,7 @@
     </entity>
     <elements>
         <element name="Following" positionX="252" positionY="414" width="128" height="118"/>
-        <element name="Messages" positionX="243" positionY="405" width="128" height="133"/>
-        <element name="User" positionX="246.65625" positionY="336.66796875" width="128" height="178"/>
+        <element name="Messages" positionX="-211.4921875" positionY="190.375" width="128" height="133"/>
+        <element name="User" positionX="-846.9140625" positionY="140.890625" width="128" height="178"/>
     </elements>
 </model>

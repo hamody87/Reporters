@@ -11,8 +11,9 @@ import UIKit
 extension AsyncImageView: AsyncImageConnectionDelegate {
     
     func connectionDidFinish(data: [String: Any]) {
-        if let image: UIImage = data[AsyncImageConnection.DEFAULT.KEY_IMAGE_ASYNCIMAGECONNECTION] as? UIImage, let url: NSURL = data[AsyncImageConnection.DEFAULT.KEY_URL_ASYNCIMAGECONNECTION] as? NSURL {
-            AsyncImageView.imageCache.setObject(image, forKey: url)
+        if let image: UIImage = data[AsyncImageConnection.DEFAULT.KEY_IMAGE_ASYNCIMAGECONNECTION] as? UIImage, let imageData: Data = image.pngData(), let url: NSURL = data[AsyncImageConnection.DEFAULT.KEY_URL_ASYNCIMAGECONNECTION] as? NSURL  {
+            let data: NSPurgeableData = NSPurgeableData.init(data: imageData)
+            AsyncImageView.cacheInstance.setObject(data, forKey: url, cost: imageData.count)
             if url == self.imageURL || url.isEqual(self.imageURL) {
                 self.activityIndicator.stopAnimating()
                 self.imageView.image = image
@@ -30,7 +31,10 @@ class AsyncImageView: UIView {
     
     // MARK: - Declare Basic Variables
     
-    private static var imageCache: NSCache<NSURL, UIImage> = NSCache<NSURL, UIImage>()
+    private static var cacheInstance: NSCache<NSURL, NSPurgeableData> = {
+        let instance = NSCache<NSURL, NSPurgeableData>()
+        return instance
+    }()
     private static var connections: [Int : AsyncImageConnection] = [Int : AsyncImageConnection]()
     private var imageView: UIImageView!
     private var imageURL: NSURL!
@@ -46,6 +50,19 @@ class AsyncImageView: UIView {
         }
     }
     
+    private func getImageCache(_ url: NSURL) -> UIImage! {
+        if let cachedData = AsyncImageView.cacheInstance.object(forKey: url) {
+            // As I am going to access now. Don't purge it
+            guard cachedData.beginContentAccess() else {
+               return nil
+            }
+            let image = UIImage(data: cachedData as Data)
+            cachedData.endContentAccess()
+            return image
+        }
+        return nil
+    }
+    
     // MARK: - Public Methods
     
     public func getImage() -> UIImage? {
@@ -59,7 +76,7 @@ class AsyncImageView: UIView {
             return
         }
         self.imageURL = imageURL
-        if let image = AsyncImageView.imageCache.object(forKey: self.imageURL) {
+        if let image = self.getImageCache(imageURL) {
             self.activityIndicator.stopAnimating()
             self.imageView.image = image
             self.imageView.isHidden = false

@@ -63,6 +63,9 @@
 		F3E734D2243E26FD00C67DD9 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3E734D1243E26FD00C67DD9 /* NotificationService.swift */; };
 		F3E734D6243E26FD00C67DD9 /* OneSignalNotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = F3E734CF243E26FD00C67DD9 /* OneSignalNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		F3E734DD24412C4000C67DD9 /* StyleCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3E734DC24412C4000C67DD9 /* StyleCollectionViewCell.swift */; };
+		F3EC10E6246D79860098650A /* AsyncFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3EC10E5246D79860098650A /* AsyncFile.swift */; };
+		F3EC10E8246D79910098650A /* StorageFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3EC10E7246D79910098650A /* StorageFile.swift */; };
+		F3EC10EB246D8B0B0098650A /* DownloadFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3EC10EA246D8B0B0098650A /* DownloadFile.swift */; };
 		F3F725EE2459A020004FF4CD /* UnreadBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F725ED2459A020004FF4CD /* UnreadBadge.swift */; };
 		F3F725F12459D379004FF4CD /* BadgesBtn.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F725F02459D379004FF4CD /* BadgesBtn.swift */; };
 /* End PBXBuildFile section */
@@ -160,6 +163,9 @@
 		F3E734D1243E26FD00C67DD9 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		F3E734D3243E26FD00C67DD9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F3E734DC24412C4000C67DD9 /* StyleCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleCollectionViewCell.swift; sourceTree = "<group>"; };
+		F3EC10E5246D79860098650A /* AsyncFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncFile.swift; sourceTree = "<group>"; };
+		F3EC10E7246D79910098650A /* StorageFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageFile.swift; sourceTree = "<group>"; };
+		F3EC10EA246D8B0B0098650A /* DownloadFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadFile.swift; sourceTree = "<group>"; };
 		F3F725ED2459A020004FF4CD /* UnreadBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnreadBadge.swift; sourceTree = "<group>"; };
 		F3F725F02459D379004FF4CD /* BadgesBtn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BadgesBtn.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -391,6 +397,7 @@
 		F3A14C212420DDC000A375D1 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				F3EC10E3246D79610098650A /* Files */,
 				F38947EE24648116007C9361 /* BarcodeGenerator */,
 				F3BB3A2A244F099200C253BA /* Reachability */,
 				F3E734BE243D385D00C67DD9 /* AsyncImage */,
@@ -543,6 +550,40 @@
 				F3E734DC24412C4000C67DD9 /* StyleCollectionViewCell.swift */,
 			);
 			path = StyleCollectionViewCell;
+			sourceTree = "<group>";
+		};
+		F3EC10D4246D54920098650A /* StorageFile */ = {
+			isa = PBXGroup;
+			children = (
+				F3EC10E7246D79910098650A /* StorageFile.swift */,
+			);
+			path = StorageFile;
+			sourceTree = "<group>";
+		};
+		F3EC10E3246D79610098650A /* Files */ = {
+			isa = PBXGroup;
+			children = (
+				F3EC10E9246D7E160098650A /* DownloadFile */,
+				F3EC10E4246D796E0098650A /* AsyncFile */,
+				F3EC10D4246D54920098650A /* StorageFile */,
+			);
+			path = Files;
+			sourceTree = "<group>";
+		};
+		F3EC10E4246D796E0098650A /* AsyncFile */ = {
+			isa = PBXGroup;
+			children = (
+				F3EC10E5246D79860098650A /* AsyncFile.swift */,
+			);
+			path = AsyncFile;
+			sourceTree = "<group>";
+		};
+		F3EC10E9246D7E160098650A /* DownloadFile */ = {
+			isa = PBXGroup;
+			children = (
+				F3EC10EA246D8B0B0098650A /* DownloadFile.swift */,
+			);
+			path = DownloadFile;
 			sourceTree = "<group>";
 		};
 		F3F725EC2459A00A004FF4CD /* UnreadBadge */ = {
@@ -753,9 +794,11 @@
 				F3A14C232420DF3200A375D1 /* StringExtension.swift in Sources */,
 				F3A14C482423EB6500A375D1 /* TemplateLoginView.swift in Sources */,
 				F3E734B9243C9AEA00C67DD9 /* TabBarView.swift in Sources */,
+				F3EC10E8246D79910098650A /* StorageFile.swift in Sources */,
 				F3BB3A29244F097800C253BA /* ReachabilityObserverDelegate.swift in Sources */,
 				F3E734C3243D387400C67DD9 /* AsyncImageView.swift in Sources */,
 				F30AC613243355DE00CEA545 /* SignUpUserDetailsView.swift in Sources */,
+				F3EC10EB246D8B0B0098650A /* DownloadFile.swift in Sources */,
 				F3A14C302420EA0F00A375D1 /* LoginView.swift in Sources */,
 				F38947F224680D1C007C9361 /* ProfileView.swift in Sources */,
 				F3A14C262420E22F00A375D1 /* SuperView.swift in Sources */,
@@ -773,6 +816,7 @@
 				F3A14C4A2424235D00A375D1 /* PhoneNumberView.swift in Sources */,
 				F3F725EE2459A020004FF4CD /* UnreadBadge.swift in Sources */,
 				F3A14C1B2420D62100A375D1 /* Global.swift in Sources */,
+				F3EC10E6246D79860098650A /* AsyncFile.swift in Sources */,
 				F3BB3A2F244F416200C253BA /* DateExtension.swift in Sources */,
 				F3A14C182420D22A00A375D1 /* CONSTANTS.swift in Sources */,
 				F3A14C432421844400A375D1 /* CustomizeButton.swift in Sources */,
