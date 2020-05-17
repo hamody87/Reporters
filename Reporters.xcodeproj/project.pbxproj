@@ -25,6 +25,7 @@
 		F36B68A5241C3D3400D91162 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36B68A4241C3D3400D91162 /* AppDelegate.swift */; };
 		F36B68AB241C3D3600D91162 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F36B68AA241C3D3600D91162 /* Assets.xcassets */; };
 		F36B68B1241C3D3600D91162 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F36B68AF241C3D3600D91162 /* LaunchScreen.storyboard */; };
+		F37134AB24715BAE003140C0 /* Download.swift in Sources */ = {isa = PBXBuildFile; fileRef = F37134AA24715BAE003140C0 /* Download.swift */; };
 		F381D9A72443DB00003CF6B6 /* ArrayExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F381D9A62443DB00003CF6B6 /* ArrayExtension.swift */; };
 		F38947F02464811E007C9361 /* BarcodeGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38947EF2464811E007C9361 /* BarcodeGenerator.swift */; };
 		F38947F224680D1C007C9361 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38947F124680D1C007C9361 /* ProfileView.swift */; };
@@ -66,6 +67,7 @@
 		F3EC10E6246D79860098650A /* AsyncFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3EC10E5246D79860098650A /* AsyncFile.swift */; };
 		F3EC10E8246D79910098650A /* StorageFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3EC10E7246D79910098650A /* StorageFile.swift */; };
 		F3EC10EB246D8B0B0098650A /* DownloadFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3EC10EA246D8B0B0098650A /* DownloadFile.swift */; };
+		F3EC10ED246EED6B0098650A /* DownloadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3EC10EC246EED6B0098650A /* DownloadManager.swift */; };
 		F3F725EE2459A020004FF4CD /* UnreadBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F725ED2459A020004FF4CD /* UnreadBadge.swift */; };
 		F3F725F12459D379004FF4CD /* BadgesBtn.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F725F02459D379004FF4CD /* BadgesBtn.swift */; };
 /* End PBXBuildFile section */
@@ -120,6 +122,7 @@
 		F36B68AA241C3D3600D91162 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F36B68B0241C3D3600D91162 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F36B68B2241C3D3600D91162 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F37134AA24715BAE003140C0 /* Download.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Download.swift; sourceTree = "<group>"; };
 		F381D9A62443DB00003CF6B6 /* ArrayExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayExtension.swift; sourceTree = "<group>"; };
 		F38947EF2464811E007C9361 /* BarcodeGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarcodeGenerator.swift; sourceTree = "<group>"; };
 		F38947F124680D1C007C9361 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
@@ -166,6 +169,7 @@
 		F3EC10E5246D79860098650A /* AsyncFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncFile.swift; sourceTree = "<group>"; };
 		F3EC10E7246D79910098650A /* StorageFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageFile.swift; sourceTree = "<group>"; };
 		F3EC10EA246D8B0B0098650A /* DownloadFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadFile.swift; sourceTree = "<group>"; };
+		F3EC10EC246EED6B0098650A /* DownloadManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadManager.swift; sourceTree = "<group>"; };
 		F3F725ED2459A020004FF4CD /* UnreadBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnreadBadge.swift; sourceTree = "<group>"; };
 		F3F725F02459D379004FF4CD /* BadgesBtn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BadgesBtn.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -343,6 +347,14 @@
 			path = Fonts;
 			sourceTree = "<group>";
 		};
+		F37134A924715BA1003140C0 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				F37134AA24715BAE003140C0 /* Download.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		F38947ED2464563D007C9361 /* ProfileView */ = {
 			isa = PBXGroup;
 			children = (
@@ -399,6 +411,7 @@
 			children = (
 				F3EC10E3246D79610098650A /* Files */,
 				F38947EE24648116007C9361 /* BarcodeGenerator */,
+				F3EC10E9246D7E160098650A /* DownloadManager */,
 				F3BB3A2A244F099200C253BA /* Reachability */,
 				F3E734BE243D385D00C67DD9 /* AsyncImage */,
 				F30AC626243A8BDA00CEA545 /* NotificationAlert */,
@@ -563,7 +576,6 @@
 		F3EC10E3246D79610098650A /* Files */ = {
 			isa = PBXGroup;
 			children = (
-				F3EC10E9246D7E160098650A /* DownloadFile */,
 				F3EC10E4246D796E0098650A /* AsyncFile */,
 				F3EC10D4246D54920098650A /* StorageFile */,
 			);
@@ -578,12 +590,14 @@
 			path = AsyncFile;
 			sourceTree = "<group>";
 		};
-		F3EC10E9246D7E160098650A /* DownloadFile */ = {
+		F3EC10E9246D7E160098650A /* DownloadManager */ = {
 			isa = PBXGroup;
 			children = (
+				F37134A924715BA1003140C0 /* Model */,
 				F3EC10EA246D8B0B0098650A /* DownloadFile.swift */,
+				F3EC10EC246EED6B0098650A /* DownloadManager.swift */,
 			);
-			path = DownloadFile;
+			path = DownloadManager;
 			sourceTree = "<group>";
 		};
 		F3F725EC2459A00A004FF4CD /* UnreadBadge */ = {
@@ -811,10 +825,12 @@
 				F30AC62A243A8DEE00CEA545 /* Queue.swift in Sources */,
 				F3A14C152420265300A375D1 /* OverlapContainer.swift in Sources */,
 				F30AC6232439F0E200CEA545 /* CoreData.xcdatamodeld in Sources */,
+				F3EC10ED246EED6B0098650A /* DownloadManager.swift in Sources */,
 				F3E734BD243D33B300C67DD9 /* CustomizeImage.swift in Sources */,
 				F30AC60C24312C2C00CEA545 /* VerificationCodeView.swift in Sources */,
 				F3A14C4A2424235D00A375D1 /* PhoneNumberView.swift in Sources */,
 				F3F725EE2459A020004FF4CD /* UnreadBadge.swift in Sources */,
+				F37134AB24715BAE003140C0 /* Download.swift in Sources */,
 				F3A14C1B2420D62100A375D1 /* Global.swift in Sources */,
 				F3EC10E6246D79860098650A /* AsyncFile.swift in Sources */,
 				F3BB3A2F244F416200C253BA /* DateExtension.swift in Sources */,

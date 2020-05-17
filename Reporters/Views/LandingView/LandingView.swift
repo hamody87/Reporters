@@ -838,7 +838,7 @@ class LandingView: SuperView {
         print("-->\(documentDirectory[0])")
         
         
-        
+//        DownloadManager.shared().start(withURL: URL(string: "https://mp3.panet.co.il/media/zekra/Panet.co.il_Zekra-Arou7-Leemeen.mp3")!)
         
         
         

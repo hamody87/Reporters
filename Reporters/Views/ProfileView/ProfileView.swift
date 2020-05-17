@@ -11,6 +11,8 @@ import UIKit
 class ProfileView: SuperView {
     
     // MARK: - Basic Constants
+    
+    var ssss: String = "hamody"
         
     // MARK: - Override Methods
 
@@ -239,6 +241,24 @@ class ProfileView: SuperView {
                 textView.attributedText = underlineAttriString
             }
             
+        }
+        
+//        https://mp3.panet.co.il/media/Adham-Nabulsi/Panet.co.il_Adham-Nabulsi-Ma-Beshba3-Mennek%20.mp3
+        DownloadManager.shared().start(withURL:  URL(string: "https://mp3.panet.co.il/media/zekra/Panet.co.il_Zekra-Arou7-Leemeen.mp3")!, "thumb_dsadas323rde", { [weak self] (Download) in
+            guard let self = self else {
+                return
+            }
+            print("\(self.ssss) ---- \(Float(Download.totalBytesWritten) / Float(Download.totalBytesExpectedToWrite))")
+//            DispatchQueue.main.async {
+//                print("\(self.ssss) ---- \(Float(Download.totalBytesWritten) / Float(Download.totalBytesExpectedToWrite))")
+//            }
+        }) { [weak self] (Download) in
+            guard let _ = self else {
+                return
+            }
+            DispatchQueue.main.async {
+                print("Finish :)")
+            }
         }
     }
     

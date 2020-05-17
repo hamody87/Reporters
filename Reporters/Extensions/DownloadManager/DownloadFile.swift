@@ -25,10 +25,9 @@ final class DownloadFile {
         
         let request: NSMutableURLRequest = NSMutableURLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 60.0)
         let task = URLSession.shared.dataTask(with: request as URLRequest) { data, response, error in
+            print("--> \(response)")
             guard let _: Data = data, let _: URLResponse = response, error == nil else {
-//                DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
-//                    self.start()
-//                }
+                block(nil)
                 return
             }
             block(data)
