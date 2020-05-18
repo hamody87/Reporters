@@ -22,7 +22,7 @@ class Download {
     
     let previewURL: URL
     let progressBlock: (Download) -> Void
-    let completionBlock: (Download) -> Void
+    let completionBlock: (Data?) -> Void
     let key: String
     
     // MARK: - Variables And Properties
@@ -35,7 +35,7 @@ class Download {
     
     // MARK: - Initialization
     
-    init(previewURL: URL, _ key: String, _ progressBlock: @escaping (Download) -> Void, _ completionBlock: @escaping (Download) -> Void) {
+    init(previewURL: URL, _ key: String, _ progressBlock: @escaping (Download) -> Void, _ completionBlock: @escaping (Data?) -> Void) {
         self.previewURL = previewURL
         self.key = key
         self.progressBlock = progressBlock

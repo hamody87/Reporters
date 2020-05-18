@@ -19,7 +19,7 @@ final class StorageFile {
     
     // MARK: - Private Methods
     
-    private func filePath(forKey key: String) -> URL? {
+    private func localFilePath(forKey key: String) -> URL? {
         let fileManager = FileManager.default
         guard let documentURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
             return nil
@@ -29,34 +29,37 @@ final class StorageFile {
     
     // MARK: - Public Methods
     
-    public func retrieveImage(forKey key: String) -> UIImage? {
-        if let filePath = self.filePath(forKey: "\(key).png"), let fileData = FileManager.default.contents(atPath: filePath.path), let image = UIImage(data: fileData) {
-            return image
+    public func retrieve(fileWithKey key: String) -> Data? {
+        if let filePath = self.localFilePath(forKey: key), let fileData = FileManager.default.contents(atPath: filePath.path) {
+            return fileData
         }
         return nil
     }
     
-    public func delete(imageWithKey key: String) {
-        if let filePath = self.filePath(forKey: "\(key).png") {
+    public func delete(fileWithKey key: String) -> Bool {
+        if let filePath = self.localFilePath(forKey: key) {
             do {
                 try FileManager.default.removeItem(atPath: filePath.path)
-                print("Local path removed successfully")
-            } catch let error as NSError {
-                print("Error: ", error.debugDescription)
+                return true
+            } catch {
+                return false
             }
         }
+        return false
     }
     
-    public func store(image: UIImage, forKey key: String) {
-        if let pngRepresentation = image.pngData() {
-            if let filePath = filePath(forKey: "\(key).png") {
-                do  {
-                    try pngRepresentation.write(to: filePath, options: .atomic)
-                } catch let err {
-                    print("Saving file resulted in error: ", err)
-                }
+    public func store(fileAtSrcURL srcURL: URL, forKey key: String) -> Bool {
+        if let destinationURL = self.localFilePath(forKey: key) {
+            let fileManager = FileManager.default
+            try? fileManager.removeItem(at: destinationURL)
+            do {
+                try fileManager.copyItem(at: srcURL, to: destinationURL)
+                return true
+            } catch {
+                return false
             }
         }
+        return false
     }
     
     // MARK: - Accessors
@@ -66,3 +69,4 @@ final class StorageFile {
     }
     
 }
+

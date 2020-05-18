@@ -244,22 +244,24 @@ class ProfileView: SuperView {
         }
         
 //        https://mp3.panet.co.il/media/Adham-Nabulsi/Panet.co.il_Adham-Nabulsi-Ma-Beshba3-Mennek%20.mp3
-        DownloadManager.shared().start(withURL:  URL(string: "https://mp3.panet.co.il/media/zekra/Panet.co.il_Zekra-Arou7-Leemeen.mp3")!, "thumb_dsadas323rde", { [weak self] (Download) in
-            guard let self = self else {
-                return
-            }
-            print("\(self.ssss) ---- \(Float(Download.totalBytesWritten) / Float(Download.totalBytesExpectedToWrite))")
-//            DispatchQueue.main.async {
-//                print("\(self.ssss) ---- \(Float(Download.totalBytesWritten) / Float(Download.totalBytesExpectedToWrite))")
+        
+//        DownloadManager.shared().start(withURL:  URL(string: "https://firebasestorage.googleapis.com/v0/b/abraj-7800d.appspot.com/o/Specialist%2FProfileImage%2F3PbDSUG5qlcHGDcKTPn9paDFqWy2?alt=media&token=aec90549-12aa-477b-866f-5c0dd16a7224")!, "thumb_dsadas323rde", { [weak self] (Download) in
+////        DownloadManager.shared().start(withURL:  URL(string: "https://mp3.panet.co.il/media/zekra/Panet.co.il_Zekra-Arou7-Leemeen.mp3")!, "thumb_dsadas323rde", { [weak self] (Download) in
+//            guard let self = self else {
+//                return
 //            }
-        }) { [weak self] (Download) in
-            guard let _ = self else {
-                return
-            }
-            DispatchQueue.main.async {
-                print("Finish :)")
-            }
-        }
+//            print("\(self.ssss) ---- \(Float(Download.totalBytesWritten) / Float(Download.totalBytesExpectedToWrite))")
+////            DispatchQueue.main.async {
+////                print("\(self.ssss) ---- \(Float(Download.totalBytesWritten) / Float(Download.totalBytesExpectedToWrite))")
+////            }
+//        }) { [weak self] () in
+//            guard let _ = self else {
+//                return
+//            }
+//            DispatchQueue.main.async {
+//                print("Finish :)")
+//            }
+//        }
     }
     
 }

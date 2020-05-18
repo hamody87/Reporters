@@ -1,5 +1,5 @@
 //
-//  DownloadManager.swift
+//  DownloadFile.swift
 //  Reporters
 //
 //  Created by Muhammad Jbara on 15/05/2020.
@@ -8,27 +8,14 @@
 
 import UIKit
 
-extension DownloadManager: URLSessionDownloadDelegate {
+extension DownloadFile: URLSessionDownloadDelegate {
     
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
         guard let url = downloadTask.originalRequest?.url, let download = self.activeDownloads[url] else {
             return
         }
-        
-        
-        if let type = self.readDownloadedData(of: location). {
-            print(type)
-        }
-        if let destinationURL = self.localFilePath(forKey: download.key) {
-            let fileManager = FileManager.default
-            try? fileManager.removeItem(at: destinationURL)
-            do {
-                try fileManager.copyItem(at: location, to: destinationURL)
-            } catch let error {
-                print("Could not copy file to disk: \(error.localizedDescription)")
-            }
-        }
-        download.completionBlock(download)
+        let _ = StorageFile.shared().store(fileAtSrcURL: location, forKey: download.key)
+        download.completionBlock(self.readDownloadedData(of: location))
         self.activeDownloads[url] = nil
     }
     
@@ -43,32 +30,24 @@ extension DownloadManager: URLSessionDownloadDelegate {
     
 }
 
-final class DownloadManager: NSObject {
+final class DownloadFile: NSObject {
     
     // MARK: - Declare Basic Variables
     
     lazy var activeDownloads: [URL: Download] = [URL: Download]()
     lazy var downloadsSession: URLSession = {
         let configuration = URLSessionConfiguration.background(withIdentifier: "com.raywenderlich.HalfTunes.bgSession")
-        return URLSession(configuration: configuration, delegate: DownloadManager.shared(), delegateQueue: nil)
+        return URLSession(configuration: configuration, delegate: DownloadFile.shared(), delegateQueue: nil)
     }()
     
     // MARK: - Declare Static Variables
     
-    private static var sharedInstance: DownloadManager = {
-        let instance = DownloadManager()
+    private static var sharedInstance: DownloadFile = {
+        let instance = DownloadFile()
         return instance
     }()
     
     // MARK: - Private Methods
-    
-    private func localFilePath(forKey key: String) -> URL? {
-        let fileManager = FileManager.default
-        guard let documentURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            return nil
-        }
-        return documentURL.appendingPathComponent(key)
-    }
 
     private func readDownloadedData(of url: URL) -> Data? {
         do {
@@ -116,7 +95,7 @@ final class DownloadManager: NSObject {
         download.downloadStatus = .start
     }
     
-    public func start(withURL url: URL, _ key: String, _ progressBlock: @escaping (Download) -> Void, _ completionBlock: @escaping (Download) -> Void) {
+    public func start(withURL url: URL, _ key: String, _ progressBlock: @escaping (Download) -> Void, _ completionBlock: @escaping (Data?) -> Void) {
         if let _: Download = self.activeDownloads[url] {
             return
         }
@@ -129,7 +108,7 @@ final class DownloadManager: NSObject {
     
     // MARK: - Accessors
 
-    class func shared() -> DownloadManager {
+    class func shared() -> DownloadFile {
         return self.sharedInstance
     }
     

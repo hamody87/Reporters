@@ -15,6 +15,18 @@ class AsyncFile: UIView {
     private var imageView: UIImageView!
     private var activityIndicator: UIActivityIndicatorView!
     
+    // MARK: - Private Methods
+    
+    private func fetch(fileWithKey key: String) -> Bool {
+        if let fileData = StorageFile.shared().retrieve(fileWithKey: key), let image = UIImage(data: fileData) { 
+            self.activityIndicator.stopAnimating()
+            self.imageView.image = image
+            self.imageView.isHidden = false
+            return true
+        }
+        return false
+    }
+    
     // MARK: - Public Methods
     
     public func sync(imageWithUrl url: URL!, _ key: String) {
@@ -23,22 +35,19 @@ class AsyncFile: UIView {
         guard let _ = url else {
             return
         }
-        if let image = StorageFile.shared().retrieveImage(forKey: key) {
-            self.activityIndicator.stopAnimating()
-            self.imageView.image = image
-            self.imageView.isHidden = false
+        if self.fetch(fileWithKey: key) {
             return
         }
-        DownloadFile.shared().start(withURL: url) { data in
-            if let imageData = data {
-                if let image: UIImage = UIImage(data: imageData) {
-                    DispatchQueue.main.async {
-                        StorageFile.shared().store(image: image, forKey: key)
-                        self.activityIndicator.stopAnimating()
-                        self.imageView.image = image
-                        self.imageView.isHidden = false
-                    }
-                }
+        DownloadFile.shared().start(withURL: url, key, { [weak self] Download in
+            guard let _ = self else {
+                return
+            }
+        }) { [weak self] data in
+            guard let self = self else {
+                return
+            }
+            DispatchQueue.main.async {
+                let _ = self.fetch(fileWithKey: key)
             }
         }
     }

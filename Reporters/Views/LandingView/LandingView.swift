@@ -339,7 +339,7 @@ extension LandingView: UITableViewDataSource {
                 reporterNameView.isHidden = false
                 thumb.frame = CGRect(x: thumb.frame.origin.x, y: cellView.frame.height - DEFAULT.TABLENVIEW.CELL.THUMB.SIZE.BOTH, width: DEFAULT.TABLENVIEW.CELL.THUMB.SIZE.BOTH, height: thumb.frame.height)
                 if let reporter: [String: Any] = self.reporters[reporterID], let name: String = reporter[CONSTANTS.KEYS.JSON.FIELD.NAME] as? String, let reporterThumb: String = reporter[CONSTANTS.KEYS.JSON.FIELD.THUMB] as? String {
-                    thumb.sync(imageWithUrl: URL(string: reporterThumb), "thumb_\(reporterID)")
+                    thumb.sync(imageWithUrl: URL(string: reporterThumb), "thumb_\(reporterID).jpg")
                     reporterName.text = name
                 }
                 reporterName.frame = CGRect(x: reporterName.frame.origin.x, y: 0, width: reporterName.widthOfString(), height: reporterName.frame.height)
