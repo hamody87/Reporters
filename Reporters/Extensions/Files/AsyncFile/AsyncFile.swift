@@ -6,7 +6,22 @@
 //  Copyright © 2020 Muhammad Jbara. All rights reserved.
 //
 
+
 import UIKit
+
+extension AsyncFile: DownloadFileDelegate {
+    
+    func transferArgumentToPreviousSuperView222222() {
+                    DispatchQueue.main.async {
+        if let fileData = StorageFile.shared().retrieve(fileWithKey: "5444dddddd44.jpg"), let image = UIImage(data: fileData) {
+            self.activityIndicator.stopAnimating()
+            self.imageView.image = image
+            self.imageView.isHidden = false
+        }
+    }
+    }
+    
+}
 
 class AsyncFile: UIView {
     
@@ -18,10 +33,11 @@ class AsyncFile: UIView {
     // MARK: - Private Methods
     
     private func fetch(fileWithKey key: String) -> Bool {
-        if let fileData = StorageFile.shared().retrieve(fileWithKey: key), let image = UIImage(data: fileData) { 
+        if let fileData = StorageFile.shared().retrieve(fileWithKey: key), let image = UIImage(data: fileData) {
             self.activityIndicator.stopAnimating()
             self.imageView.image = image
             self.imageView.isHidden = false
+            print("44444")
             return true
         }
         return false
@@ -35,23 +51,45 @@ class AsyncFile: UIView {
         guard let _ = url else {
             return
         }
-        if self.fetch(fileWithKey: key) {
-            return
+//        if self.fetch(fileWithKey: key) {
+//            return
+//        }
+//        print("1-----> \(self.imageView)")
+        DownloadFile.shared().start(withURL: url, key, { download in
+//            guard let self = self else {
+//                return
+//            }
+//             [weak self]
+//            if self.imageView.isHidden == false {
+//                self.imageView.isHidden = true
+//            } else {
+//
+//                self.imageView.isHidden = false
+//            }
+        }) { data in
+//            DispatchQueue.main.async {
+//                print("dddd333")
+//                if let fileData = StorageFile.shared().retrieve(fileWithKey: key), let image = UIImage(data: fileData) {
+//                    self.activityIndicator.stopAnimating()
+//                    self.imageView.image = image
+//                    self.imageView.isHidden = false
+//                    print("44444")
+//                }
+//            }
         }
-        DownloadFile.shared().start(withURL: url, key, { [weak self] Download in
-            guard let _ = self else {
-                return
-            }
-        }) { [weak self] data in
-            guard let self = self else {
-                return
-            }
-            DispatchQueue.main.async {
-                let _ = self.fetch(fileWithKey: key)
-            }
-        }
+        DownloadFile.shared().delegate = self
+        
+        
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 10.0) {
+//            let _ = self.fetch(fileWithKey: key)
+//        }
+            
     }
-
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.activityIndicator?.center = CGPoint(x: self.bounds.width / 2.0, y: self.bounds.height / 2.0)
+        self.imageView?.frame = self.bounds
+    }
     // MARK: - Interstitial AsyncImageView
 
     required init?(coder aDecoder: NSCoder) {
@@ -62,10 +100,10 @@ class AsyncFile: UIView {
         super.init(frame: frame)
         self.layer.masksToBounds = true
         self.activityIndicator = UIActivityIndicatorView(style: .white)
-        self.activityIndicator.center = CGPoint(x: self.frame.width / 2.0, y: self.frame.height / 2.0)
         self.addSubview(self.activityIndicator)
-        self.imageView = UIImageView(frame: self.bounds)
-        self.imageView.contentMode = .scaleToFill
+        self.imageView = UIImageView(frame: .zero)
+        self.imageView.backgroundColor = .red
+        self.imageView.contentMode = .scaleAspectFill
         self.imageView.clipsToBounds = true
         self.addSubview(self.imageView)
     }

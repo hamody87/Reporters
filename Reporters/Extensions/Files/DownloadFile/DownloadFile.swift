@@ -8,6 +8,12 @@
 
 import UIKit
 
+@objc public protocol DownloadFileDelegate {
+    
+    @objc func transferArgumentToPreviousSuperView222222()
+    
+}
+
 extension DownloadFile: URLSessionDownloadDelegate {
     
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
@@ -15,7 +21,8 @@ extension DownloadFile: URLSessionDownloadDelegate {
             return
         }
         let _ = StorageFile.shared().store(fileAtSrcURL: location, forKey: download.key)
-        download.completionBlock(self.readDownloadedData(of: location))
+//        download.completionBlock(self.readDownloadedData(of: location))
+        self.delegate?.transferArgumentToPreviousSuperView222222()
         self.activeDownloads[url] = nil
     }
     
@@ -33,6 +40,16 @@ extension DownloadFile: URLSessionDownloadDelegate {
 final class DownloadFile: NSObject {
     
     // MARK: - Declare Basic Variables
+    
+    weak private var _delegate: DownloadFileDelegate? = nil
+    weak public var delegate: DownloadFileDelegate? {
+        set(value) {
+            self._delegate = value
+        }
+        get {
+            return self._delegate
+        }
+    }
     
     lazy var activeDownloads: [URL: Download] = [URL: Download]()
     lazy var downloadsSession: URLSession = {
@@ -96,6 +113,7 @@ final class DownloadFile: NSObject {
     }
     
     public func start(withURL url: URL, _ key: String, _ progressBlock: @escaping (Download) -> Void, _ completionBlock: @escaping (Data?) -> Void) {
+        print(self.activeDownloads)
         if let _: Download = self.activeDownloads[url] {
             return
         }

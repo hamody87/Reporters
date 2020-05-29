@@ -220,12 +220,17 @@ extension LandingView: UITableViewDataSource {
             let messageView: UIView = UIView()
             messageView.backgroundColor = UIColor(named: "Background/Third")
             cellView.addSubview(messageView)
-            let messageLabel: UILabel = UILabel()
-            messageLabel.backgroundColor = .clear
-            messageLabel.textColor = UIColor(named: "Font/Basic")
-            messageLabel.numberOfLines = 0
-            messageLabel.font = CONSTANTS.GLOBAL.createFont(ofSize: DEFAULT.TABLENVIEW.CELL.MESSAGE.FONT.SIZE, false)
-            messageView.addSubview(messageLabel)
+            let textMessage: UILabel = UILabel()
+            textMessage.backgroundColor = .clear
+            textMessage.textColor = UIColor(named: "Font/Basic")
+            textMessage.numberOfLines = 0
+            textMessage.font = CONSTANTS.GLOBAL.createFont(ofSize: DEFAULT.TABLENVIEW.CELL.MESSAGE.FONT.SIZE, false)
+            messageView.addSubview(textMessage)
+
+            let imageMessage: AsyncFile! = AsyncFile(withFrame: .zero)
+            imageMessage.backgroundColor = UIColor(named: "Background/Third")
+            messageView.addSubview(imageMessage)
+            
             let dateLabel: UILabel = UILabel()
             dateLabel.backgroundColor = .clear
             dateLabel.textColor = UIColor(named: "Font/Basic")
@@ -286,9 +291,10 @@ extension LandingView: UITableViewDataSource {
             }
             cellUnreadView.isHidden = !newMessage
             let messageView: UIView = cellView.subviews[2]
-            let messageLabel: UILabel = messageView.subviews[0] as! UILabel
-            let dateLabel: UILabel = messageView.subviews[1] as! UILabel
-            let favIcon: UIImageView = messageView.subviews[2] as! UIImageView
+            let textMessage: UILabel = messageView.subviews[0] as! UILabel
+            let imageMessage: AsyncFile = messageView.subviews[1] as! AsyncFile
+            let dateLabel: UILabel = messageView.subviews[2] as! UILabel
+            let favIcon: UIImageView = messageView.subviews[3] as! UIImageView
             let shareBtnView: UIView = cellView.subviews[3]
             let thumb: AsyncFile = cellView.subviews[0] as! AsyncFile
             let reporterNameView: UIView = cellView.subviews[1]
@@ -296,23 +302,35 @@ extension LandingView: UITableViewDataSource {
             let reporterName: UILabel = reporterNameView.subviews[1] as! UILabel
             cellView.frame = CGRect(x: CONSTANTS.SCREEN.MARGIN(), y: newMessage ? DEFAULT.TABLENVIEW.CELL.UNREAD.SIZE.HEIGHT + (self.previousMessageInfo.isFollow ? DEFAULT.TABLENVIEW.CELL.MARGIN : CONSTANTS.SCREEN.MARGIN(3)) : 0, width: cell.bounds.width - CONSTANTS.SCREEN.MARGIN(2), height: cell.frame.height - (isFollowMessage ? DEFAULT.TABLENVIEW.CELL.MARGIN : CONSTANTS.SCREEN.MARGIN(3)) - (newMessage ? DEFAULT.TABLENVIEW.CELL.UNREAD.SIZE.HEIGHT + (self.previousMessageInfo.isFollow ? DEFAULT.TABLENVIEW.CELL.MARGIN : CONSTANTS.SCREEN.MARGIN(3)) : 0))
             messageView.frame = CGRect(x: DEFAULT.TABLENVIEW.CELL.THUMB.SIZE.BOTH + DEFAULT.TABLENVIEW.CELL.MARGIN, y: 0, width: 0, height: cellView.frame.height - (isFollowMessage ? 0 : (DEFAULT.TABLENVIEW.CELL.MARGIN + DEFAULT.TABLENVIEW.CELL.REPORTER.SIZE.HEIGHT)))
+            var originYCoreMessage: CGFloat = 0
             if let content: [String: Any] = currentMessage[CONSTANTS.KEYS.JSON.FIELD.MESSAGE.SELF] as? [String: Any], let element: String = content[CONSTANTS.KEYS.JSON.FIELD.MESSAGE.ELEMENT.SELF] as? String, let value: String = content[element] as? String  {
+                let fullWidth: CGFloat = cellView.frame.width - DEFAULT.TABLENVIEW.CELL.THUMB.SIZE.BOTH - DEFAULT.TABLENVIEW.CELL.MARGIN - CONSTANTS.SCREEN.MARGIN(1) - DEFAULT.TABLENVIEW.CELL.SHARE.SIZE.BOTH
                 switch element {
                     
                     case CONSTANTS.KEYS.JSON.FIELD.MESSAGE.ELEMENT.IMAGE:
+                        textMessage.isHidden = true
+                        imageMessage.isHidden = false
+                        messageView.frame = CGRect(x: messageView.frame.origin.x, y: messageView.frame.origin.y, width: fullWidth, height: messageView.frame.height)
+                        messageView.roundCorners(corners: isFollowMessage ? [.allCorners] : [.topLeft, .topRight, .bottomRight], radius: 16.0)
+                        imageMessage.frame = CGRect(x: CONSTANTS.SCREEN.MARGIN(0.3), y: CONSTANTS.SCREEN.MARGIN(0.3), width: fullWidth - CONSTANTS.SCREEN.MARGIN(0.6), height: messageView.frame.height - DEFAULT.TABLENVIEW.CELL.DATE.SIZE.HEIGHT - 5.0)
+                        imageMessage.roundCorners(corners: [.allCorners], radius: 16.0)
+                        imageMessage.sync(imageWithUrl: URL(string: "https://scontent.fsdv3-1.fna.fbcdn.net/v/t1.0-9/s1080x2048/97307219_2924093217645678_494472785855250432_o.jpg?_nc_cat=101&_nc_sid=9267fe&_nc_ohc=C56P5VZ3V9gAX8TMwOx&_nc_ht=scontent.fsdv3-1.fna&_nc_tp=7&oh=0ba4927fcbb2aaa67ed1f4545f2f7d28&oe=5EE9334C"), "5444dddddd44.jpg")
+                        originYCoreMessage = imageMessage.frame.origin.y + imageMessage.frame.height
                     break
                     
-                    case CONSTANTS.KEYS.JSON.FIELD.MESSAGE.ELEMENT.IMAGE:
+                    case CONSTANTS.KEYS.JSON.FIELD.MESSAGE.ELEMENT.VIDEO:
                     break
                     
                     default:
-                        messageLabel.frame = CGRect(x: CONSTANTS.SCREEN.MARGIN(), y: CONSTANTS.SCREEN.MARGIN(), width: 0, height: 0)
-                        messageLabel.text = value
-                        messageLabel.decideTextDirection()
-                        let fullWidth: CGFloat = cellView.frame.width - DEFAULT.TABLENVIEW.CELL.THUMB.SIZE.BOTH - DEFAULT.TABLENVIEW.CELL.MARGIN - CONSTANTS.SCREEN.MARGIN(1) - DEFAULT.TABLENVIEW.CELL.SHARE.SIZE.BOTH
-                        messageView.frame = CGRect(x: messageView.frame.origin.x, y: messageView.frame.origin.y, width: messageLabel.widthOfString() < fullWidth ? messageLabel.widthOfString() + CONSTANTS.SCREEN.MARGIN(2) : fullWidth, height: messageView.frame.height)
+                        textMessage.isHidden = false
+                        imageMessage.isHidden = true
+                        textMessage.frame = CGRect(x: CONSTANTS.SCREEN.MARGIN(), y: CONSTANTS.SCREEN.MARGIN(), width: 0, height: 0)
+                        textMessage.text = value
+                        textMessage.decideTextDirection()
+                        messageView.frame = CGRect(x: messageView.frame.origin.x, y: messageView.frame.origin.y, width: textMessage.widthOfString() < fullWidth ? textMessage.widthOfString() + CONSTANTS.SCREEN.MARGIN(2) : fullWidth, height: messageView.frame.height)
                         messageView.roundCorners(corners: isFollowMessage ? [.allCorners] : [.topLeft, .topRight, .bottomRight], radius: 16.0)
-                        messageLabel.frame = CGRect(x: messageLabel.frame.origin.x, y: messageLabel.frame.origin.y, width: messageView.frame.width - CONSTANTS.SCREEN.MARGIN(2), height: messageView.frame.height - CONSTANTS.SCREEN.MARGIN() - DEFAULT.TABLENVIEW.CELL.DATE.SIZE.HEIGHT)
+                        textMessage.frame = CGRect(x: textMessage.frame.origin.x, y: textMessage.frame.origin.y, width: messageView.frame.width - CONSTANTS.SCREEN.MARGIN(2), height: messageView.frame.height - CONSTANTS.SCREEN.MARGIN() - DEFAULT.TABLENVIEW.CELL.DATE.SIZE.HEIGHT)
+                        originYCoreMessage = textMessage.frame.origin.y + textMessage.frame.height
                     break
                     
                 }
@@ -322,7 +340,7 @@ extension LandingView: UITableViewDataSource {
                 inputFormatter.dateFormat = "HH:mm"
                 dateLabel.text = inputFormatter.string(from: date)
             }
-            dateLabel.frame = CGRect(x: messageView.frame.width - dateLabel.widthOfString() - CONSTANTS.SCREEN.MARGIN(), y: messageLabel.frame.origin.y + messageLabel.frame.height, width: dateLabel.widthOfString(), height: DEFAULT.TABLENVIEW.CELL.DATE.SIZE.HEIGHT)
+            dateLabel.frame = CGRect(x: messageView.frame.width - dateLabel.widthOfString() - CONSTANTS.SCREEN.MARGIN(), y: originYCoreMessage, width: dateLabel.widthOfString(), height: DEFAULT.TABLENVIEW.CELL.DATE.SIZE.HEIGHT)
             favIcon.isHidden = true
             if let isStar: Bool = currentMessage[CONSTANTS.KEYS.JSON.FIELD.STAR] as? Bool, isStar {
                 favIcon.isHidden = false
@@ -756,11 +774,13 @@ class LandingView: SuperView {
         self.setStatusBarIsHidden(hide: true)
         UIView.animate(withDuration: 0.6, animations: {
             self.getPresentSection(self.messagesList)?.alpha = 0
+            
+//            let query: CoreDataStack = CoreDataStack(withCoreData: "CoreData")
+//            let _ = query.deleteContext([CONSTANTS.KEYS.SQL.NAME_ENTITY: CONSTANTS.KEYS.SQL.ENTITY.MESSAGES, CONSTANTS.KEYS.SQL.WHERE: "\(CONSTANTS.KEYS.JSON.FIELD.ID.MESSAGE) = 'qYWQcXmuX4BvKBYr44aF'"])
+            
         })
         
         
-//        let query: CoreDataStack = CoreDataStack(withCoreData: "CoreData")
-//        let _ = query.deleteContext([CONSTANTS.KEYS.SQL.NAME_ENTITY: CONSTANTS.KEYS.SQL.ENTITY.MESSAGES, CONSTANTS.KEYS.SQL.WHERE: "\(CONSTANTS.KEYS.JSON.FIELD.ID.MESSAGE) = 'XuROtv0i13ndWMSn8Ohe'"])
     }
     
     override func transferArgumentToPreviousSuperView(anArgument argument: Any!) {
@@ -830,22 +850,6 @@ class LandingView: SuperView {
             })
         }
         EnterView.shared().startEnterView(self)
-        
-        
-        
-        
-        let documentDirectory = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
-        print("-->\(documentDirectory[0])")
-        
-        
-//        DownloadManager.shared().start(withURL: URL(string: "https://mp3.panet.co.il/media/zekra/Panet.co.il_Zekra-Arou7-Leemeen.mp3")!)
-        
-        
-        
-//        if let img: UIImage = self.generateBarcode(from: "4354ffx43xd32zd3z23") {
-//            let imgView: UIImageView = UIImageView(image: img)
-//            self.addSubview(imgView)
-//        }
     }
     
 }

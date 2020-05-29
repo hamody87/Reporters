@@ -132,6 +132,7 @@ class ProfileView: SuperView {
                 argument[CONSTANTS.KEYS.ELEMENTS.FONT] = CONSTANTS.GLOBAL.createFont(ofSize: 18.0, false)
                 return argument
             }())[CONSTANTS.KEYS.ELEMENTS.SELF] as! CustomizeButton)
+            
             originY += 40.0 + CONSTANTS.SCREEN.MARGIN(3)
             var countFollow: Int = 0
             if let followingUser: [Any] = CONSTANTS.GLOBAL.getFollowingUser() {
@@ -205,63 +206,33 @@ class ProfileView: SuperView {
                 heightFollowingView += 40.0 + CONSTANTS.SCREEN.MARGIN(2)
                 followingView.frame = CGRect(x: followingView.frame.origin.x, y: followingView.frame.origin.y, width: followingView.frame.width, height: heightFollowingView)
             }
-            let widthSwitchReporterAccountBtn: CGFloat = CONSTANTS.GLOBAL.getWidthLabel(byText: "I_AM_REPORTER".localized, CONSTANTS.GLOBAL.createFont(ofSize: 18.0, false)) + CONSTANTS.SCREEN.MARGIN(4)
-            self.safeAreaView.addSubview(CONSTANTS.GLOBAL.createCustomButtonElement(withFrame: CGRect(x: (self.safeAreaView.frame.width - widthSwitchReporterAccountBtn) / 2.0, y: self.safeAreaView.frame.height - CONSTANTS.SCREEN.MARGIN(2) - 40.0, width: widthSwitchReporterAccountBtn, height: 40.0), {
-                var argument: [String: Any] = [String: Any]()
-                argument[CONSTANTS.KEYS.ELEMENTS.CORNER.SELF] = [CONSTANTS.KEYS.ELEMENTS.CORNER.DIRECTION: [UIRectCorner.allCorners], CONSTANTS.KEYS.ELEMENTS.CORNER.RADIUS: 20.0]
-                argument[CONSTANTS.KEYS.ELEMENTS.DELEGATE] = self
-                argument[CONSTANTS.KEYS.ELEMENTS.COLOR.BACKGROUND] = UIColor.white
-                argument[CONSTANTS.KEYS.ELEMENTS.TEXT] = "I_AM_REPORTER".localized
-            //                argument[CONSTANTS.KEYS.ELEMENTS.BUTTON.SELF] = [CONSTANTS.KEYS.ELEMENTS.BUTTON.TARGET: self, CONSTANTS.KEYS.ELEMENTS.BUTTON.SELECTOR: #selector(self.loginWithPhoneNumber)]
-                argument[CONSTANTS.KEYS.ELEMENTS.COLOR.TEXT] = UIColor.black
-                argument[CONSTANTS.KEYS.ELEMENTS.FONT] = CONSTANTS.GLOBAL.createFont(ofSize: 18.0, false)
-                return argument
-            }())[CONSTANTS.KEYS.ELEMENTS.SELF] as! CustomizeButton)
             if let textView: UITextView = CONSTANTS.GLOBAL.createTextViewElement(withFrame: CGRect(x: CONSTANTS.SCREEN.MARGIN(3), y: 0, width: self.safeAreaView.frame.width - CONSTANTS.SCREEN.MARGIN(6), height: 0), {
                 var argument: [String: Any] = [String: Any]()
                 argument[CONSTANTS.KEYS.ELEMENTS.DELEGATE] = self
                 argument[CONSTANTS.KEYS.ELEMENTS.COLOR.BACKGROUND] = UIColor.clear
                 argument[CONSTANTS.KEYS.ELEMENTS.FONT] = CONSTANTS.GLOBAL.createFont(ofSize: 18.0, false)
-                argument[CONSTANTS.KEYS.ELEMENTS.TEXT] = "\("SWITCH_ACCOUNT".localized) \("REPORTER_ACCOUNT".localized)"
+                argument[CONSTANTS.KEYS.ELEMENTS.TEXT] = "\("SWITCH_TO".localized) \("REPORTER_ACCOUNT".localized)"
                 argument[CONSTANTS.KEYS.ELEMENTS.ALLOW.ENABLE] = false
                 argument[CONSTANTS.KEYS.ELEMENTS.COLOR.LINK] = UIColor.white
                 return argument
             }())[CONSTANTS.KEYS.ELEMENTS.SELF] as? UITextView {
                 textView.textContainerInset = .zero
                 self.safeAreaView.addSubview(textView)
-                textView.frame = CGRect(x: textView.frame.origin.x, y: self.safeAreaView.frame.height - CONSTANTS.SCREEN.MARGIN(2) - 40.0 - CONSTANTS.SCREEN.MARGIN(2) - textView.heightOfString(), width: textView.frame.width, height: textView.heightOfString())
+                textView.frame = CGRect(x: textView.frame.origin.x, y: self.safeAreaView.frame.height - CONSTANTS.SCREEN.MARGIN(2) - textView.heightOfString(), width: textView.frame.width, height: textView.heightOfString())
                 let paragraph = NSMutableParagraphStyle()
                 paragraph.alignment = .center
                 let underlineAttriString = NSMutableAttributedString(string: textView.text)
                 underlineAttriString.addAttributes([.paragraphStyle: paragraph,
+                                                    .underlineColor : UIColor.white,
+                                                    .underlineStyle: NSUnderlineStyle.single.rawValue,
                                                     .foregroundColor: UIColor.white,
                                                     .font: CONSTANTS.GLOBAL.createFont(ofSize: 18.0, false)], range: (textView.text as NSString).range(of: textView.text))
-                underlineAttriString.addAttributes([.font: CONSTANTS.GLOBAL.createFont(ofSize: 18.0, true),
-                                                    .link: "https://www.google.com"], range: (textView.text as NSString).range(of: "REPORTER_ACCOUNT".localized))
+                underlineAttriString.addAttributes([.font: CONSTANTS.GLOBAL.createFont(ofSize: 18.0, false),
+                                                    .link: "https://www.google.com"], range: (textView.text as NSString).range(of: "\("SWITCH_TO".localized) \("REPORTER_ACCOUNT".localized)"))
                 textView.attributedText = underlineAttriString
             }
             
         }
-        
-//        https://mp3.panet.co.il/media/Adham-Nabulsi/Panet.co.il_Adham-Nabulsi-Ma-Beshba3-Mennek%20.mp3
-        
-//        DownloadManager.shared().start(withURL:  URL(string: "https://firebasestorage.googleapis.com/v0/b/abraj-7800d.appspot.com/o/Specialist%2FProfileImage%2F3PbDSUG5qlcHGDcKTPn9paDFqWy2?alt=media&token=aec90549-12aa-477b-866f-5c0dd16a7224")!, "thumb_dsadas323rde", { [weak self] (Download) in
-////        DownloadManager.shared().start(withURL:  URL(string: "https://mp3.panet.co.il/media/zekra/Panet.co.il_Zekra-Arou7-Leemeen.mp3")!, "thumb_dsadas323rde", { [weak self] (Download) in
-//            guard let self = self else {
-//                return
-//            }
-//            print("\(self.ssss) ---- \(Float(Download.totalBytesWritten) / Float(Download.totalBytesExpectedToWrite))")
-////            DispatchQueue.main.async {
-////                print("\(self.ssss) ---- \(Float(Download.totalBytesWritten) / Float(Download.totalBytesExpectedToWrite))")
-////            }
-//        }) { [weak self] () in
-//            guard let _ = self else {
-//                return
-//            }
-//            DispatchQueue.main.async {
-//                print("Finish :)")
-//            }
-//        }
     }
     
 }

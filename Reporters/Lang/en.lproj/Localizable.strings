@@ -41,8 +41,9 @@
 "FOLLOWING" = "Following";
 "FOLLOW_REPORTERS" = "Follow Reporters";
 "I_AM_REPORTER" = "I am reporter";
-"SWITCH_ACCOUNT" = "Switch your account to";
+"SWITCH_TO" = "Switch to";
 "REPORTER_ACCOUNT" = "Reporter Account";
+"SETTINGS" = "Settings";
 
 "SUCCESSFULLY_UPLOADED_NOTICE" = "Your photo has successfully uploaded";
 "FAILURE_UPLOADED_NOTICE" = "Failed to upload";

@@ -68,6 +68,8 @@ final class DatatHandler {
                 messageArr[CONSTANTS.KEYS.JSON.FIELD.MESSAGE.ELEMENT.SELF] = element
                 switch element {
                 case CONSTANTS.KEYS.JSON.FIELD.MESSAGE.ELEMENT.IMAGE:
+                    messageArr[element] = (message[CONSTANTS.KEYS.JSON.FIELD.MESSAGE.ELEMENT.IMAGE] as! String)
+                    messageArr[CONSTANTS.KEYS.JSON.FIELD.MESSAGE.HEIGHT] = 250.0
                     break
                 case CONSTANTS.KEYS.JSON.FIELD.MESSAGE.ELEMENT.VIDEO:
                     break
