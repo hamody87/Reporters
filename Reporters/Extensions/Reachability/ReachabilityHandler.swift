@@ -24,7 +24,8 @@ class ReachabilityHandler: ReachabilityObserverDelegate {
     
     func reachabilityChanged(_ isReachable: Bool) {
         if !isReachable {
-            print("No internet connection")
+//            print("No internet connection")
+            print("ddddd")
         }
     }
     
