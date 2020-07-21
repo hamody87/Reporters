@@ -220,6 +220,7 @@ final class DatatHandler {
     }
     
     public func initReporters() {
+        print("----> \(self.getFolderMessage(byDate: Date()))")
         self.initReporterInfoByID(self.bringReportersID(), 0)
     }
     

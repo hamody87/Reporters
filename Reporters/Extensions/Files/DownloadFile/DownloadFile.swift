@@ -9,9 +9,10 @@
 import UIKit
 
 @objc public protocol DownloadFileDelegate {
-    
-    @objc func transferArgumentToPreviousSuperView222222()
-    
+
+    @objc func progressDownload(withKey key: String)
+    @objc func finishDownload(withKey key: String)
+
 }
 
 extension DownloadFile: URLSessionDownloadDelegate {
@@ -21,9 +22,13 @@ extension DownloadFile: URLSessionDownloadDelegate {
             return
         }
         let _ = StorageFile.shared().store(fileAtSrcURL: location, forKey: download.key)
-//        download.completionBlock(self.readDownloadedData(of: location))
-        self.delegate?.transferArgumentToPreviousSuperView222222()
+        if let delegates: [DownloadFileDelegate?] = self.delegateDownloads[url] {
+            for delegate in delegates {
+                delegate?.finishDownload(withKey: download.key)
+            }
+        }
         self.activeDownloads[url] = nil
+        self.delegateDownloads[url] = nil
     }
     
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
@@ -32,7 +37,11 @@ extension DownloadFile: URLSessionDownloadDelegate {
         }
         download.totalBytesWritten = totalBytesWritten
         download.totalBytesExpectedToWrite = totalBytesExpectedToWrite
-        download.progressBlock(download)
+        if let delegates: [DownloadFileDelegate?] = self.delegateDownloads[url] {
+            for delegate in delegates {
+                delegate?.progressDownload(withKey: download.key)
+            }
+        }
     }
     
 }
@@ -41,17 +50,8 @@ final class DownloadFile: NSObject {
     
     // MARK: - Declare Basic Variables
     
-    weak private var _delegate: DownloadFileDelegate? = nil
-    weak public var delegate: DownloadFileDelegate? {
-        set(value) {
-            self._delegate = value
-        }
-        get {
-            return self._delegate
-        }
-    }
-    
     lazy var activeDownloads: [URL: Download] = [URL: Download]()
+    lazy var delegateDownloads: [URL: [DownloadFileDelegate?]] = [URL: [DownloadFileDelegate?]]()
     lazy var downloadsSession: URLSession = {
         let configuration = URLSessionConfiguration.background(withIdentifier: "com.raywenderlich.HalfTunes.bgSession")
         return URLSession(configuration: configuration, delegate: DownloadFile.shared(), delegateQueue: nil)
@@ -112,16 +112,17 @@ final class DownloadFile: NSObject {
         download.downloadStatus = .start
     }
     
-    public func start(withURL url: URL, _ key: String, _ progressBlock: @escaping (Download) -> Void, _ completionBlock: @escaping (Data?) -> Void) {
-        print(self.activeDownloads)
-        if let _: Download = self.activeDownloads[url] {
+    public func start(withURL url: URL, _ key: String, delegate: DownloadFileDelegate?) {
+        if let download: Download = self.activeDownloads[url] {
+            self.delegateDownloads[download.previewURL] = (self.delegateDownloads[download.previewURL] ?? []) + [delegate]
             return
         }
-        let download = Download(previewURL: url, key, progressBlock, completionBlock)
+        let download = Download(previewURL: url, key)
         download.task = self.downloadsSession.downloadTask(with: download.previewURL)
         download.task?.resume()
         download.downloadStatus = .start
         self.activeDownloads[download.previewURL] = download
+        self.delegateDownloads[download.previewURL] = [delegate]
     }
     
     // MARK: - Accessors

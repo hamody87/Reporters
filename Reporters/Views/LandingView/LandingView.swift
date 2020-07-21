@@ -297,6 +297,7 @@ extension LandingView: UITableViewDataSource {
             let favIcon: UIImageView = messageView.subviews[3] as! UIImageView
             let shareBtnView: UIView = cellView.subviews[3]
             let thumb: AsyncFile = cellView.subviews[0] as! AsyncFile
+            print("-------> \(thumb)")
             let reporterNameView: UIView = cellView.subviews[1]
             let _: UIButton = reporterNameView.subviews[0] as! UIButton //starBtn
             let reporterName: UILabel = reporterNameView.subviews[1] as! UILabel
@@ -314,7 +315,7 @@ extension LandingView: UITableViewDataSource {
                         messageView.roundCorners(corners: isFollowMessage ? [.allCorners] : [.topLeft, .topRight, .bottomRight], radius: 16.0)
                         imageMessage.frame = CGRect(x: CONSTANTS.SCREEN.MARGIN(0.3), y: CONSTANTS.SCREEN.MARGIN(0.3), width: fullWidth - CONSTANTS.SCREEN.MARGIN(0.6), height: messageView.frame.height - DEFAULT.TABLENVIEW.CELL.DATE.SIZE.HEIGHT - 5.0)
                         imageMessage.roundCorners(corners: [.allCorners], radius: 16.0)
-                        imageMessage.sync(imageWithUrl: URL(string: "https://scontent.fsdv3-1.fna.fbcdn.net/v/t1.0-9/s1080x2048/97307219_2924093217645678_494472785855250432_o.jpg?_nc_cat=101&_nc_sid=9267fe&_nc_ohc=C56P5VZ3V9gAX8TMwOx&_nc_ht=scontent.fsdv3-1.fna&_nc_tp=7&oh=0ba4927fcbb2aaa67ed1f4545f2f7d28&oe=5EE9334C"), "5444dddddd44.jpg")
+                        imageMessage.sync(imageWithUrl: URL(string: "https://scontent.fsdv3-1.fna.fbcdn.net/v/t1.0-9/91521398_10216413589867584_8431722578229329920_n.jpg?_nc_cat=108&_nc_sid=09cbfe&_nc_ohc=NJzZqQfb7TAAX9EHMH3&_nc_ht=scontent.fsdv3-1.fna&oh=5d552c43baca045b9eba482027106c94&oe=5F3BAC58"), "rfrfrfrfr.jpg")
                         originYCoreMessage = imageMessage.frame.origin.y + imageMessage.frame.height
                     break
                     

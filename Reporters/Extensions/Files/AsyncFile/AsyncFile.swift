@@ -11,14 +11,18 @@ import UIKit
 
 extension AsyncFile: DownloadFileDelegate {
     
-    func transferArgumentToPreviousSuperView222222() {
-                    DispatchQueue.main.async {
-        if let fileData = StorageFile.shared().retrieve(fileWithKey: "5444dddddd44.jpg"), let image = UIImage(data: fileData) {
-            self.activityIndicator.stopAnimating()
-            self.imageView.image = image
-            self.imageView.isHidden = false
+    func finishDownload(withKey key: String) {
+        DispatchQueue.main.async {
+            if let fileData = StorageFile.shared().retrieve(fileWithKey: key), let image = UIImage(data: fileData) {
+                self.activityIndicator.stopAnimating()
+                self.imageView.image = image
+                self.imageView.isHidden = false
+            }
         }
     }
+    
+    func progressDownload(withKey key: String) {
+        print("sssss")
     }
     
 }
@@ -48,6 +52,12 @@ class AsyncFile: UIView {
     public func sync(imageWithUrl url: URL!, _ key: String) {
         self.imageView.isHidden = true
         self.activityIndicator.startAnimating()
+
+            print("-------")
+            print("id_\(String(UInt(bitPattern: ObjectIdentifier(self))))")
+            print("-------")
+        
+        print(key)
         guard let _ = url else {
             return
         }
@@ -55,18 +65,37 @@ class AsyncFile: UIView {
 //            return
 //        }
 //        print("1-----> \(self.imageView)")
-        DownloadFile.shared().start(withURL: url, key, { download in
-//            guard let self = self else {
-//                return
-//            }
-//             [weak self]
-//            if self.imageView.isHidden == false {
-//                self.imageView.isHidden = true
-//            } else {
+        DownloadFile.shared().start(withURL: url, key, delegate: self)
+//        DownloadFile.shared().start(withURL: url, key, { download in
 //
-//                self.imageView.isHidden = false
+//            print("YESSSS 1111")
+////            guard let self = self else {
+////                return
+////            }
+////             [weak self]
+////            if self.imageView.isHidden == false {
+////                self.imageView.isHidden = true
+////            } else {
+////
+////                self.imageView.isHidden = false
+////            }
+//        }) { data in
+//        print("YESSSS 22222")
+//
+//
+//                                DispatchQueue.main.async {
+//                                    if let fileData = StorageFile.shared().retrieve(fileWithKey: key), let image = UIImage(data: fileData) {
+//                                        self.activityIndicator.stopAnimating()
+//                                        self.imageView.image = image
+//                                        self.imageView.isHidden = false
+//                                    }
 //            }
-        }) { data in
+//                    if let fileData = StorageFile.shared().retrieve(fileWithKey: "rfrfrfrfr.jpg"), let image = UIImage(data: fileData) {
+//                        self.activityIndicator.stopAnimating()
+//                        self.imageView.image = image
+//                        self.imageView.isHidden = false
+//                    }
+                
 //            DispatchQueue.main.async {
 //                print("dddd333")
 //                if let fileData = StorageFile.shared().retrieve(fileWithKey: key), let image = UIImage(data: fileData) {
@@ -76,8 +105,8 @@ class AsyncFile: UIView {
 //                    print("44444")
 //                }
 //            }
-        }
-        DownloadFile.shared().delegate = self
+//        }
+//        DownloadFile.shared().delegate = self
         
         
 //        DispatchQueue.main.asyncAfter(deadline: .now() + 10.0) {

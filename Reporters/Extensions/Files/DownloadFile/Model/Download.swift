@@ -2,7 +2,7 @@
 //  Download.swift
 //  Reporters
 //
-//  Created by Muhammad Jbara on 17/05/2020.
+//  Created by Muhammad Jbara on 21/07/2020.
 //  Copyright © 2020 Muhammad Jbara. All rights reserved.
 //
 
@@ -21,8 +21,6 @@ class Download {
     // MARK: - Constants
     
     let previewURL: URL
-    let progressBlock: (Download) -> Void
-    let completionBlock: (Data?) -> Void
     let key: String
     
     // MARK: - Variables And Properties
@@ -35,11 +33,9 @@ class Download {
     
     // MARK: - Initialization
     
-    init(previewURL: URL, _ key: String, _ progressBlock: @escaping (Download) -> Void, _ completionBlock: @escaping (Data?) -> Void) {
+    init(previewURL: URL, _ key: String) {
         self.previewURL = previewURL
         self.key = key
-        self.progressBlock = progressBlock
-        self.completionBlock = completionBlock
     }
     
 }
