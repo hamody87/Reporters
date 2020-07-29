@@ -128,6 +128,7 @@ class LoginView: SuperView {
     required init?(withFrame frame: CGRect!, delegate: SuperViewDelegate?) {
         super.init(withFrame: frame, delegate: delegate)!
         self.backgroundColor = UIColor(named: DEFAULT.BACKGROUND.BASIC)
+        
         var originY: CGFloat = self.safeAreaView.frame.height
         if let textView: UITextView = CONSTANTS.GLOBAL.createTextViewElement(withFrame: CGRect(x: CONSTANTS.SCREEN.MARGIN(3), y: 0, width: self.safeAreaView.frame.width - CONSTANTS.SCREEN.MARGIN(6), height: 0), {
             var argument: [String: Any] = [String: Any]()

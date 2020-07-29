@@ -79,7 +79,7 @@ final class Global {
     }
     
     public func createFont(ofSize size: CGFloat, _ bold: Bool) -> UIFont {
-        guard let font: UIFont = UIFont(name: (bold ? "FONT_FAMILT_BOLD".localized : "FONT_FAMILT_LIGHT".localized), size: 16.0) else {
+        guard let font: UIFont = UIFont(name: (bold ? "FONT_FAMILT_BOLD".localized : "FONT_FAMILT_LIGHT".localized), size: size) else {
             return bold ? UIFont.boldSystemFont(ofSize: size) : UIFont.systemFont(ofSize: size)
         }
         return font
