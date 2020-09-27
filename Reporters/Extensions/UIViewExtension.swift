@@ -26,8 +26,15 @@ extension UIView {
 //         layer.masksToBounds = true
 //     }
     
-    func clone() -> UIView {
-        return NSKeyedUnarchiver.unarchiveObject(with: NSKeyedArchiver.archivedData(withRootObject: self))! as! UIView
-     }
+    func clone() throws -> UIView? {
+        let data = try NSKeyedArchiver.archivedData(withRootObject:self, requiringSecureCoding:false)
+        return try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? UIView
+    }
+//    func clone() -> UIView {
+        
+        
+
+//        return NSKeyedUnarchiver.unarchiveObject(with: NSKeyedArchiver.archivedData(withRootObject: self, requiringSecureCoding: false))! as! UIView
+//     }
     
 }

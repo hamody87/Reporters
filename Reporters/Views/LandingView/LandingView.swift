@@ -528,82 +528,86 @@ class LandingView: SuperView {
     @objc private func presentMoreOptions(gesture: UIGestureRecognizer) {
         if let longPress = gesture as? MoreOptionsGesture {
             if longPress.state == UIGestureRecognizer.State.began {
-                if let indexPath: IndexPath = longPress.indexPath, let messageView: UIView = longPress.view?.clone() {
-                    let isFollowMessage: Bool = longPress.followMessage
-                    self.backgroundMoreOptions = UIView(frame: self.bounds)
-                    self.backgroundMoreOptions.backgroundColor = .black
-                    self.backgroundMoreOptions.alpha = 0
-                    self.addSubview(self.backgroundMoreOptions)
-                    self.messageMoreOptions = UIView(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: self.frame.height - tabBar.frame.height))
-                    self.messageMoreOptions.clipsToBounds = true
-                    let cell: UITableViewCell! = self.messagesList.cellForRow(at: indexPath)
-                    var originY: CGFloat = cell?.frame.origin.y ?? 0
-                    originY -= self.messagesList.contentOffset.y
-                    if let view: UIView = cell.viewWithTag(111) {
-                        originY += view.frame.origin.y
+                do {
+                    if let indexPath: IndexPath = longPress.indexPath, let messageView: UIView = try longPress.view?.clone() {
+                        let isFollowMessage: Bool = longPress.followMessage
+                        self.backgroundMoreOptions = UIView(frame: self.bounds)
+                        self.backgroundMoreOptions.backgroundColor = .black
+                        self.backgroundMoreOptions.alpha = 0
+                        self.addSubview(self.backgroundMoreOptions)
+                        self.messageMoreOptions = UIView(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: self.frame.height - tabBar.frame.height))
+                        self.messageMoreOptions.clipsToBounds = true
+                        let cell: UITableViewCell! = self.messagesList.cellForRow(at: indexPath)
+                        var originY: CGFloat = cell?.frame.origin.y ?? 0
+                        originY -= self.messagesList.contentOffset.y
+                        if let view: UIView = cell.viewWithTag(111) {
+                            originY += view.frame.origin.y
+                        }
+                        messageView.frame = CGRect(x: CONSTANTS.SCREEN.MARGIN() + messageView.frame.origin.x, y: originY, width: messageView.frame.width, height: messageView.frame.height)
+                        messageView.roundCorners(corners: isFollowMessage ? [.allCorners] : [.topLeft, .topRight, .bottomRight], radius: 16.0)
+                        if let unreadBadge: UIView = messageView.subviews.getElement(safe: 3) {
+                            unreadBadge.removeFromSuperview()
+                        }
+                        if let messageID: String = longPress.messageID {
+                            UnreadBadge.shared().showUnreadBadge(self.messageMoreOptions, messageID, longPress.isRead)
+                        }
+                        self.messageMoreOptions.addSubview(messageView)
+                        self.addSubview(self.messageMoreOptions)
+                        let gestureMessage = UITapGestureRecognizer(target: self, action: #selector(self.dismissMoreOptions))
+                        gestureMessage.numberOfTapsRequired = 1
+                        messageView.addGestureRecognizer(gestureMessage)
+                        let gestureBackground = UITapGestureRecognizer(target: self, action: #selector(self.dismissMoreOptions))
+                        gestureBackground.numberOfTapsRequired = 1
+                        self.messageMoreOptions.addGestureRecognizer(gestureBackground)
+                        let sizePupup: CGSize = CGSize(width: 110.0, height: 45.0)
+                        let img_arrow: UIImage! = UIImage(named: "\(self.classDir())ArrowOptions")
+                        self.listOptions = UIView(frame: CGRect(x: gesture.location(in: self).x - (sizePupup.width / 2.0), y: gesture.location(in: self).y - sizePupup.height - 40.0, width: sizePupup.width, height: sizePupup.height + img_arrow.size.height))
+                        self.listOptions.alpha = 0
+                        self.addSubview(self.listOptions)
+                        let coreListOptions: UIView = UIView(frame: CGRect(origin: .zero, size: sizePupup))
+                        coreListOptions.layer.shadowPath = UIBezierPath(rect: coreListOptions.bounds).cgPath
+                        coreListOptions.layer.cornerRadius = 10.0
+                        coreListOptions.layer.shadowRadius = 10.0
+                        coreListOptions.layer.shadowOffset = .zero
+                        coreListOptions.layer.shadowOpacity = 0.3
+                        coreListOptions.backgroundColor = UIColor(named: "Background/Basic")
+                        self.listOptions.addSubview(coreListOptions)
+                        let img_saveIcon: UIImage! = UIImage(named: "\(self.classDir())SaveIcon")
+                        var originX: CGFloat = coreListOptions.frame.width
+                        let label: UILabel = UILabel(frame: CGRect(x: 0, y: 0, width: 0, height: coreListOptions.frame.height))
+                        label.backgroundColor = .clear
+                        label.text = longPress.isStar ? "UNSAVE".localized : "SAVE".localized
+                        label.textColor = .white
+                        label.font = CONSTANTS.GLOBAL.createFont(ofSize: 17.0, false)
+                        coreListOptions.addSubview(label)
+                        originX -= (label.widthOfString() + img_saveIcon.size.width + CONSTANTS.SCREEN.MARGIN())
+                        originX /= 2.0
+                        label.frame = CGRect(x: originX + img_saveIcon.size.width + CONSTANTS.SCREEN.MARGIN(), y: label.frame.origin.y, width: label.widthOfString(), height: label.frame.height)
+                        let saveIcon: UIImageView = UIImageView(frame: CGRect(x: originX, y: (coreListOptions.frame.height - img_saveIcon.size.height) / 2.0, width: img_saveIcon.size.width, height: img_saveIcon.size.height))
+                        saveIcon.image = img_saveIcon
+                        coreListOptions.addSubview(saveIcon)
+                        let addStar: StarButton = StarButton(frame: coreListOptions.bounds)
+                        addStar.addTarget(self, action: #selector(self.addStarForMessage), for: .touchUpInside)
+                        addStar.messageID = longPress.messageID
+                        addStar.isStar = !longPress.isStar
+                        coreListOptions.addSubview(addStar)
+                        let arrow: UIImageView = UIImageView(frame: CGRect(x: (sizePupup.width - img_arrow.size.width) / 2.0, y: coreListOptions.frame.height, width: img_arrow.size.width, height: img_arrow.size.height))
+                        arrow.image = img_arrow
+                        self.listOptions.addSubview(arrow)
+                        self.listOptions.transform = CGAffineTransform(scaleX: 0.7, y: 0.7)
+                        UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0, options: [],  animations: {
+                            self.listOptions.alpha = 1.0
+                            self.listOptions.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+                            let generator = UIImpactFeedbackGenerator(style: .medium)
+                            generator.prepare()
+                            generator.impactOccurred()
+                        })
+                        UIView.animate(withDuration: 0.1, animations: {
+                            self.backgroundMoreOptions.alpha = 0.6
+                        })
                     }
-                    messageView.frame = CGRect(x: CONSTANTS.SCREEN.MARGIN() + messageView.frame.origin.x, y: originY, width: messageView.frame.width, height: messageView.frame.height)
-                    messageView.roundCorners(corners: isFollowMessage ? [.allCorners] : [.topLeft, .topRight, .bottomRight], radius: 16.0)
-                    if let unreadBadge: UIView = messageView.subviews.getElement(safe: 3) {
-                        unreadBadge.removeFromSuperview()
-                    }
-                    if let messageID: String = longPress.messageID {
-                        UnreadBadge.shared().showUnreadBadge(self.messageMoreOptions, messageID, longPress.isRead)
-                    }
-                    self.messageMoreOptions.addSubview(messageView)
-                    self.addSubview(self.messageMoreOptions)
-                    let gestureMessage = UITapGestureRecognizer(target: self, action: #selector(self.dismissMoreOptions))
-                    gestureMessage.numberOfTapsRequired = 1
-                    messageView.addGestureRecognizer(gestureMessage)
-                    let gestureBackground = UITapGestureRecognizer(target: self, action: #selector(self.dismissMoreOptions))
-                    gestureBackground.numberOfTapsRequired = 1
-                    self.messageMoreOptions.addGestureRecognizer(gestureBackground)
-                    let sizePupup: CGSize = CGSize(width: 110.0, height: 45.0)
-                    let img_arrow: UIImage! = UIImage(named: "\(self.classDir())ArrowOptions")
-                    self.listOptions = UIView(frame: CGRect(x: gesture.location(in: self).x - (sizePupup.width / 2.0), y: gesture.location(in: self).y - sizePupup.height - 40.0, width: sizePupup.width, height: sizePupup.height + img_arrow.size.height))
-                    self.listOptions.alpha = 0
-                    self.addSubview(self.listOptions)
-                    let coreListOptions: UIView = UIView(frame: CGRect(origin: .zero, size: sizePupup))
-                    coreListOptions.layer.shadowPath = UIBezierPath(rect: coreListOptions.bounds).cgPath
-                    coreListOptions.layer.cornerRadius = 10.0
-                    coreListOptions.layer.shadowRadius = 10.0
-                    coreListOptions.layer.shadowOffset = .zero
-                    coreListOptions.layer.shadowOpacity = 0.3
-                    coreListOptions.backgroundColor = UIColor(named: "Background/Basic")
-                    self.listOptions.addSubview(coreListOptions)
-                    let img_saveIcon: UIImage! = UIImage(named: "\(self.classDir())SaveIcon")
-                    var originX: CGFloat = coreListOptions.frame.width
-                    let label: UILabel = UILabel(frame: CGRect(x: 0, y: 0, width: 0, height: coreListOptions.frame.height))
-                    label.backgroundColor = .clear
-                    label.text = longPress.isStar ? "UNSAVE".localized : "SAVE".localized
-                    label.textColor = .white
-                    label.font = CONSTANTS.GLOBAL.createFont(ofSize: 17.0, false)
-                    coreListOptions.addSubview(label)
-                    originX -= (label.widthOfString() + img_saveIcon.size.width + CONSTANTS.SCREEN.MARGIN())
-                    originX /= 2.0
-                    label.frame = CGRect(x: originX + img_saveIcon.size.width + CONSTANTS.SCREEN.MARGIN(), y: label.frame.origin.y, width: label.widthOfString(), height: label.frame.height)
-                    let saveIcon: UIImageView = UIImageView(frame: CGRect(x: originX, y: (coreListOptions.frame.height - img_saveIcon.size.height) / 2.0, width: img_saveIcon.size.width, height: img_saveIcon.size.height))
-                    saveIcon.image = img_saveIcon
-                    coreListOptions.addSubview(saveIcon)
-                    let addStar: StarButton = StarButton(frame: coreListOptions.bounds)
-                    addStar.addTarget(self, action: #selector(self.addStarForMessage), for: .touchUpInside)
-                    addStar.messageID = longPress.messageID
-                    addStar.isStar = !longPress.isStar
-                    coreListOptions.addSubview(addStar)
-                    let arrow: UIImageView = UIImageView(frame: CGRect(x: (sizePupup.width - img_arrow.size.width) / 2.0, y: coreListOptions.frame.height, width: img_arrow.size.width, height: img_arrow.size.height))
-                    arrow.image = img_arrow
-                    self.listOptions.addSubview(arrow)
-                    self.listOptions.transform = CGAffineTransform(scaleX: 0.7, y: 0.7)
-                    UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0, options: [],  animations: {
-                        self.listOptions.alpha = 1.0
-                        self.listOptions.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
-                        let generator = UIImpactFeedbackGenerator(style: .medium)
-                        generator.prepare()
-                        generator.impactOccurred()
-                    })
-                    UIView.animate(withDuration: 0.1, animations: {
-                        self.backgroundMoreOptions.alpha = 0.6
-                    })
+                } catch {
+                    print(error)
                 }
             }
         }
