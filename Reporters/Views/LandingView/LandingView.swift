@@ -297,7 +297,6 @@ extension LandingView: UITableViewDataSource {
             let favIcon: UIImageView = messageView.subviews[3] as! UIImageView
             let shareBtnView: UIView = cellView.subviews[3]
             let thumb: AsyncFile = cellView.subviews[0] as! AsyncFile
-            print("-------> \(thumb)")
             let reporterNameView: UIView = cellView.subviews[1]
             let _: UIButton = reporterNameView.subviews[0] as! UIButton //starBtn
             let reporterName: UILabel = reporterNameView.subviews[1] as! UILabel

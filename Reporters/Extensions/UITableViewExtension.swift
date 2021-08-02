@@ -18,7 +18,7 @@ extension UITableView {
         })
     }
     
-    func scrollToRow(at indexPath: IndexPath, at scrollPosition: UITableView.ScrollPosition, animated: Bool, _ completion:@escaping ()->()) {
+    func scrollToRow(at indexPath: IndexPath, at scrollPosition: UITableView.ScrollPosition, animated: Bool, _ completion: @escaping ()->()) {
         UIView.animate(withDuration: 0, animations: {
             self.scrollToRow(at: indexPath, at: scrollPosition, animated: animated)
         }, completion: { _ in

@@ -207,6 +207,7 @@ class SignUpUserDetailsView: TemplateLoginView {
     required init?(withFrame frame: CGRect!, delegate: SuperViewDelegate?) {
         super.init(withFrame: frame, delegate: delegate)!
         self.title = "REGISTER".localized
+        
         var originY: CGFloat = self.navBar.frame.height + CONSTANTS.SCREEN.MARGIN(3)
         self.stepControl = StepControl(withFrame: CGRect(x: CONSTANTS.SCREEN.MARGIN(3), y: originY, width: self.safeAreaView.frame.width - CONSTANTS.SCREEN.MARGIN(6), height: 10.0), 3)!
         self.safeAreaView.addSubview(self.stepControl)

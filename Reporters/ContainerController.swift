@@ -215,8 +215,10 @@ extension ContainerController: OverlapContainerDelegate {
     
     func transitionToChildOverlapContainer(viewName: String, _ anArgument: Any!, _ modalTransitionStyle: ModalTransitionStyle, _ enableCloseOverlapBySlide: Bool, _ completion: (() -> Void)?) {
         self.view.isUserInteractionEnabled = false
+        
         if let instance = NSClassFromString("\(CONSTANTS.INFO.APP.BUNDLE.NAME).\(viewName)") as? SuperView.Type {
             let presentOverlapContainer: OverlapContainer! = OverlapContainer(withDelegate: self)
+            
             self.addChild(presentOverlapContainer)
             self.view.addSubview(presentOverlapContainer.view)
             let classInst: SuperView! = instance.init(withFrame: presentOverlapContainer.masterView.bounds, delegate: presentOverlapContainer)
@@ -350,6 +352,7 @@ class ContainerController: UIViewController {
         self.view.backgroundColor = .black
         self.addChild(self.currentOverlapContainer)
         self.view.addSubview(self.currentOverlapContainer.view)
+        
         self.currentOverlapContainer?.didMove(toParent: self)
         if let instance = NSClassFromString("\(CONSTANTS.INFO.APP.BUNDLE.NAME).\(CONSTANTS.INFO.GLOBAL.LANDING_VIEW())") as? SuperView.Type {
             let classInst: SuperView! = instance.init(withFrame: self.currentOverlapContainer.masterView.bounds, delegate: currentOverlapContainer)
